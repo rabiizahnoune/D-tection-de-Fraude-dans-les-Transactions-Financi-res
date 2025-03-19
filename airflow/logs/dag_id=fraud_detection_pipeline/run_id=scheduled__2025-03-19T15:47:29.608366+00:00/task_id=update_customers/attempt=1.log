@@ -1,0 +1,13 @@
+[2025-03-19T15:53:02.015+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: fraud_detection_pipeline.update_customers scheduled__2025-03-19T15:47:29.608366+00:00 [queued]>
+[2025-03-19T15:53:02.033+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: fraud_detection_pipeline.update_customers scheduled__2025-03-19T15:47:29.608366+00:00 [queued]>
+[2025-03-19T15:53:02.035+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 2
+[2025-03-19T15:53:02.058+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): update_customers> on 2025-03-19 15:47:29.608366+00:00
+[2025-03-19T15:53:02.071+0000] {standard_task_runner.py:57} INFO - Started process 195 to run task
+[2025-03-19T15:53:02.076+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'fraud_detection_pipeline', 'update_customers', 'scheduled__2025-03-19T15:47:29.608366+00:00', '--job-id', '25', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpln2m8c1h']
+[2025-03-19T15:53:02.081+0000] {standard_task_runner.py:85} INFO - Job 25: Subtask update_customers
+[2025-03-19T15:53:02.175+0000] {task_command.py:415} INFO - Running <TaskInstance: fraud_detection_pipeline.update_customers scheduled__2025-03-19T15:47:29.608366+00:00 [running]> on host f76c4cf6a8a2
+[2025-03-19T15:53:02.394+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='fraud_detection_pipeline' AIRFLOW_CTX_TASK_ID='update_customers' AIRFLOW_CTX_EXECUTION_DATE='2025-03-19T15:47:29.608366+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-19T15:47:29.608366+00:00'
+[2025-03-19T15:53:02.398+0000] {python.py:194} INFO - Done. Returned value was: None
+[2025-03-19T15:53:02.422+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=fraud_detection_pipeline, task_id=update_customers, execution_date=20250319T154729, start_date=20250319T155302, end_date=20250319T155302
+[2025-03-19T15:53:02.496+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-19T15:53:02.548+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

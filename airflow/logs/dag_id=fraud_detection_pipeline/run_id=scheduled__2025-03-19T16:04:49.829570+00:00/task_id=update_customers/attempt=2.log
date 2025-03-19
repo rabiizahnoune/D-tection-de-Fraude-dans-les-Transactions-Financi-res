@@ -1,0 +1,38 @@
+[2025-03-19T16:14:57.048+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: fraud_detection_pipeline.update_customers scheduled__2025-03-19T16:04:49.829570+00:00 [queued]>
+[2025-03-19T16:14:57.060+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: fraud_detection_pipeline.update_customers scheduled__2025-03-19T16:04:49.829570+00:00 [queued]>
+[2025-03-19T16:14:57.061+0000] {taskinstance.py:1359} INFO - Starting attempt 2 of 2
+[2025-03-19T16:14:57.192+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): update_customers> on 2025-03-19 16:04:49.829570+00:00
+[2025-03-19T16:14:57.198+0000] {standard_task_runner.py:57} INFO - Started process 568 to run task
+[2025-03-19T16:14:57.202+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'fraud_detection_pipeline', 'update_customers', 'scheduled__2025-03-19T16:04:49.829570+00:00', '--job-id', '43', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpp8dv59y2']
+[2025-03-19T16:14:57.205+0000] {standard_task_runner.py:85} INFO - Job 43: Subtask update_customers
+[2025-03-19T16:14:57.260+0000] {task_command.py:415} INFO - Running <TaskInstance: fraud_detection_pipeline.update_customers scheduled__2025-03-19T16:04:49.829570+00:00 [running]> on host f76c4cf6a8a2
+[2025-03-19T16:14:57.347+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='fraud_detection_pipeline' AIRFLOW_CTX_TASK_ID='update_customers' AIRFLOW_CTX_EXECUTION_DATE='2025-03-19T16:04:49.829570+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-19T16:04:49.829570+00:00'
+[2025-03-19T16:15:00.069+0000] {logging_mixin.py:151} INFO -   account_history  ...                      demographics
+0              []  ...  {'age': 41, 'location': 'City3'}
+
+[1 rows x 4 columns]
+[2025-03-19T16:15:00.086+0000] {taskinstance.py:1935} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/fraud_detection_pipeline.py", line 33, in update_customers
+    df.to_parquet("/data/customers/customers.parquet")
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/core/frame.py", line 2889, in to_parquet
+    return to_parquet(
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/io/parquet.py", line 411, in to_parquet
+    impl.write(
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/io/parquet.py", line 161, in write
+    path_or_handle, handles, kwargs["filesystem"] = _get_path_or_handle(
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/io/parquet.py", line 110, in _get_path_or_handle
+    handles = get_handle(
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/io/common.py", line 737, in get_handle
+    check_parent_directory(str(handle))
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/io/common.py", line 600, in check_parent_directory
+    raise OSError(rf"Cannot save file into a non-existent directory: '{parent}'")
+OSError: Cannot save file into a non-existent directory: '/data/customers'
+[2025-03-19T16:15:00.110+0000] {taskinstance.py:1398} INFO - Marking task as FAILED. dag_id=fraud_detection_pipeline, task_id=update_customers, execution_date=20250319T160449, start_date=20250319T161457, end_date=20250319T161500
+[2025-03-19T16:15:00.125+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 43 for task update_customers (Cannot save file into a non-existent directory: '/data/customers'; 568)
+[2025-03-19T16:15:01.976+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-03-19T16:15:01.998+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

@@ -1,0 +1,61 @@
+[2025-03-19T17:03:49.047+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.copy_to_hdfs manual__2025-03-19T17:03:44.639199+00:00 [queued]>
+[2025-03-19T17:03:49.060+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.copy_to_hdfs manual__2025-03-19T17:03:44.639199+00:00 [queued]>
+[2025-03-19T17:03:49.061+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-19T17:03:49.080+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): copy_to_hdfs> on 2025-03-19 17:03:44.639199+00:00
+[2025-03-19T17:03:49.086+0000] {standard_task_runner.py:57} INFO - Started process 2042 to run task
+[2025-03-19T17:03:49.090+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'copy_to_hdfs', 'manual__2025-03-19T17:03:44.639199+00:00', '--job-id', '65', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmp8d0faffk']
+[2025-03-19T17:03:49.094+0000] {standard_task_runner.py:85} INFO - Job 65: Subtask copy_to_hdfs
+[2025-03-19T17:03:49.169+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.copy_to_hdfs manual__2025-03-19T17:03:44.639199+00:00 [running]> on host f76c4cf6a8a2
+[2025-03-19T17:03:49.332+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='copy_to_hdfs' AIRFLOW_CTX_EXECUTION_DATE='2025-03-19T17:03:44.639199+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-19T17:03:44.639199+00:00'
+[2025-03-19T17:03:49.335+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-19T17:03:49.337+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', 'docker exec -u root hive hdfs dfs -put -f /data/transactions/transactions_batch_0.parquet /data/transactions/']
+[2025-03-19T17:03:49.351+0000] {subprocess.py:86} INFO - Output:
+[2025-03-19T17:03:52.019+0000] {subprocess.py:93} INFO - 2025-03-19 17:03:52,010 WARN hdfs.DataStreamer: DataStreamer Exception
+[2025-03-19T17:03:52.020+0000] {subprocess.py:93} INFO - org.apache.hadoop.ipc.RemoteException(java.io.IOException): File /data/transactions/transactions_batch_0.parquet._COPYING_ could only be written to 0 of the 1 minReplication nodes. There are 0 datanode(s) running and no node(s) are excluded in this operation.
+[2025-03-19T17:03:52.022+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.chooseTarget4NewBlock(BlockManager.java:2116)
+[2025-03-19T17:03:52.023+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.server.namenode.FSDirWriteFileOp.chooseTargetForNewBlock(FSDirWriteFileOp.java:287)
+[2025-03-19T17:03:52.024+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:2688)
+[2025-03-19T17:03:52.024+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.server.namenode.NameNodeRpcServer.addBlock(NameNodeRpcServer.java:875)
+[2025-03-19T17:03:52.025+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolServerSideTranslatorPB.addBlock(ClientNamenodeProtocolServerSideTranslatorPB.java:559)
+[2025-03-19T17:03:52.026+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos$ClientNamenodeProtocol$2.callBlockingMethod(ClientNamenodeProtocolProtos.java)
+[2025-03-19T17:03:52.027+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:523)
+[2025-03-19T17:03:52.027+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:991)
+[2025-03-19T17:03:52.028+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.Server$RpcCall.run(Server.java:869)
+[2025-03-19T17:03:52.029+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.Server$RpcCall.run(Server.java:815)
+[2025-03-19T17:03:52.029+0000] {subprocess.py:93} INFO - 	at java.security.AccessController.doPrivileged(Native Method)
+[2025-03-19T17:03:52.030+0000] {subprocess.py:93} INFO - 	at javax.security.auth.Subject.doAs(Subject.java:422)
+[2025-03-19T17:03:52.031+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1682)
+[2025-03-19T17:03:52.032+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2675)
+[2025-03-19T17:03:52.033+0000] {subprocess.py:93} INFO - 
+[2025-03-19T17:03:52.033+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.Client.getRpcResponse(Client.java:1491)
+[2025-03-19T17:03:52.035+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.Client.call(Client.java:1437)
+[2025-03-19T17:03:52.036+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.Client.call(Client.java:1347)
+[2025-03-19T17:03:52.037+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.ProtobufRpcEngine$Invoker.invoke(ProtobufRpcEngine.java:228)
+[2025-03-19T17:03:52.038+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.ipc.ProtobufRpcEngine$Invoker.invoke(ProtobufRpcEngine.java:116)
+[2025-03-19T17:03:52.039+0000] {subprocess.py:93} INFO - 	at com.sun.proxy.$Proxy11.addBlock(Unknown Source)
+[2025-03-19T17:03:52.039+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolTranslatorPB.addBlock(ClientNamenodeProtocolTranslatorPB.java:504)
+[2025-03-19T17:03:52.040+0000] {subprocess.py:93} INFO - 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2025-03-19T17:03:52.040+0000] {subprocess.py:93} INFO - 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+[2025-03-19T17:03:52.041+0000] {subprocess.py:93} INFO - 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2025-03-19T17:03:52.042+0000] {subprocess.py:93} INFO - 	at java.lang.reflect.Method.invoke(Method.java:498)
+[2025-03-19T17:03:52.042+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.io.retry.RetryInvocationHandler.invokeMethod(RetryInvocationHandler.java:422)
+[2025-03-19T17:03:52.043+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.io.retry.RetryInvocationHandler$Call.invokeMethod(RetryInvocationHandler.java:165)
+[2025-03-19T17:03:52.044+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.io.retry.RetryInvocationHandler$Call.invoke(RetryInvocationHandler.java:157)
+[2025-03-19T17:03:52.044+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.io.retry.RetryInvocationHandler$Call.invokeOnce(RetryInvocationHandler.java:95)
+[2025-03-19T17:03:52.045+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.io.retry.RetryInvocationHandler.invoke(RetryInvocationHandler.java:359)
+[2025-03-19T17:03:52.045+0000] {subprocess.py:93} INFO - 	at com.sun.proxy.$Proxy12.addBlock(Unknown Source)
+[2025-03-19T17:03:52.046+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.DFSOutputStream.addBlock(DFSOutputStream.java:1078)
+[2025-03-19T17:03:52.047+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.DataStreamer.locateFollowingBlock(DataStreamer.java:1865)
+[2025-03-19T17:03:52.047+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.DataStreamer.nextBlockOutputStream(DataStreamer.java:1668)
+[2025-03-19T17:03:52.049+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.hdfs.DataStreamer.run(DataStreamer.java:716)
+[2025-03-19T17:03:52.080+0000] {subprocess.py:93} INFO - put: File /data/transactions/transactions_batch_0.parquet._COPYING_ could only be written to 0 of the 1 minReplication nodes. There are 0 datanode(s) running and no node(s) are excluded in this operation.
+[2025-03-19T17:03:52.548+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-03-19T17:03:52.567+0000] {taskinstance.py:1935} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 210, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-03-19T17:03:52.573+0000] {taskinstance.py:1398} INFO - Marking task as FAILED. dag_id=transactions_pipeline, task_id=copy_to_hdfs, execution_date=20250319T170344, start_date=20250319T170349, end_date=20250319T170352
+[2025-03-19T17:03:52.603+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 65 for task copy_to_hdfs (Bash command failed. The command returned a non-zero exit code 1.; 2042)
+[2025-03-19T17:03:52.631+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-03-19T17:03:52.677+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

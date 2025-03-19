@@ -30,7 +30,7 @@ while True:
         data.append(message.value)
         print(f"Received transaction({i}): {message.value['transaction_id']}")
         i += 1
-        if len(data) >= 2:
+        if len(data) >= 20:
             df = pd.DataFrame(data)
             output_file = f"{OUTPUT_DIR}/transactions_batch_{file_counter}.parquet"
             df.to_parquet(output_file)

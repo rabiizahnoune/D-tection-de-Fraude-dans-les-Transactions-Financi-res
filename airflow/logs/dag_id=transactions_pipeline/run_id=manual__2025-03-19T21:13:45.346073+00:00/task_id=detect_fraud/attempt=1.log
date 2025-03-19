@@ -1,0 +1,97 @@
+[2025-03-19T21:14:05.309+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.detect_fraud manual__2025-03-19T21:13:45.346073+00:00 [queued]>
+[2025-03-19T21:14:05.331+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.detect_fraud manual__2025-03-19T21:13:45.346073+00:00 [queued]>
+[2025-03-19T21:14:05.333+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-19T21:14:05.375+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): detect_fraud> on 2025-03-19 21:13:45.346073+00:00
+[2025-03-19T21:14:05.392+0000] {standard_task_runner.py:57} INFO - Started process 409 to run task
+[2025-03-19T21:14:05.398+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'detect_fraud', 'manual__2025-03-19T21:13:45.346073+00:00', '--job-id', '188', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpqht2gjzt']
+[2025-03-19T21:14:05.405+0000] {standard_task_runner.py:85} INFO - Job 188: Subtask detect_fraud
+[2025-03-19T21:14:05.519+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.detect_fraud manual__2025-03-19T21:13:45.346073+00:00 [running]> on host 2b5af9d7d045
+[2025-03-19T21:14:05.661+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='detect_fraud' AIRFLOW_CTX_EXECUTION_DATE='2025-03-19T21:13:45.346073+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-19T21:13:45.346073+00:00'
+[2025-03-19T21:14:05.664+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-19T21:14:05.666+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n    docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e"\n    CREATE TABLE IF NOT EXISTS fraud_detections (\n        transaction_id STRING,\n        date_time STRING,\n        amount DOUBLE,\n        customer_id STRING,\n        location STRING,\n        fraud_reason STRING\n    )\n    STORED AS PARQUET\n    LOCATION \'/data/fraud_detections\';\n    INSERT INTO TABLE fraud_detections\n    SELECT\n        t.transaction_id,\n        t.date_time,\n        t.amount,\n        t.customer_id,\n        t.location,\n        \'High Amount\' AS fraud_reason\n    FROM transactions t\n    WHERE t.batch_id = \'batch_0\'\n    AND t.amount > 1000;"\n    ']
+[2025-03-19T21:14:05.682+0000] {subprocess.py:86} INFO - Output:
+[2025-03-19T21:14:07.235+0000] {subprocess.py:93} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2025-03-19T21:14:07.237+0000] {subprocess.py:93} INFO - SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.17.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2025-03-19T21:14:07.238+0000] {subprocess.py:93} INFO - SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2025-03-19T21:14:07.239+0000] {subprocess.py:93} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2025-03-19T21:14:07.618+0000] {subprocess.py:93} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2025-03-19T21:14:09.466+0000] {subprocess.py:93} INFO - Connecting to jdbc:hive2://localhost:10000
+[2025-03-19T21:14:09.735+0000] {subprocess.py:93} INFO - Connected to: Apache Hive (version 3.1.3)
+[2025-03-19T21:14:09.736+0000] {subprocess.py:93} INFO - Driver: Hive JDBC (version 3.1.3)
+[2025-03-19T21:14:09.737+0000] {subprocess.py:93} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2025-03-19T21:14:09.818+0000] {subprocess.py:93} INFO - INFO  : Compiling command(queryId=root_20250319211409_c2d07c1d-0d60-471d-a4cb-8db2fb3dea55): CREATE TABLE IF NOT EXISTS fraud_detections (
+[2025-03-19T21:14:09.819+0000] {subprocess.py:93} INFO -         transaction_id STRING,
+[2025-03-19T21:14:09.819+0000] {subprocess.py:93} INFO -         date_time STRING,
+[2025-03-19T21:14:09.820+0000] {subprocess.py:93} INFO -         amount DOUBLE,
+[2025-03-19T21:14:09.821+0000] {subprocess.py:93} INFO -         customer_id STRING,
+[2025-03-19T21:14:09.821+0000] {subprocess.py:93} INFO -         location STRING,
+[2025-03-19T21:14:09.822+0000] {subprocess.py:93} INFO -         fraud_reason STRING
+[2025-03-19T21:14:09.823+0000] {subprocess.py:93} INFO -     )
+[2025-03-19T21:14:09.823+0000] {subprocess.py:93} INFO -     STORED AS PARQUET
+[2025-03-19T21:14:09.824+0000] {subprocess.py:93} INFO -     LOCATION '/data/fraud_detections'
+[2025-03-19T21:14:09.824+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-19T21:14:09.825+0000] {subprocess.py:93} INFO - INFO  : Semantic Analysis Completed (retrial = false)
+[2025-03-19T21:14:09.826+0000] {subprocess.py:93} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+[2025-03-19T21:14:09.826+0000] {subprocess.py:93} INFO - INFO  : Completed compiling command(queryId=root_20250319211409_c2d07c1d-0d60-471d-a4cb-8db2fb3dea55); Time taken: 0.019 seconds
+[2025-03-19T21:14:09.827+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-19T21:14:09.828+0000] {subprocess.py:93} INFO - INFO  : Executing command(queryId=root_20250319211409_c2d07c1d-0d60-471d-a4cb-8db2fb3dea55): CREATE TABLE IF NOT EXISTS fraud_detections (
+[2025-03-19T21:14:09.828+0000] {subprocess.py:93} INFO -         transaction_id STRING,
+[2025-03-19T21:14:09.829+0000] {subprocess.py:93} INFO -         date_time STRING,
+[2025-03-19T21:14:09.830+0000] {subprocess.py:93} INFO -         amount DOUBLE,
+[2025-03-19T21:14:09.831+0000] {subprocess.py:93} INFO -         customer_id STRING,
+[2025-03-19T21:14:09.831+0000] {subprocess.py:93} INFO -         location STRING,
+[2025-03-19T21:14:09.832+0000] {subprocess.py:93} INFO -         fraud_reason STRING
+[2025-03-19T21:14:09.832+0000] {subprocess.py:93} INFO -     )
+[2025-03-19T21:14:09.833+0000] {subprocess.py:93} INFO -     STORED AS PARQUET
+[2025-03-19T21:14:09.833+0000] {subprocess.py:93} INFO -     LOCATION '/data/fraud_detections'
+[2025-03-19T21:14:09.834+0000] {subprocess.py:93} INFO - INFO  : Completed executing command(queryId=root_20250319211409_c2d07c1d-0d60-471d-a4cb-8db2fb3dea55); Time taken: 0.0 seconds
+[2025-03-19T21:14:09.834+0000] {subprocess.py:93} INFO - INFO  : OK
+[2025-03-19T21:14:09.835+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-19T21:14:09.835+0000] {subprocess.py:93} INFO - No rows affected (0.067 seconds)
+[2025-03-19T21:14:11.172+0000] {subprocess.py:93} INFO - INFO  : Compiling command(queryId=root_20250319211409_dd9cb01b-2f10-4c62-be8c-0ac91c42cf99): INSERT INTO TABLE fraud_detections
+[2025-03-19T21:14:11.173+0000] {subprocess.py:93} INFO -     SELECT
+[2025-03-19T21:14:11.174+0000] {subprocess.py:93} INFO -         t.transaction_id,
+[2025-03-19T21:14:11.175+0000] {subprocess.py:93} INFO -         t.date_time,
+[2025-03-19T21:14:11.175+0000] {subprocess.py:93} INFO -         t.amount,
+[2025-03-19T21:14:11.176+0000] {subprocess.py:93} INFO -         t.customer_id,
+[2025-03-19T21:14:11.177+0000] {subprocess.py:93} INFO -         t.location,
+[2025-03-19T21:14:11.177+0000] {subprocess.py:93} INFO -         'High Amount' AS fraud_reason
+[2025-03-19T21:14:11.177+0000] {subprocess.py:93} INFO -     FROM transactions t
+[2025-03-19T21:14:11.178+0000] {subprocess.py:93} INFO -     WHERE t.batch_id = 'batch_0'
+[2025-03-19T21:14:11.178+0000] {subprocess.py:93} INFO -     AND t.amount > 1000
+[2025-03-19T21:14:11.179+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-19T21:14:11.179+0000] {subprocess.py:93} INFO - INFO  : Semantic Analysis Completed (retrial = false)
+[2025-03-19T21:14:11.180+0000] {subprocess.py:93} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:t.transaction_id, type:string, comment:null), FieldSchema(name:t.date_time, type:string, comment:null), FieldSchema(name:t.amount, type:double, comment:null), FieldSchema(name:t.customer_id, type:string, comment:null), FieldSchema(name:t.location, type:string, comment:null), FieldSchema(name:fraud_reason, type:string, comment:null)], properties:null)
+[2025-03-19T21:14:11.181+0000] {subprocess.py:93} INFO - INFO  : Completed compiling command(queryId=root_20250319211409_dd9cb01b-2f10-4c62-be8c-0ac91c42cf99); Time taken: 0.32 seconds
+[2025-03-19T21:14:11.181+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-19T21:14:11.182+0000] {subprocess.py:93} INFO - INFO  : Executing command(queryId=root_20250319211409_dd9cb01b-2f10-4c62-be8c-0ac91c42cf99): INSERT INTO TABLE fraud_detections
+[2025-03-19T21:14:11.183+0000] {subprocess.py:93} INFO -     SELECT
+[2025-03-19T21:14:11.184+0000] {subprocess.py:93} INFO -         t.transaction_id,
+[2025-03-19T21:14:11.184+0000] {subprocess.py:93} INFO -         t.date_time,
+[2025-03-19T21:14:11.185+0000] {subprocess.py:93} INFO -         t.amount,
+[2025-03-19T21:14:11.185+0000] {subprocess.py:93} INFO -         t.customer_id,
+[2025-03-19T21:14:11.185+0000] {subprocess.py:93} INFO -         t.location,
+[2025-03-19T21:14:11.186+0000] {subprocess.py:93} INFO -         'High Amount' AS fraud_reason
+[2025-03-19T21:14:11.186+0000] {subprocess.py:93} INFO -     FROM transactions t
+[2025-03-19T21:14:11.187+0000] {subprocess.py:93} INFO -     WHERE t.batch_id = 'batch_0'
+[2025-03-19T21:14:11.187+0000] {subprocess.py:93} INFO -     AND t.amount > 1000
+[2025-03-19T21:14:11.188+0000] {subprocess.py:93} INFO - WARN  : Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+[2025-03-19T21:14:11.188+0000] {subprocess.py:93} INFO - INFO  : Query ID = root_20250319211409_dd9cb01b-2f10-4c62-be8c-0ac91c42cf99
+[2025-03-19T21:14:11.188+0000] {subprocess.py:93} INFO - INFO  : Total jobs = 3
+[2025-03-19T21:14:11.189+0000] {subprocess.py:93} INFO - INFO  : Launching Job 1 out of 3
+[2025-03-19T21:14:11.192+0000] {subprocess.py:93} INFO - INFO  : Starting task [Stage-1:MAPRED] in serial mode
+[2025-03-19T21:14:11.192+0000] {subprocess.py:93} INFO - INFO  : Number of reduce tasks determined at compile time: 1
+[2025-03-19T21:14:11.193+0000] {subprocess.py:93} INFO - INFO  : In order to change the average load for a reducer (in bytes):
+[2025-03-19T21:14:11.194+0000] {subprocess.py:93} INFO - INFO  :   set hive.exec.reducers.bytes.per.reducer=<number>
+[2025-03-19T21:14:11.194+0000] {subprocess.py:93} INFO - INFO  : In order to limit the maximum number of reducers:
+[2025-03-19T21:14:11.195+0000] {subprocess.py:93} INFO - INFO  :   set hive.exec.reducers.max=<number>
+[2025-03-19T21:14:11.195+0000] {subprocess.py:93} INFO - INFO  : In order to set a constant number of reducers:
+[2025-03-19T21:14:11.196+0000] {subprocess.py:93} INFO - INFO  :   set mapreduce.job.reduces=<number>
+[2025-03-19T21:15:41.191+0000] {local_task_job_runner.py:294} WARNING - State of this instance has been externally set to failed. Terminating instance.
+[2025-03-19T21:15:41.195+0000] {process_utils.py:131} INFO - Sending 15 to group 409. PIDs of all processes in the group: [410, 411, 409]
+[2025-03-19T21:15:41.196+0000] {process_utils.py:86} INFO - Sending the signal 15 to group 409
+[2025-03-19T21:15:41.197+0000] {taskinstance.py:1630} ERROR - Received SIGTERM. Terminating subprocesses.
+[2025-03-19T21:15:41.198+0000] {subprocess.py:104} INFO - Sending SIGTERM signal to process group
+[2025-03-19T21:15:41.250+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=409, status='terminated', exitcode=0, started='21:14:05') (409) terminated with exit code 0
+[2025-03-19T21:15:41.252+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=410, status='terminated', started='21:14:05') (410) terminated with exit code None
+[2025-03-19T21:15:41.252+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=411, status='terminated', started='21:14:05') (411) terminated with exit code None
