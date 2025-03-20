@@ -78,6 +78,43 @@ jobs:
           # Pour api-externaldata, limiter les tentatives à cause du délai de 60 secondes
           check_api "api-externaldata" "5002" "/generate/externaldata" "10"
 
+      - name: Verify Kafka Producer and Consumer
+        run: |
+          # Étape 1 : Exécuter le producteur Kafka
+          echo "Exécution du producteur Kafka (transactions_producer.py)..."
+          docker exec kafka bash -c "cd /application/producer && python3 transactions_producer.py"
+          if [ $? -ne 0 ]; then
+            echo "Erreur lors de l'exécution de transactions_producer.py !"
+            docker-compose logs kafka  # Affiche les logs pour débogage
+            exit 1
+          fi
+          echo "Producteur Kafka exécuté avec succès !"
+
+          # Étape 2 : Exécuter le consommateur Kafka
+          echo "Exécution du consommateur Kafka (consumer_transaction.py)..."
+          docker exec kafka bash -c "cd /application/consumer && python3 consumer_transaction.py &"
+          # Attendre un peu pour que le consommateur ait le temps de traiter les messages
+          sleep 30
+          if ! docker ps | grep -q "kafka"; then
+            echo "Erreur : Le conteneur kafka n'est plus en cours d'exécution !"
+            docker-compose logs kafka
+            exit 1
+          fi
+          echo "Consommateur Kafka démarré avec succès !"
+
+          # Étape 3 : Vérifier la présence de fichiers .parquet dans /data/transactions
+          echo "Vérification de la présence de fichiers .parquet dans /data/transactions..."
+          parquet_files=$(docker exec kafka bash -c "ls -1 /data/transactions/*.parquet 2>/dev/null | wc -l")
+          if [ "$parquet_files" -eq 0 ]; then
+            echo "Erreur : Aucun fichier .parquet n'a été trouvé dans /data/transactions !"
+            docker-compose logs kafka  # Affiche les logs pour débogage
+            exit 1
+          else
+            echo "Fichiers .parquet trouvés dans /data/transactions : $parquet_files fichier(s) détecté(s)."
+            # Afficher les noms des fichiers pour confirmation
+            docker exec kafka bash -c "ls -lh /data/transactions/*.parquet"
+          fi
+
       - name: Clean up
         if: always() 
         run: |
