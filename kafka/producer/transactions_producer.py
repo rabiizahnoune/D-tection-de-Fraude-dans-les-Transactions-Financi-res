@@ -10,7 +10,7 @@ load_dotenv()
 
 # Accéder aux variables
 PORT = os.getenv("PORT")
-API = os.getenv("API", "http://api-transactions:5000/generate/transaction")
+API = os.getenv("API", "http://api-transactions:5000/generate/transaction")  # Valeur par défaut corrigée
 
 KAFKA_BROKER = f"kafka:{PORT}"
 KAFKA_TOPIC = "transactions_topic"
