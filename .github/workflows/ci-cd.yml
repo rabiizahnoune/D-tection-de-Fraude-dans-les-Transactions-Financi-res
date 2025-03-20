@@ -29,7 +29,7 @@ jobs:
           docker-compose up -d # Lance les conteneurs en mode détaché
 
       - name: Wait for containers to start
-        run: sleep 30 # Augmenté pour donner plus de temps à Kafka et aux APIs
+        run: sleep 20 # Attendre un peu pour que les conteneurs démarrent (augmenté pour Kafka et les APIs)
 
       - name: Check container status
         run: |
@@ -49,15 +49,13 @@ jobs:
           check_api() {
             local api_name=$1
             local port=$2
-            local endpoint=$3
-            local max_attempts=$4
+            local max_attempts=30
             local attempt=1
-            local url="http://localhost:$port$endpoint"
+            local url="http://localhost:$port/health"  # Remplace /health par l'endpoint approprié
 
-            echo "Vérification de l'API $api_name sur le port $port (endpoint $endpoint)..."
+            echo "Vérification de l'API $api_name sur le port $port..."
             while [ $attempt -le $max_attempts ]; do
-              # Utilise un timeout de 10 secondes pour éviter d'attendre trop longtemps
-              if curl -s --connect-timeout 10 -o /dev/null -w "%{http_code}" $url | grep -q "200"; then
+              if curl -s -o /dev/null -w "%{http_code}" $url | grep -q "200"; then
                 echo "API $api_name est opérationnelle !"
                 return 0
               else
@@ -72,13 +70,51 @@ jobs:
             exit 1
           }
 
-          # Vérifier chaque API avec son endpoint spécifique
-          check_api "api-transactions" "5000" "/generate/transaction" "30"
-          check_api "api-customers" "5001" "/generate/customer" "30"
-          # Pour api-externaldata, limiter les tentatives à cause du délai de 60 secondes
-          check_api "api-externaldata" "5002" "/generate/externaldata" "10"
+          # Vérifier chaque API
+          check_api "api-transactions" "5000"
+          check_api "api-customers" "5001"
+          check_api "api-externaldata" "5002"
+
+      - name: Run Kafka Producer
+        run: |
+          echo "Exécution du producteur Kafka (transactions_producer.py)..."
+          docker exec kafka bash -c "cd /application/producer && python3 transactions_producer.py"
+          if [ $? -ne 0 ]; then
+            echo "Erreur lors de l'exécution de transactions_producer.py !"
+            docker-compose logs kafka  # Affiche les logs pour débogage
+            exit 1
+          fi
+          echo "Producteur Kafka exécuté avec succès !"
+
+      - name: Run Kafka Consumer
+        run: |
+          echo "Exécution du consommateur Kafka (consumer_transaction.py)..."
+          docker exec kafka bash -c "cd /application/consumer && python3 consumer_transaction.py"
+          if [ $? -ne 0 ]; then
+            echo "Erreur lors de l'exécution de consumer_transaction.py !"
+            docker-compose logs kafka  # Affiche les logs pour débogage
+            exit 1
+          fi
+          echo "Consommateur Kafka exécuté avec succès !"
+
+      - name: Verify Parquet Files in /data/transactions
+        run: |
+          echo "Vérification de la présence de fichiers .parquet dans /data/transactions..."
+          # Attendre un peu pour s'assurer que le consommateur a fini d'écrire
+          sleep 10
+          # Lister les fichiers .parquet dans /data/transactions
+          parquet_files=$(docker exec kafka bash -c "ls -1 /data/transactions/*.parquet 2>/dev/null | wc -l")
+          if [ "$parquet_files" -eq 0 ]; then
+            echo "Erreur : Aucun fichier .parquet n'a été trouvé dans /data/transactions !"
+            docker-compose logs kafka  # Affiche les logs pour débogage
+            exit 1
+          else
+            echo "Fichiers .parquet trouvés dans /data/transactions : $parquet_files fichier(s) détecté(s)."
+            # Afficher les noms des fichiers pour confirmation
+            docker exec kafka bash -c "ls -lh /data/transactions/*.parquet"
+          fi
 
       - name: Clean up
-        if: always() 
+        if: always() # S'exécute même si une étape précédente échoue
         run: |
           docker-compose down # Arrête et supprime les conteneurs
