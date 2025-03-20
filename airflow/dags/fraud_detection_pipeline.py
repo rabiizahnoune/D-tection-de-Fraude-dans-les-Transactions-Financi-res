@@ -39,7 +39,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
     'on_failure_callback': on_failure_callback,  # Callback pour les échecs
     'email_on_failure': True,  # Activer les emails en cas d'échec
-    'email': Variable.get("alert_email", default_var="admin@example.com"),
+    'email': Variable.get("alert_email", default_var="rabiizahnoune7@gmail.com"),
     'sla': timedelta(minutes=45),  # SLA pour s'assurer que le DAG termine en moins de 45 minutes
 }
 

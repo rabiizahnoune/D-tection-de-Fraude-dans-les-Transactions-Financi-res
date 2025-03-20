@@ -1,12 +1,21 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 import sys
+from dotenv import load_dotenv
+import os
+
+# Charger le fichier .env
+load_dotenv()
+
+# Accéder aux variables
+PORT = os.getenv("PORT_SPARK")
+PATH = os.getenv("PATH_FRAUD")
 
 batch_id = sys.argv[1] if len(sys.argv) > 1 else "batch_0"
 
 spark = SparkSession.builder \
     .appName("FraudDetection") \
-    .master("spark://localhost:7077") \
+    .master(f"spark://localhost:{PORT}") \
     .getOrCreate()
 
 try:
@@ -25,7 +34,7 @@ try:
         )
 
     # Écrire dans HDFS
-    df_fraud.write.mode("overwrite").parquet("/data/fraud_detections")
+    df_fraud.write.mode("overwrite").parquet(PATH)
 except Exception as e:
     print(f"Error: {str(e)}")
     raise

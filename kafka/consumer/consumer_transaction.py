@@ -3,10 +3,17 @@ import pandas as pd
 import json
 from datetime import datetime
 import os
+from dotenv import load_dotenv
 
+
+# Charger le fichier .env
+load_dotenv()
+
+# Accéder aux variables
+PORT = os.getenv("PORT")
 consumer = KafkaConsumer(
     'transactions_topic',
-    bootstrap_servers=['kafka:9092'],
+    bootstrap_servers=[F'kafka:{PORT}'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
     group_id='transaction-consumer-group'

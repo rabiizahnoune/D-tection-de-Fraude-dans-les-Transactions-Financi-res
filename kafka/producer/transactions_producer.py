@@ -2,8 +2,17 @@ import requests
 import json
 from kafka import KafkaProducer
 import time
+from dotenv import load_dotenv
+import os
 
-KAFKA_BROKER = "kafka:9092"
+# Charger le fichier .env
+load_dotenv()
+
+# Accéder aux variables
+PORT = os.getenv("PORT")
+API = os.getenv("API")
+
+KAFKA_BROKER = f"kafka:{PORT}"
 KAFKA_TOPIC = "transactions_topic"
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
@@ -11,7 +20,7 @@ producer = KafkaProducer(
 )
 
 while True:
-    response = requests.get("http://transactions-api-transactions-1:5000/generate/transaction")
+    response = requests.get(API)
     if response.status_code == 200:
         transaction = response.json()
         producer.send(KAFKA_TOPIC, value=transaction)
