@@ -3,9 +3,9 @@ set -e  # Arrête le script si une commande échoue
 
 # Fonction pour arrêter les processus proprement
 cleanup() {
-    echo "Stopping Hadoop and Hive services..."
-    kill $NAMENODE_PID $DATANODE_PID $HIVESERVER2_PID 2>/dev/null
-    wait $NAMENODE_PID $DATANODE_PID $HIVESERVER2_PID 2>/dev/null
+    echo "Stopping Hadoop, Spark, and Hive services..."
+    kill $NAMENODE_PID $DATANODE_PID $SPARK_MASTER_PID $SPARK_WORKER_PID $HIVESERVER2_PID 2>/dev/null
+    wait $NAMENODE_PID $DATANODE_PID $SPARK_MASTER_PID $SPARK_WORKER_PID $HIVESERVER2_PID 2>/dev/null
     echo "All services stopped."
     exit 0
 }
@@ -30,20 +30,18 @@ NAMENODE_PID=$!
 sleep 10
 if ! ps -p $NAMENODE_PID > /dev/null; then
     echo "NameNode failed to start. Check logs..."
-    ls -lh /opt/hadoop/logs/  # Lister les fichiers pour trouver les logs
     cat /opt/hadoop/logs/hadoop-*namenode*.log || echo "No NameNode logs found"
     exit 1
 fi
 
 # Démarrer le DataNode
 echo "Starting DataNode..."
-rm -rf /data/datanode/*  # Nettoyer les anciennes données pour éviter les corruptions
+rm -rf /data/datanode/*  # Nettoyer pour éviter les corruptions
 /opt/hadoop/bin/hdfs datanode &
 DATANODE_PID=$!
 sleep 10
 if ! ps -p $DATANODE_PID > /dev/null; then
     echo "DataNode failed to start. Check logs..."
-    ls -lh /opt/hadoop/logs/  # Lister les fichiers pour trouver les logs
     cat /opt/hadoop/logs/hadoop-*datanode*.log || echo "No DataNode logs found"
     exit 1
 fi
@@ -61,6 +59,28 @@ echo "Creating directories in HDFS..."
 hdfs dfs -mkdir -p /data/transactions /data/fraud_detections /tmp/hadoop /tmp/hive /user/hive/warehouse
 hdfs dfs -chmod -R 777 /data/transactions /data/fraud_detections /tmp/hadoop /tmp/hive /user/hive/warehouse
 hdfs dfs -chown -R hive:hive /data /tmp/hadoop /tmp/hive /user/hive/warehouse
+
+# Démarrer Spark Master
+echo "Starting Spark Master..."
+/opt/spark-3.5.0-bin-hadoop3/bin/spark-class org.apache.spark.deploy.master.Master --host localhost --port 7077 &
+SPARK_MASTER_PID=$!
+sleep 10
+if ! ps -p $SPARK_MASTER_PID > /dev/null; then
+    echo "Spark Master failed to start. Check logs..."
+    cat /opt/spark-3.5.0-bin-hadoop3/logs/spark-*master*.out || echo "No Spark Master logs found"
+    exit 1
+fi
+
+# Démarrer Spark Worker
+echo "Starting Spark Worker..."
+/opt/spark-3.5.0-bin-hadoop3/bin/spark-class org.apache.spark.deploy.worker.Worker spark://localhost:7077 &
+SPARK_WORKER_PID=$!
+sleep 10
+if ! ps -p $SPARK_WORKER_PID > /dev/null; then
+    echo "Spark Worker failed to start. Check logs..."
+    cat /opt/spark-3.5.0-bin-hadoop3/logs/spark-*worker*.out || echo "No Spark Worker logs found"
+    exit 1
+fi
 
 # Initialiser le schéma Hive si nécessaire
 if [ ! -d "/tmp/metastore_db" ]; then
@@ -80,4 +100,4 @@ if ! ps -p $HIVESERVER2_PID > /dev/null; then
 fi
 
 # Attendre que les services restent en cours d'exécution
-wait $NAMENODE_PID $DATANODE_PID $HIVESERVER2_PID
+wait $NAMENODE_PID $DATANODE_PID $SPARK_MASTER_PID $SPARK_WORKER_PID $HIVESERVER2_PID

@@ -8753,3 +8753,45 @@ SyntaxError: invalid syntax
 [2025-03-19T23:13:13.676+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:13:13.675+0000] {dag.py:2915} INFO - Sync 1 DAGs
 [2025-03-19T23:13:13.713+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:13:13.712+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T22:24:58.253415+00:00, run_after=2025-03-19T23:14:58.253415+00:00
 [2025-03-19T23:13:13.758+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.252 seconds
+[2025-03-19T23:13:43.852+0000] {processor.py:157} INFO - Started process (PID=462) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:13:43.854+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-19T23:13:43.857+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:13:43.856+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:13:43.891+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:13:43.941+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:13:43.940+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-19T23:13:43.978+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:13:43.977+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T22:24:58.253415+00:00, run_after=2025-03-19T23:14:58.253415+00:00
+[2025-03-19T23:13:44.013+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.167 seconds
+[2025-03-19T23:14:14.593+0000] {processor.py:157} INFO - Started process (PID=467) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:14:14.595+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-19T23:14:14.597+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:14:14.596+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:14:14.636+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:14:14.691+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:14:14.691+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-19T23:14:14.738+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:14:14.738+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T22:24:58.253415+00:00, run_after=2025-03-19T23:14:58.253415+00:00
+[2025-03-19T23:14:14.785+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.197 seconds
+[2025-03-19T23:14:44.851+0000] {processor.py:157} INFO - Started process (PID=472) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:14:44.852+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-19T23:14:44.854+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:14:44.853+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:14:44.882+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:14:44.929+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:14:44.928+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-19T23:14:44.965+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:14:44.965+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T22:24:58.253415+00:00, run_after=2025-03-19T23:14:58.253415+00:00
+[2025-03-19T23:14:45.000+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.155 seconds
+[2025-03-19T23:15:16.036+0000] {processor.py:157} INFO - Started process (PID=527) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:15:16.038+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-19T23:15:16.040+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:15:16.039+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:15:16.075+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:15:16.130+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:15:16.129+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-19T23:15:16.188+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:15:16.188+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T23:14:58.253415+00:00, run_after=2025-03-20T00:04:58.253415+00:00
+[2025-03-19T23:15:16.244+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.216 seconds
+[2025-03-19T23:15:46.364+0000] {processor.py:157} INFO - Started process (PID=532) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:15:46.366+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-19T23:15:46.370+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:15:46.369+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:15:46.426+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:15:46.481+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:15:46.481+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-19T23:15:46.524+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:15:46.523+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T23:14:58.253415+00:00, run_after=2025-03-20T00:04:58.253415+00:00
+[2025-03-19T23:15:46.556+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.200 seconds
+[2025-03-19T23:23:36.445+0000] {processor.py:157} INFO - Started process (PID=539) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:23:36.447+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-19T23:23:36.449+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:23:36.448+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:23:36.486+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-19T23:23:36.540+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:23:36.540+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-19T23:23:36.581+0000] {logging_mixin.py:151} INFO - [2025-03-19T23:23:36.580+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to 2025-03-19T23:14:58.253415+00:00, run_after=2025-03-20T00:04:58.253415+00:00
+[2025-03-19T23:23:36.618+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.186 seconds

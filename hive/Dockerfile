@@ -39,67 +39,42 @@ RUN echo '<?xml version="1.0"?>\n\
     </property>\n\
 </configuration>' > /opt/hadoop/etc/hadoop/hdfs-site.xml
 
-# Configurer MapReduce avec YARN
-RUN echo '<?xml version="1.0"?>\n\
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>\n\
-<configuration>\n\
-    <property>\n\
-        <name>mapreduce.framework.name</name>\n\
-        <value>yarn</value>\n\
-    </property>\n\
-    <property>\n\
-        <name>mapreduce.map.memory.mb</name>\n\
-        <value>1024</value>\n\
-    </property>\n\
-    <property>\n\
-        <name>mapreduce.reduce.memory.mb</name>\n\
-        <value>1024</value>\n\
-    </property>\n\
-    <property>\n\
-        <name>yarn.app.mapreduce.am.resource.mb</name>\n\
-        <value>1024</value>\n\
-    </property>\n\
-</configuration>' > /opt/hadoop/etc/hadoop/mapred-site.xml
+# Télécharger et installer Spark
+RUN curl -O https://archive.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz && \
+    tar -xvzf spark-3.5.0-bin-hadoop3.tgz -C /opt && \
+    rm spark-3.5.0-bin-hadoop3.tgz
 
-# Configurer YARN
-RUN echo '<?xml version="1.0"?>\n\
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>\n\
-<configuration>\n\
-    <property>\n\
-        <name>yarn.resourcemanager.hostname</name>\n\
-        <value>localhost</value>\n\
-    </property>\n\
-    <property>\n\
-        <name>yarn.nodemanager.aux-services</name>\n\
-        <value>mapreduce_shuffle</value>\n\
-    </property>\n\
-    <property>\n\
-        <name>yarn.nodemanager.resource.memory-mb</name>\n\
-        <value>2048</value>\n\
-    </property>\n\
-    <property>\n\
-        <name>yarn.scheduler.maximum-allocation-mb</name>\n\
-        <value>2048</value>\n\
-    </property>\n\
-</configuration>' > /opt/hadoop/etc/hadoop/yarn-site.xml
-
-# Configurer Hive pour utiliser YARN
+# Configurer Hive pour utiliser Spark
 RUN echo '<?xml version="1.0"?>\n\
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>\n\
 <configuration>\n\
     <property>\n\
         <name>hive.execution.engine</name>\n\
-        <value>mr</value>\n\
+        <value>spark</value>\n\
     </property>\n\
     <property>\n\
         <name>hive.metastore.warehouse.dir</name>\n\
         <value>/data/warehouse</value>\n\
     </property>\n\
+    <property>\n\
+        <name>spark.master</name>\n\
+        <value>spark://localhost:7077</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.sql.catalogImplementation</name>\n\
+        <value>hive</value>\n\
+    </property>\n\
 </configuration>' > /opt/hive/conf/hive-site.xml
+
+# Configurer Spark (facultatif, pour les defaults)
+RUN echo "spark.master                     spark://localhost:7077" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf && \
+    echo "spark.sql.warehouse.dir         /data/warehouse" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf && \
+    echo "spark.hadoop.fs.defaultFS        hdfs://localhost:9000" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf
 
 # Définir les variables d'environnement
 ENV HADOOP_HOME=/opt/hadoop
-ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+ENV SPARK_HOME=/opt/spark-3.5.0-bin-hadoop3
+ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 
 # Copier les scripts et entrypoint
 COPY scripts/ /hive/scripts/
