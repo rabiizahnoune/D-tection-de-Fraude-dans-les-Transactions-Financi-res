@@ -77,6 +77,13 @@ jobs:
           check_api "api-customers" "5001" "/generate/customer" "30"
           # Pour api-externaldata, limiter les tentatives à cause du délai de 60 secondes
           check_api "api-externaldata" "5002" "/generate/externaldata" "10"
+      
+      - name: Debug Network Connectivity
+        run: |
+            echo "Vérification de la résolution DNS pour api-transactions..."
+            docker exec kafka bash -c "ping -c 4 api-transactions || echo 'Échec de la résolution DNS pour api-transactions'"
+            echo "Test de la connexion à l'API..."
+            docker exec kafka bash -c "curl -v http://api-transactions:5000/generate/transaction || echo 'Échec de la connexion à l'API'"
 
       - name: Verify Kafka Producer and Consumer
         run: |
