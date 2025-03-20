@@ -32,22 +32,22 @@ def get_latest_batch_id():
         
         if result.stderr and "No such file" in result.stderr:
             print("No batch files found in /data/transactions")
-            return None
+            return "batch_0"
 
         files = result.stdout.strip().split('\n')
         if not files or files[0] == '':
             print("No batch files found in /data/transactions")
-            return None
+            return "batch_0"
 
         latest_file = files[0].strip()
-        batch_id = ''.join(filter(str.isdigit, latest_file.split('_')[-1]))
+        batch_id = latest_file.split('transactions_batch_')[1].replace('.parquet', '')
         if not batch_id:
             print("Could not extract batch ID from filename")
-            return None
+            return "batch_0"
         
         print(f"Latest file: {latest_file}")
-        print(f"Latest batch ID: {batch_id}")
-        return batch_id
+        print(f"Latest batch ID: batch_{batch_id}")
+        return f"batch_{batch_id}"
     except subprocess.CalledProcessError as e:
         print(f"Error executing command: {e.stderr}")
         raise
@@ -64,7 +64,7 @@ get_batch_id = PythonOperator(
 
 copy_to_hdfs = BashOperator(
     task_id='copy_to_hdfs',
-    bash_command="docker exec hive hdfs dfs -mkdir -p /data/transactions/transactions_batch_{{ ti.xcom_pull(task_ids='get_batch_id') or '0' }} && docker exec hive hdfs dfs -put -f /data/transactions/transactions_batch_{{ ti.xcom_pull(task_ids='get_batch_id') or '0' }}.parquet /data/transactions/transactions_batch_{{ ti.xcom_pull(task_ids='get_batch_id') or '0' }}/",
+    bash_command="docker exec hive hdfs dfs -mkdir -p /data/transactions/transactions_{{ ti.xcom_pull(task_ids='get_batch_id') or 'batch_0' }} && docker exec hive hdfs dfs -put -f /data/transactions/transactions_{{ ti.xcom_pull(task_ids='get_batch_id') or 'batch_0' }}.parquet /data/transactions/transactions_{{ ti.xcom_pull(task_ids='get_batch_id') or 'batch_0' }}/",
     dag=dag,
 )
 
@@ -83,17 +83,17 @@ create_table = BashOperator(
         location STRING
     )
     PARTITIONED BY (batch_id STRING)
-    STORED AS PARQUET
-    LOCATION '/data/transactions/transactions_batch_0';
-    ALTER TABLE transactions ADD IF NOT EXISTS PARTITION (batch_id='batch_{{ execution_date.strftime('%Y%m%d_%H%M%S') }}') LOCATION '/data/transactions/transactions_batch_{{ ti.xcom_pull(task_ids='get_batch_id') or '0' }}';"
+    STORED AS PARQUET;
+    ALTER TABLE transactions ADD IF NOT EXISTS PARTITION (batch_id='{{ ti.xcom_pull(task_ids='get_batch_id') or 'batch_0' }}') LOCATION '/data/transactions/transactions_{{ ti.xcom_pull(task_ids='get_batch_id') or 'batch_0' }}';"
     """,
     dag=dag,
 )
-detect_fraud = BashOperator(
-    task_id='detect_fraud',
+
+create_fraud_table = BashOperator(
+    task_id='create_fraud_table',
     bash_command="""
-    docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e"
-    CREATE TABLE IF NOT EXISTS fraud_detections (
+    docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "
+    CREATE EXTERNAL TABLE IF NOT EXISTS fraud_detections (
         transaction_id STRING,
         date_time STRING,
         amount DOUBLE,
@@ -102,34 +102,17 @@ detect_fraud = BashOperator(
         fraud_reason STRING
     )
     STORED AS PARQUET
-    LOCATION '/data/fraud_detections';
-    INSERT INTO TABLE fraud_detections
-    SELECT
-        t.transaction_id,
-        t.date_time,
-        t.amount,
-        t.customer_id,
-        t.location,
-        'High Amount' AS fraud_reason
-    FROM transactions t
-    WHERE t.batch_id = 'batch_{{ ti.xcom_pull(task_ids='get_batch_id') if ti.xcom_pull(task_ids='get_batch_id') else '20250319_194300' }}'
-    AND t.amount > 1000;"
+    LOCATION '/data/fraud_detections';"
     """,
     dag=dag,
 )
-get_batch_id >> copy_to_hdfs >> create_table >> detect_fraud
 
+detect_fraud = BashOperator(
+    task_id='detect_fraud',
+    bash_command="""
+    docker exec hive spark-submit --master spark://localhost:7077 /hive/scripts/detect_fraud.py "{{ ti.xcom_pull(task_ids='get_batch_id') or 'batch_0' }}"
+    """,
+    dag=dag,
+)
 
-
-
-# INSERT INTO TABLE fraud_detections
-# SELECT
-#     t.transaction_id,
-#     t.date_time,
-#     t.amount,
-#     t.customer_id,
-#     t.location,
-#     'High Amount' AS fraud_reason
-# FROM transactions t
-# WHERE t.batch_id = 'batch_20250319_211345'
-# AND t.amount > 1000;
+get_batch_id >> copy_to_hdfs >> create_table >> create_fraud_table >> detect_fraud

@@ -93,18 +93,24 @@ services:
       dockerfile: Dockerfile
     container_name: hive
     ports:
-      - "10000:10000"  # HiveServer2
-      - "10002:10002"  # Hive Metastore Thrift
-      - "9870:9870"    # NameNode Web UI
-      - "9000:9000"    # HDFS NameNode (port de données)
+      - "10000:10000"
+      - "10002:10002"
+      - "9870:9870"
+      - "9000:9000"
+      - "7077:7077"
     volumes:
-      - transactions_data:/data/transactions  # Volume partagé
-      - ./data/namenode:/data/namenode        # Pour le NameNode
-      - ./data/datanode:/data/datanode        # Pour le DataNode
-      - ./data/warehouse:/data/warehouse      # Pour le warehouse Hive
+      - transactions_data:/data/transactions
+      - ./data/namenode:/data/namenode
+      - ./data/datanode:/data/datanode
+      - ./data/warehouse:/data/warehouse
+      - ./hive/scripts:/hive/scripts
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "4G"
     networks:
       - airflow_network
-
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
@@ -192,3 +198,16 @@ volumes:
 networks:
   airflow_network:
     driver: bridge
+
+
+# INSERT INTO TABLE fraud_detections
+# SELECT
+#     t.transaction_id,
+#     t.date_time,
+#     t.amount,
+#     t.customer_id,
+#     t.location,
+#     'High Amount' AS fraud_reason
+# FROM transactions t
+# WHERE t.batch_id = 'batch_20250320_112938'
+# AND t.amount > 1000;

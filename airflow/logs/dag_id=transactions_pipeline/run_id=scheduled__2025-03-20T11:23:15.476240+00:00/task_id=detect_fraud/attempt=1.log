@@ -1,0 +1,258 @@
+[2025-03-20T12:14:06.315+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.detect_fraud scheduled__2025-03-20T11:23:15.476240+00:00 [queued]>
+[2025-03-20T12:14:06.332+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.detect_fraud scheduled__2025-03-20T11:23:15.476240+00:00 [queued]>
+[2025-03-20T12:14:06.333+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-20T12:14:06.362+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): detect_fraud> on 2025-03-20 11:23:15.476240+00:00
+[2025-03-20T12:14:06.373+0000] {standard_task_runner.py:57} INFO - Started process 437 to run task
+[2025-03-20T12:14:06.380+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'detect_fraud', 'scheduled__2025-03-20T11:23:15.476240+00:00', '--job-id', '294', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmprhlb76vh']
+[2025-03-20T12:14:06.391+0000] {standard_task_runner.py:85} INFO - Job 294: Subtask detect_fraud
+[2025-03-20T12:14:06.511+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.detect_fraud scheduled__2025-03-20T11:23:15.476240+00:00 [running]> on host 3938a1dd8bd9
+[2025-03-20T12:14:06.836+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='detect_fraud' AIRFLOW_CTX_EXECUTION_DATE='2025-03-20T11:23:15.476240+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-20T11:23:15.476240+00:00'
+[2025-03-20T12:14:06.841+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-20T12:14:06.843+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n    docker exec hive spark-submit --master spark://hive:7077 --conf spark.sql.catalogImplementation=hive /hive/scripts/detect_fraud.py "0"\n    ']
+[2025-03-20T12:14:06.883+0000] {subprocess.py:86} INFO - Output:
+[2025-03-20T12:14:14.887+0000] {subprocess.py:93} INFO - 25/03/20 12:14:14 INFO SparkContext: Running Spark version 3.5.0
+[2025-03-20T12:14:14.892+0000] {subprocess.py:93} INFO - 25/03/20 12:14:14 INFO SparkContext: OS info Linux, 5.15.167.4-microsoft-standard-WSL2, amd64
+[2025-03-20T12:14:14.893+0000] {subprocess.py:93} INFO - 25/03/20 12:14:14 INFO SparkContext: Java version 1.8.0_342
+[2025-03-20T12:14:15.016+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2025-03-20T12:14:15.109+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO ResourceUtils: ==============================================================
+[2025-03-20T12:14:15.110+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO ResourceUtils: No custom resources configured for spark.driver.
+[2025-03-20T12:14:15.112+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO ResourceUtils: ==============================================================
+[2025-03-20T12:14:15.113+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SparkContext: Submitted application: FraudDetection
+[2025-03-20T12:14:15.167+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+[2025-03-20T12:14:15.206+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO ResourceProfile: Limiting resource is cpu
+[2025-03-20T12:14:15.207+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO ResourceProfileManager: Added ResourceProfile id: 0
+[2025-03-20T12:14:15.280+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SecurityManager: Changing view acls to: root
+[2025-03-20T12:14:15.281+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SecurityManager: Changing modify acls to: root
+[2025-03-20T12:14:15.282+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SecurityManager: Changing view acls groups to:
+[2025-03-20T12:14:15.283+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SecurityManager: Changing modify acls groups to:
+[2025-03-20T12:14:15.284+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: root; groups with view permissions: EMPTY; users with modify permissions: root; groups with modify permissions: EMPTY
+[2025-03-20T12:14:15.610+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO Utils: Successfully started service 'sparkDriver' on port 34753.
+[2025-03-20T12:14:15.649+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SparkEnv: Registering MapOutputTracker
+[2025-03-20T12:14:15.702+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SparkEnv: Registering BlockManagerMaster
+[2025-03-20T12:14:15.731+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+[2025-03-20T12:14:15.732+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+[2025-03-20T12:14:15.739+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+[2025-03-20T12:14:15.824+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-9ac95e77-e832-4fa2-8516-d1f5f562789e
+[2025-03-20T12:14:15.858+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO MemoryStore: MemoryStore started with capacity 366.3 MiB
+[2025-03-20T12:14:15.897+0000] {subprocess.py:93} INFO - 25/03/20 12:14:15 INFO SparkEnv: Registering OutputCommitCoordinator
+[2025-03-20T12:14:16.347+0000] {subprocess.py:93} INFO - 25/03/20 12:14:16 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+[2025-03-20T12:14:16.635+0000] {subprocess.py:93} INFO - 25/03/20 12:14:16 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+[2025-03-20T12:14:17.215+0000] {subprocess.py:93} INFO - 25/03/20 12:14:17 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://hive:7077...
+[2025-03-20T12:14:17.426+0000] {subprocess.py:93} INFO - 25/03/20 12:14:17 WARN StandaloneAppClient$ClientEndpoint: Failed to connect to master hive:7077
+[2025-03-20T12:14:17.427+0000] {subprocess.py:93} INFO - org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-03-20T12:14:17.427+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-03-20T12:14:17.428+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-03-20T12:14:17.429+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
+[2025-03-20T12:14:17.429+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcEnv.setupEndpointRefByURI(RpcEnv.scala:102)
+[2025-03-20T12:14:17.430+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcEnv.setupEndpointRef(RpcEnv.scala:110)
+[2025-03-20T12:14:17.430+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.client.StandaloneAppClient$ClientEndpoint$$anon$1.run(StandaloneAppClient.scala:108)
+[2025-03-20T12:14:17.431+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+[2025-03-20T12:14:17.431+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+[2025-03-20T12:14:17.432+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+[2025-03-20T12:14:17.432+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+[2025-03-20T12:14:17.433+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:14:17.433+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: Failed to connect to hive/172.18.0.6:7077
+[2025-03-20T12:14:17.433+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:294)
+[2025-03-20T12:14:17.434+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:214)
+[2025-03-20T12:14:17.434+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:226)
+[2025-03-20T12:14:17.435+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.NettyRpcEnv.createClient(NettyRpcEnv.scala:204)
+[2025-03-20T12:14:17.435+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.Outbox$$anon$1.call(Outbox.scala:202)
+[2025-03-20T12:14:17.436+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.Outbox$$anon$1.call(Outbox.scala:198)
+[2025-03-20T12:14:17.436+0000] {subprocess.py:93} INFO - 	... 4 more
+[2025-03-20T12:14:17.437+0000] {subprocess.py:93} INFO - Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: hive/172.18.0.6:7077
+[2025-03-20T12:14:17.437+0000] {subprocess.py:93} INFO - Caused by: java.net.ConnectException: Connection refused
+[2025-03-20T12:14:17.438+0000] {subprocess.py:93} INFO - 	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+[2025-03-20T12:14:17.438+0000] {subprocess.py:93} INFO - 	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:716)
+[2025-03-20T12:14:17.439+0000] {subprocess.py:93} INFO - 	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+[2025-03-20T12:14:17.440+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+[2025-03-20T12:14:17.440+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+[2025-03-20T12:14:17.441+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+[2025-03-20T12:14:17.442+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+[2025-03-20T12:14:17.442+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+[2025-03-20T12:14:17.442+0000] {subprocess.py:93} INFO - 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+[2025-03-20T12:14:17.443+0000] {subprocess.py:93} INFO - 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+[2025-03-20T12:14:17.444+0000] {subprocess.py:93} INFO - 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+[2025-03-20T12:14:17.444+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:14:37.344+0000] {subprocess.py:93} INFO - 25/03/20 12:14:37 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://hive:7077...
+[2025-03-20T12:14:37.373+0000] {subprocess.py:93} INFO - 25/03/20 12:14:37 WARN StandaloneAppClient$ClientEndpoint: Failed to connect to master hive:7077
+[2025-03-20T12:14:37.388+0000] {subprocess.py:93} INFO - org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-03-20T12:14:37.389+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-03-20T12:14:37.389+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-03-20T12:14:37.390+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
+[2025-03-20T12:14:37.391+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcEnv.setupEndpointRefByURI(RpcEnv.scala:102)
+[2025-03-20T12:14:37.391+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcEnv.setupEndpointRef(RpcEnv.scala:110)
+[2025-03-20T12:14:37.412+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.client.StandaloneAppClient$ClientEndpoint$$anon$1.run(StandaloneAppClient.scala:108)
+[2025-03-20T12:14:37.415+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+[2025-03-20T12:14:37.425+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+[2025-03-20T12:14:37.427+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+[2025-03-20T12:14:37.438+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+[2025-03-20T12:14:37.439+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:14:37.440+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: Failed to connect to hive/172.18.0.6:7077
+[2025-03-20T12:14:37.441+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:294)
+[2025-03-20T12:14:37.442+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:214)
+[2025-03-20T12:14:37.442+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:226)
+[2025-03-20T12:14:37.443+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.NettyRpcEnv.createClient(NettyRpcEnv.scala:204)
+[2025-03-20T12:14:37.444+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.Outbox$$anon$1.call(Outbox.scala:202)
+[2025-03-20T12:14:37.444+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.Outbox$$anon$1.call(Outbox.scala:198)
+[2025-03-20T12:14:37.445+0000] {subprocess.py:93} INFO - 	... 4 more
+[2025-03-20T12:14:37.446+0000] {subprocess.py:93} INFO - Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: hive/172.18.0.6:7077
+[2025-03-20T12:14:37.447+0000] {subprocess.py:93} INFO - Caused by: java.net.ConnectException: Connection refused
+[2025-03-20T12:14:37.448+0000] {subprocess.py:93} INFO - 	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+[2025-03-20T12:14:37.449+0000] {subprocess.py:93} INFO - 	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:716)
+[2025-03-20T12:14:37.449+0000] {subprocess.py:93} INFO - 	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+[2025-03-20T12:14:37.450+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+[2025-03-20T12:14:37.451+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+[2025-03-20T12:14:37.451+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+[2025-03-20T12:14:37.452+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+[2025-03-20T12:14:37.453+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+[2025-03-20T12:14:37.454+0000] {subprocess.py:93} INFO - 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+[2025-03-20T12:14:37.455+0000] {subprocess.py:93} INFO - 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+[2025-03-20T12:14:37.456+0000] {subprocess.py:93} INFO - 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+[2025-03-20T12:14:37.457+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:14:57.341+0000] {subprocess.py:93} INFO - 25/03/20 12:14:57 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://hive:7077...
+[2025-03-20T12:14:57.352+0000] {subprocess.py:93} INFO - 25/03/20 12:14:57 WARN StandaloneAppClient$ClientEndpoint: Failed to connect to master hive:7077
+[2025-03-20T12:14:57.353+0000] {subprocess.py:93} INFO - org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-03-20T12:14:57.354+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-03-20T12:14:57.355+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-03-20T12:14:57.356+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
+[2025-03-20T12:14:57.356+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcEnv.setupEndpointRefByURI(RpcEnv.scala:102)
+[2025-03-20T12:14:57.357+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.RpcEnv.setupEndpointRef(RpcEnv.scala:110)
+[2025-03-20T12:14:57.357+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.client.StandaloneAppClient$ClientEndpoint$$anon$1.run(StandaloneAppClient.scala:108)
+[2025-03-20T12:14:57.358+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+[2025-03-20T12:14:57.359+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+[2025-03-20T12:14:57.359+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+[2025-03-20T12:14:57.360+0000] {subprocess.py:93} INFO - 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+[2025-03-20T12:14:57.361+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:14:57.361+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: Failed to connect to hive/172.18.0.6:7077
+[2025-03-20T12:14:57.362+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:294)
+[2025-03-20T12:14:57.363+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:214)
+[2025-03-20T12:14:57.363+0000] {subprocess.py:93} INFO - 	at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:226)
+[2025-03-20T12:14:57.364+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.NettyRpcEnv.createClient(NettyRpcEnv.scala:204)
+[2025-03-20T12:14:57.364+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.Outbox$$anon$1.call(Outbox.scala:202)
+[2025-03-20T12:14:57.365+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rpc.netty.Outbox$$anon$1.call(Outbox.scala:198)
+[2025-03-20T12:14:57.366+0000] {subprocess.py:93} INFO - 	... 4 more
+[2025-03-20T12:14:57.366+0000] {subprocess.py:93} INFO - Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: hive/172.18.0.6:7077
+[2025-03-20T12:14:57.367+0000] {subprocess.py:93} INFO - Caused by: java.net.ConnectException: Connection refused
+[2025-03-20T12:14:57.367+0000] {subprocess.py:93} INFO - 	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+[2025-03-20T12:14:57.368+0000] {subprocess.py:93} INFO - 	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:716)
+[2025-03-20T12:14:57.369+0000] {subprocess.py:93} INFO - 	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+[2025-03-20T12:14:57.370+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+[2025-03-20T12:14:57.372+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+[2025-03-20T12:14:57.372+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+[2025-03-20T12:14:57.373+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+[2025-03-20T12:14:57.373+0000] {subprocess.py:93} INFO - 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+[2025-03-20T12:14:57.374+0000] {subprocess.py:93} INFO - 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+[2025-03-20T12:14:57.374+0000] {subprocess.py:93} INFO - 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+[2025-03-20T12:14:57.375+0000] {subprocess.py:93} INFO - 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+[2025-03-20T12:14:57.376+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:15:17.481+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 WARN StandaloneSchedulerBackend: Application ID is not initialized yet.
+[2025-03-20T12:15:17.482+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 ERROR StandaloneSchedulerBackend: Application has been killed. Reason: All masters are unresponsive! Giving up.
+[2025-03-20T12:15:17.501+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39821.
+[2025-03-20T12:15:17.502+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO NettyBlockTransferService: Server created on bcc1e3430c31:39821
+[2025-03-20T12:15:17.504+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+[2025-03-20T12:15:17.520+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, bcc1e3430c31, 39821, None)
+[2025-03-20T12:15:17.527+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO BlockManagerMasterEndpoint: Registering block manager bcc1e3430c31:39821 with 366.3 MiB RAM, BlockManagerId(driver, bcc1e3430c31, 39821, None)
+[2025-03-20T12:15:17.531+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, bcc1e3430c31, 39821, None)
+[2025-03-20T12:15:17.533+0000] {subprocess.py:93} INFO - 25/03/20 12:15:17 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, bcc1e3430c31, 39821, None)
+[2025-03-20T12:15:18.083+0000] {subprocess.py:93} INFO - 25/03/20 12:15:18 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+[2025-03-20T12:15:18.674+0000] {subprocess.py:93} INFO - Spark version: 3.5.0
+[2025-03-20T12:15:18.895+0000] {subprocess.py:93} INFO - 25/03/20 12:15:18 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+[2025-03-20T12:15:18.972+0000] {subprocess.py:93} INFO - 25/03/20 12:15:18 INFO SparkContext: SparkContext is stopping with exitCode 0.
+[2025-03-20T12:15:18.988+0000] {subprocess.py:93} INFO - 25/03/20 12:15:18 INFO SparkUI: Stopped Spark web UI at http://bcc1e3430c31:4040
+[2025-03-20T12:15:19.001+0000] {subprocess.py:93} INFO - 25/03/20 12:15:18 INFO StandaloneSchedulerBackend: Shutting down all executors
+[2025-03-20T12:15:19.010+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO StandaloneSchedulerBackend$StandaloneDriverEndpoint: Asking each executor to shut down
+[2025-03-20T12:15:19.019+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 WARN StandaloneAppClient$ClientEndpoint: Drop UnregisterApplication(null) because has not yet connected to master
+[2025-03-20T12:15:19.071+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+[2025-03-20T12:15:19.089+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO MemoryStore: MemoryStore cleared
+[2025-03-20T12:15:19.090+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO BlockManager: BlockManager stopped
+[2025-03-20T12:15:19.103+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO BlockManagerMaster: BlockManagerMaster stopped
+[2025-03-20T12:15:19.109+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+[2025-03-20T12:15:19.162+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO SparkContext: Successfully stopped SparkContext
+[2025-03-20T12:15:19.954+0000] {subprocess.py:93} INFO - 25/03/20 12:15:19 INFO SharedState: Warehouse path is 'hdfs://localhost:9000/data/warehouse'.
+[2025-03-20T12:15:20.028+0000] {subprocess.py:93} INFO - Error during Spark execution: An error occurred while calling o27.sql.
+[2025-03-20T12:15:20.029+0000] {subprocess.py:93} INFO - : java.lang.IllegalStateException: LiveListenerBus is stopped.
+[2025-03-20T12:15:20.030+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.LiveListenerBus.addToQueue(LiveListenerBus.scala:92)
+[2025-03-20T12:15:20.030+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.LiveListenerBus.addToStatusQueue(LiveListenerBus.scala:75)
+[2025-03-20T12:15:20.031+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.internal.SharedState.<init>(SharedState.scala:115)
+[2025-03-20T12:15:20.031+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sharedState$1(SparkSession.scala:143)
+[2025-03-20T12:15:20.031+0000] {subprocess.py:93} INFO - 	at scala.Option.getOrElse(Option.scala:189)
+[2025-03-20T12:15:20.032+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sharedState$lzycompute(SparkSession.scala:143)
+[2025-03-20T12:15:20.032+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sharedState(SparkSession.scala:142)
+[2025-03-20T12:15:20.032+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sessionState$2(SparkSession.scala:162)
+[2025-03-20T12:15:20.033+0000] {subprocess.py:93} INFO - 	at scala.Option.getOrElse(Option.scala:189)
+[2025-03-20T12:15:20.033+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sessionState$lzycompute(SparkSession.scala:160)
+[2025-03-20T12:15:20.033+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sessionState(SparkSession.scala:157)
+[2025-03-20T12:15:20.034+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sql$2(SparkSession.scala:631)
+[2025-03-20T12:15:20.034+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.QueryPlanningTracker.measurePhase(QueryPlanningTracker.scala:138)
+[2025-03-20T12:15:20.034+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sql$1(SparkSession.scala:630)
+[2025-03-20T12:15:20.034+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900)
+[2025-03-20T12:15:20.035+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sql(SparkSession.scala:629)
+[2025-03-20T12:15:20.035+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sql(SparkSession.scala:659)
+[2025-03-20T12:15:20.035+0000] {subprocess.py:93} INFO - 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2025-03-20T12:15:20.036+0000] {subprocess.py:93} INFO - 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+[2025-03-20T12:15:20.036+0000] {subprocess.py:93} INFO - 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2025-03-20T12:15:20.036+0000] {subprocess.py:93} INFO - 	at java.lang.reflect.Method.invoke(Method.java:498)
+[2025-03-20T12:15:20.036+0000] {subprocess.py:93} INFO - 	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+[2025-03-20T12:15:20.037+0000] {subprocess.py:93} INFO - 	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+[2025-03-20T12:15:20.037+0000] {subprocess.py:93} INFO - 	at py4j.Gateway.invoke(Gateway.java:282)
+[2025-03-20T12:15:20.037+0000] {subprocess.py:93} INFO - 	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+[2025-03-20T12:15:20.038+0000] {subprocess.py:93} INFO - 	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+[2025-03-20T12:15:20.038+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+[2025-03-20T12:15:20.038+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+[2025-03-20T12:15:20.038+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:15:20.039+0000] {subprocess.py:93} INFO - 
+[2025-03-20T12:15:20.039+0000] {subprocess.py:93} INFO - 25/03/20 12:15:20 INFO SparkContext: SparkContext is stopping with exitCode 0.
+[2025-03-20T12:15:20.040+0000] {subprocess.py:93} INFO - 25/03/20 12:15:20 INFO SparkContext: SparkContext already stopped.
+[2025-03-20T12:15:20.181+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-03-20T12:15:20.182+0000] {subprocess.py:93} INFO -   File "/hive/scripts/detect_fraud.py", line 18, in <module>
+[2025-03-20T12:15:20.185+0000] {subprocess.py:93} INFO -     df_transactions = spark.sql(f"SELECT * FROM transactions WHERE batch_id = '{batch_id}'")
+[2025-03-20T12:15:20.186+0000] {subprocess.py:93} INFO -   File "/opt/spark-3.5.0-bin-hadoop3/python/lib/pyspark.zip/pyspark/sql/session.py", line 1631, in sql
+[2025-03-20T12:15:20.187+0000] {subprocess.py:93} INFO -   File "/opt/spark-3.5.0-bin-hadoop3/python/lib/py4j-0.10.9.7-src.zip/py4j/java_gateway.py", line 1322, in __call__
+[2025-03-20T12:15:20.187+0000] {subprocess.py:93} INFO -   File "/opt/spark-3.5.0-bin-hadoop3/python/lib/pyspark.zip/pyspark/errors/exceptions/captured.py", line 179, in deco
+[2025-03-20T12:15:20.188+0000] {subprocess.py:93} INFO -   File "/opt/spark-3.5.0-bin-hadoop3/python/lib/py4j-0.10.9.7-src.zip/py4j/protocol.py", line 326, in get_return_value
+[2025-03-20T12:15:20.189+0000] {subprocess.py:93} INFO - py4j.protocol.Py4JJavaError: An error occurred while calling o27.sql.
+[2025-03-20T12:15:20.190+0000] {subprocess.py:93} INFO - : java.lang.IllegalStateException: LiveListenerBus is stopped.
+[2025-03-20T12:15:20.190+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.LiveListenerBus.addToQueue(LiveListenerBus.scala:92)
+[2025-03-20T12:15:20.191+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.LiveListenerBus.addToStatusQueue(LiveListenerBus.scala:75)
+[2025-03-20T12:15:20.191+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.internal.SharedState.<init>(SharedState.scala:115)
+[2025-03-20T12:15:20.192+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sharedState$1(SparkSession.scala:143)
+[2025-03-20T12:15:20.192+0000] {subprocess.py:93} INFO - 	at scala.Option.getOrElse(Option.scala:189)
+[2025-03-20T12:15:20.193+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sharedState$lzycompute(SparkSession.scala:143)
+[2025-03-20T12:15:20.193+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sharedState(SparkSession.scala:142)
+[2025-03-20T12:15:20.194+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sessionState$2(SparkSession.scala:162)
+[2025-03-20T12:15:20.195+0000] {subprocess.py:93} INFO - 	at scala.Option.getOrElse(Option.scala:189)
+[2025-03-20T12:15:20.195+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sessionState$lzycompute(SparkSession.scala:160)
+[2025-03-20T12:15:20.196+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sessionState(SparkSession.scala:157)
+[2025-03-20T12:15:20.196+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sql$2(SparkSession.scala:631)
+[2025-03-20T12:15:20.197+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.QueryPlanningTracker.measurePhase(QueryPlanningTracker.scala:138)
+[2025-03-20T12:15:20.197+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.$anonfun$sql$1(SparkSession.scala:630)
+[2025-03-20T12:15:20.198+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900)
+[2025-03-20T12:15:20.198+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sql(SparkSession.scala:629)
+[2025-03-20T12:15:20.199+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.sql(SparkSession.scala:659)
+[2025-03-20T12:15:20.199+0000] {subprocess.py:93} INFO - 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2025-03-20T12:15:20.200+0000] {subprocess.py:93} INFO - 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+[2025-03-20T12:15:20.201+0000] {subprocess.py:93} INFO - 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2025-03-20T12:15:20.201+0000] {subprocess.py:93} INFO - 	at java.lang.reflect.Method.invoke(Method.java:498)
+[2025-03-20T12:15:20.202+0000] {subprocess.py:93} INFO - 	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+[2025-03-20T12:15:20.202+0000] {subprocess.py:93} INFO - 	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+[2025-03-20T12:15:20.203+0000] {subprocess.py:93} INFO - 	at py4j.Gateway.invoke(Gateway.java:282)
+[2025-03-20T12:15:20.203+0000] {subprocess.py:93} INFO - 	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+[2025-03-20T12:15:20.204+0000] {subprocess.py:93} INFO - 	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+[2025-03-20T12:15:20.204+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+[2025-03-20T12:15:20.205+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+[2025-03-20T12:15:20.206+0000] {subprocess.py:93} INFO - 	at java.lang.Thread.run(Thread.java:750)
+[2025-03-20T12:15:20.206+0000] {subprocess.py:93} INFO - 
+[2025-03-20T12:15:20.241+0000] {subprocess.py:93} INFO - 25/03/20 12:15:20 INFO ShutdownHookManager: Shutdown hook called
+[2025-03-20T12:15:20.243+0000] {subprocess.py:93} INFO - 25/03/20 12:15:20 INFO ShutdownHookManager: Deleting directory /tmp/spark-c3d1d131-e2b8-40c3-a6a4-d1e10117afa1/pyspark-748cc0ba-d5b2-43b1-9744-7412c421277b
+[2025-03-20T12:15:20.249+0000] {subprocess.py:93} INFO - 25/03/20 12:15:20 INFO ShutdownHookManager: Deleting directory /tmp/spark-d8b913f6-9670-404b-a092-67a086eb2009
+[2025-03-20T12:15:20.257+0000] {subprocess.py:93} INFO - 25/03/20 12:15:20 INFO ShutdownHookManager: Deleting directory /tmp/spark-c3d1d131-e2b8-40c3-a6a4-d1e10117afa1
+[2025-03-20T12:15:20.427+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-03-20T12:15:20.458+0000] {taskinstance.py:1935} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 210, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-03-20T12:15:20.475+0000] {taskinstance.py:1398} INFO - Marking task as FAILED. dag_id=transactions_pipeline, task_id=detect_fraud, execution_date=20250320T112315, start_date=20250320T121406, end_date=20250320T121520
+[2025-03-20T12:15:20.522+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 294 for task detect_fraud (Bash command failed. The command returned a non-zero exit code 1.; 437)
+[2025-03-20T12:15:20.583+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-03-20T12:15:20.616+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

@@ -1,0 +1,23 @@
+[2025-03-20T12:51:23.182+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.get_batch_id manual__2025-03-20T12:51:21.105331+00:00 [queued]>
+[2025-03-20T12:51:23.197+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.get_batch_id manual__2025-03-20T12:51:21.105331+00:00 [queued]>
+[2025-03-20T12:51:23.198+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-20T12:51:23.219+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): get_batch_id> on 2025-03-20 12:51:21.105331+00:00
+[2025-03-20T12:51:23.226+0000] {standard_task_runner.py:57} INFO - Started process 897 to run task
+[2025-03-20T12:51:23.237+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'get_batch_id', 'manual__2025-03-20T12:51:21.105331+00:00', '--job-id', '300', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpos1hhspb']
+[2025-03-20T12:51:23.244+0000] {standard_task_runner.py:85} INFO - Job 300: Subtask get_batch_id
+[2025-03-20T12:51:23.325+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.get_batch_id manual__2025-03-20T12:51:21.105331+00:00 [running]> on host 3938a1dd8bd9
+[2025-03-20T12:51:23.431+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='get_batch_id' AIRFLOW_CTX_EXECUTION_DATE='2025-03-20T12:51:21.105331+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-20T12:51:21.105331+00:00'
+[2025-03-20T12:51:23.558+0000] {logging_mixin.py:151} INFO - Command stdout: '/data/transactions/transactions_batch_20250320_124846.parquet
+/data/transactions/transactions_batch_20250320_124806.parquet
+/data/transactions/transactions_batch_20250320_124725.parquet
+/data/transactions/transactions_batch_20250320_124645.parquet
+/data/transactions/transactions_batch_20250320_124605.parquet
+/data/transactions/transactions_batch_20250320_124547.parquet
+'
+[2025-03-20T12:51:23.560+0000] {logging_mixin.py:151} INFO - Command stderr: ''
+[2025-03-20T12:51:23.561+0000] {logging_mixin.py:151} INFO - Latest file: /data/transactions/transactions_batch_20250320_124846.parquet
+[2025-03-20T12:51:23.562+0000] {logging_mixin.py:151} INFO - Latest batch ID: batch_20250320_124846
+[2025-03-20T12:51:23.562+0000] {python.py:194} INFO - Done. Returned value was: batch_20250320_124846
+[2025-03-20T12:51:23.597+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=get_batch_id, execution_date=20250320T125121, start_date=20250320T125123, end_date=20250320T125123
+[2025-03-20T12:51:23.652+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-20T12:51:23.701+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

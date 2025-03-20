@@ -44,9 +44,9 @@ RUN curl -O https://archive.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-ha
     tar -xvzf spark-3.5.0-bin-hadoop3.tgz -C /opt && \
     rm spark-3.5.0-bin-hadoop3.tgz
 
+
 # Configurer Hive pour utiliser Spark
 RUN echo '<?xml version="1.0"?>\n\
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>\n\
 <configuration>\n\
     <property>\n\
         <name>hive.execution.engine</name>\n\
@@ -58,11 +58,23 @@ RUN echo '<?xml version="1.0"?>\n\
     </property>\n\
     <property>\n\
         <name>spark.master</name>\n\
-        <value>spark://localhost:7077</value>\n\
+        <value>spark://hive:7077</value>\n\
     </property>\n\
     <property>\n\
         <name>spark.sql.catalogImplementation</name>\n\
         <value>hive</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.home</name>\n\
+        <value>/opt/spark-3.5.0-bin-hadoop3</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.driver.memory</name>\n\
+        <value>2g</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.executor.memory</name>\n\
+        <value>2g</value>\n\
     </property>\n\
 </configuration>' > /opt/hive/conf/hive-site.xml
 
@@ -71,10 +83,12 @@ RUN echo "spark.master                     spark://localhost:7077" >> /opt/spark
     echo "spark.sql.warehouse.dir         /data/warehouse" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf && \
     echo "spark.hadoop.fs.defaultFS        hdfs://localhost:9000" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf
 
+
 # Définir les variables d'environnement
 ENV HADOOP_HOME=/opt/hadoop
 ENV SPARK_HOME=/opt/spark-3.5.0-bin-hadoop3
 ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
+
 
 # Copier les scripts et entrypoint
 COPY scripts/ /hive/scripts/

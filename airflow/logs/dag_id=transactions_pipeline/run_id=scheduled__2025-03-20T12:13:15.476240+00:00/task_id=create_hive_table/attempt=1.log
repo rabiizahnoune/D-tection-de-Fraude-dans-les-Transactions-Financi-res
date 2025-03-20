@@ -1,0 +1,72 @@
+[2025-03-20T13:03:37.360+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.create_hive_table scheduled__2025-03-20T12:13:15.476240+00:00 [queued]>
+[2025-03-20T13:03:37.379+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.create_hive_table scheduled__2025-03-20T12:13:15.476240+00:00 [queued]>
+[2025-03-20T13:03:37.380+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-20T13:03:37.403+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): create_hive_table> on 2025-03-20 12:13:15.476240+00:00
+[2025-03-20T13:03:37.413+0000] {standard_task_runner.py:57} INFO - Started process 1277 to run task
+[2025-03-20T13:03:37.417+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'create_hive_table', 'scheduled__2025-03-20T12:13:15.476240+00:00', '--job-id', '316', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpuoke_3_2']
+[2025-03-20T13:03:37.421+0000] {standard_task_runner.py:85} INFO - Job 316: Subtask create_hive_table
+[2025-03-20T13:03:37.491+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.create_hive_table scheduled__2025-03-20T12:13:15.476240+00:00 [running]> on host 3938a1dd8bd9
+[2025-03-20T13:03:37.666+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='create_hive_table' AIRFLOW_CTX_EXECUTION_DATE='2025-03-20T12:13:15.476240+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-20T12:13:15.476240+00:00'
+[2025-03-20T13:03:37.671+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-20T13:03:37.673+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n    docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "\n    CREATE EXTERNAL TABLE IF NOT EXISTS transactions (\n        transaction_id STRING,\n        date_time STRING,\n        amount DOUBLE,\n        currency STRING,\n        merchant_details STRING,\n        customer_id STRING,\n        transaction_type STRING,\n        location STRING\n    )\n    PARTITIONED BY (batch_id STRING)\n    STORED AS PARQUET;\n    ALTER TABLE transactions ADD IF NOT EXISTS PARTITION (batch_id=\'batch_20250320_130155\') LOCATION \'/data/transactions/transactions_batch_20250320_130155\';"\n    ']
+[2025-03-20T13:03:37.688+0000] {subprocess.py:86} INFO - Output:
+[2025-03-20T13:03:40.137+0000] {subprocess.py:93} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2025-03-20T13:03:40.138+0000] {subprocess.py:93} INFO - SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.17.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2025-03-20T13:03:40.139+0000] {subprocess.py:93} INFO - SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2025-03-20T13:03:40.139+0000] {subprocess.py:93} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2025-03-20T13:03:41.052+0000] {subprocess.py:93} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2025-03-20T13:03:47.120+0000] {subprocess.py:93} INFO - Connecting to jdbc:hive2://localhost:10000
+[2025-03-20T13:03:47.783+0000] {subprocess.py:93} INFO - Connected to: Apache Hive (version 3.1.3)
+[2025-03-20T13:03:47.787+0000] {subprocess.py:93} INFO - Driver: Hive JDBC (version 3.1.3)
+[2025-03-20T13:03:47.788+0000] {subprocess.py:93} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2025-03-20T13:03:48.055+0000] {subprocess.py:93} INFO - INFO  : Compiling command(queryId=root_20250320130347_7beb89bb-e703-4aa7-8d46-4d1c3ac11a4a): CREATE EXTERNAL TABLE IF NOT EXISTS transactions (
+[2025-03-20T13:03:48.056+0000] {subprocess.py:93} INFO -         transaction_id STRING,
+[2025-03-20T13:03:48.057+0000] {subprocess.py:93} INFO -         date_time STRING,
+[2025-03-20T13:03:48.058+0000] {subprocess.py:93} INFO -         amount DOUBLE,
+[2025-03-20T13:03:48.059+0000] {subprocess.py:93} INFO -         currency STRING,
+[2025-03-20T13:03:48.060+0000] {subprocess.py:93} INFO -         merchant_details STRING,
+[2025-03-20T13:03:48.060+0000] {subprocess.py:93} INFO -         customer_id STRING,
+[2025-03-20T13:03:48.061+0000] {subprocess.py:93} INFO -         transaction_type STRING,
+[2025-03-20T13:03:48.061+0000] {subprocess.py:93} INFO -         location STRING
+[2025-03-20T13:03:48.062+0000] {subprocess.py:93} INFO -     )
+[2025-03-20T13:03:48.062+0000] {subprocess.py:93} INFO -     PARTITIONED BY (batch_id STRING)
+[2025-03-20T13:03:48.063+0000] {subprocess.py:93} INFO -     STORED AS PARQUET
+[2025-03-20T13:03:48.063+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-20T13:03:48.064+0000] {subprocess.py:93} INFO - INFO  : Semantic Analysis Completed (retrial = false)
+[2025-03-20T13:03:48.064+0000] {subprocess.py:93} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+[2025-03-20T13:03:48.065+0000] {subprocess.py:93} INFO - INFO  : Completed compiling command(queryId=root_20250320130347_7beb89bb-e703-4aa7-8d46-4d1c3ac11a4a); Time taken: 0.032 seconds
+[2025-03-20T13:03:48.065+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-20T13:03:48.066+0000] {subprocess.py:93} INFO - INFO  : Executing command(queryId=root_20250320130347_7beb89bb-e703-4aa7-8d46-4d1c3ac11a4a): CREATE EXTERNAL TABLE IF NOT EXISTS transactions (
+[2025-03-20T13:03:48.066+0000] {subprocess.py:93} INFO -         transaction_id STRING,
+[2025-03-20T13:03:48.067+0000] {subprocess.py:93} INFO -         date_time STRING,
+[2025-03-20T13:03:48.067+0000] {subprocess.py:93} INFO -         amount DOUBLE,
+[2025-03-20T13:03:48.068+0000] {subprocess.py:93} INFO -         currency STRING,
+[2025-03-20T13:03:48.068+0000] {subprocess.py:93} INFO -         merchant_details STRING,
+[2025-03-20T13:03:48.069+0000] {subprocess.py:93} INFO -         customer_id STRING,
+[2025-03-20T13:03:48.069+0000] {subprocess.py:93} INFO -         transaction_type STRING,
+[2025-03-20T13:03:48.071+0000] {subprocess.py:93} INFO -         location STRING
+[2025-03-20T13:03:48.072+0000] {subprocess.py:93} INFO -     )
+[2025-03-20T13:03:48.073+0000] {subprocess.py:93} INFO -     PARTITIONED BY (batch_id STRING)
+[2025-03-20T13:03:48.074+0000] {subprocess.py:93} INFO -     STORED AS PARQUET
+[2025-03-20T13:03:48.075+0000] {subprocess.py:93} INFO - INFO  : Completed executing command(queryId=root_20250320130347_7beb89bb-e703-4aa7-8d46-4d1c3ac11a4a); Time taken: 0.001 seconds
+[2025-03-20T13:03:48.075+0000] {subprocess.py:93} INFO - INFO  : OK
+[2025-03-20T13:03:48.076+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-20T13:03:48.076+0000] {subprocess.py:93} INFO - No rows affected (0.236 seconds)
+[2025-03-20T13:03:48.351+0000] {subprocess.py:93} INFO - INFO  : Compiling command(queryId=root_20250320130348_f4e4a7c4-76f0-49a1-9a0c-5c0fe12c9a39): ALTER TABLE transactions ADD IF NOT EXISTS PARTITION (batch_id='batch_20250320_130155') LOCATION '/data/transactions/transactions_batch_20250320_130155'
+[2025-03-20T13:03:48.352+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-20T13:03:48.353+0000] {subprocess.py:93} INFO - INFO  : Semantic Analysis Completed (retrial = false)
+[2025-03-20T13:03:48.354+0000] {subprocess.py:93} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+[2025-03-20T13:03:48.354+0000] {subprocess.py:93} INFO - INFO  : Completed compiling command(queryId=root_20250320130348_f4e4a7c4-76f0-49a1-9a0c-5c0fe12c9a39); Time taken: 0.02 seconds
+[2025-03-20T13:03:48.355+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-20T13:03:48.356+0000] {subprocess.py:93} INFO - INFO  : Executing command(queryId=root_20250320130348_f4e4a7c4-76f0-49a1-9a0c-5c0fe12c9a39): ALTER TABLE transactions ADD IF NOT EXISTS PARTITION (batch_id='batch_20250320_130155') LOCATION '/data/transactions/transactions_batch_20250320_130155'
+[2025-03-20T13:03:48.356+0000] {subprocess.py:93} INFO - INFO  : Starting task [Stage-0:DDL] in serial mode
+[2025-03-20T13:03:48.357+0000] {subprocess.py:93} INFO - INFO  : Completed executing command(queryId=root_20250320130348_f4e4a7c4-76f0-49a1-9a0c-5c0fe12c9a39); Time taken: 0.178 seconds
+[2025-03-20T13:03:48.358+0000] {subprocess.py:93} INFO - INFO  : OK
+[2025-03-20T13:03:48.358+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-20T13:03:48.359+0000] {subprocess.py:93} INFO - No rows affected (0.274 seconds)
+[2025-03-20T13:03:48.362+0000] {subprocess.py:93} INFO - Beeline version 3.1.3 by Apache Hive
+[2025-03-20T13:03:48.383+0000] {subprocess.py:93} INFO - Closing: 0: jdbc:hive2://localhost:10000
+[2025-03-20T13:03:48.579+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-03-20T13:03:48.628+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=create_hive_table, execution_date=20250320T121315, start_date=20250320T130337, end_date=20250320T130348
+[2025-03-20T13:03:48.668+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-20T13:03:48.730+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

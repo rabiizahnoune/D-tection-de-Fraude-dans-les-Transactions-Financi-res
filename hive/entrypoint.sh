@@ -72,13 +72,16 @@ if ! ps -p $SPARK_MASTER_PID > /dev/null; then
 fi
 
 # Démarrer Spark Worker
+# Par :
 echo "Starting Spark Worker..."
-/opt/spark-3.5.0-bin-hadoop3/bin/spark-class org.apache.spark.deploy.worker.Worker spark://localhost:7077 &
+mkdir -p /opt/spark-3.5.0-bin-hadoop3/logs
+chmod -R 777 /opt/spark-3.5.0-bin-hadoop3/logs
+/opt/spark-3.5.0-bin-hadoop3/bin/spark-class org.apache.spark.deploy.worker.Worker spark://localhost:7077 --memory 2g --cores 2 > /opt/spark-3.5.0-bin-hadoop3/logs/spark-worker.log 2>&1 &
 SPARK_WORKER_PID=$!
 sleep 10
 if ! ps -p $SPARK_WORKER_PID > /dev/null; then
     echo "Spark Worker failed to start. Check logs..."
-    cat /opt/spark-3.5.0-bin-hadoop3/logs/spark-*worker*.out || echo "No Spark Worker logs found"
+    cat /opt/spark-3.5.0-bin-hadoop3/logs/spark-worker.log || echo "No Worker logs found"
     exit 1
 fi
 
