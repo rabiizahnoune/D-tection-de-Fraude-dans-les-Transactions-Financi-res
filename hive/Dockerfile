@@ -6,7 +6,7 @@ USER root
 RUN apt-get update && apt-get install -y python3 python3-pip wget curl
 
 # Installer les bibliothèques Python nécessaires
-RUN pip3 install pyhive thrift python-dotenv
+RUN pip3 install pyhive thrift 
 
 # Créer les répertoires nécessaires pour HDFS
 RUN mkdir -p /data/namenode /data/datanode /data/transactions /data/warehouse && \

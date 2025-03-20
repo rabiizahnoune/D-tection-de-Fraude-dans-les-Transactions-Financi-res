@@ -22,15 +22,6 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-      - AIRFLOW__SMTP__SMTP_USER=rabiizahnoune7@gmail.com
-      - AIRFLOW__SMTP__SMTP_PASSWORD=xcci gubd zyoi wvjq
-      - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
-      - AIRFLOW__SMTP__SMTP_STARTTLS=True
-      - AIRFLOW__SMTP__SMTP_SSL=False
-      - AIRFLOW__SMTP__SMTP_PORT=587
-      - AIRFLOW__SMTP__SMTP_MAIL_FROM=rabiizahnoune7@gmail.com
-      - AIRFLOW__SMTP__SMTP_TIMEOUT=30
-      - AIRFLOW__SMTP__SMTP_RETRY_LIMIT=5
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -54,15 +45,6 @@ services:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-      - AIRFLOW__SMTP__SMTP_USER=rabiizahnoune7@gmail.com
-      - AIRFLOW__SMTP__SMTP_PASSWORD=xcci gubd zyoi wvjq
-      - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
-      - AIRFLOW__SMTP__SMTP_STARTTLS=True
-      - AIRFLOW__SMTP__SMTP_SSL=False
-      - AIRFLOW__SMTP__SMTP_PORT=587
-      - AIRFLOW__SMTP__SMTP_MAIL_FROM=rabiizahnoune7@gmail.com
-      - AIRFLOW__SMTP__SMTP_TIMEOUT=30
-      - AIRFLOW__SMTP__SMTP_RETRY_LIMIT=5
     ports:
       - "8080:8080"
     depends_on:
@@ -89,15 +71,6 @@ services:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-      - AIRFLOW__SMTP__SMTP_USER=rabiizahnoune7@gmail.com
-      - AIRFLOW__SMTP__SMTP_PASSWORD=xcci gubd zyoi wvjq
-      - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
-      - AIRFLOW__SMTP__SMTP_STARTTLS=True
-      - AIRFLOW__SMTP__SMTP_SSL=False
-      - AIRFLOW__SMTP__SMTP_PORT=587
-      - AIRFLOW__SMTP__SMTP_MAIL_FROM=rabiizahnoune7@gmail.com
-      - AIRFLOW__SMTP__SMTP_TIMEOUT=30
-      - AIRFLOW__SMTP__SMTP_RETRY_LIMIT=5
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -127,9 +100,6 @@ services:
       - "7077:7077"
     volumes:
       - transactions_data:/data/transactions
-      - ./data/namenode:/data/namenode
-      - ./data/datanode:/data/datanode
-      - ./data/warehouse:/data/warehouse
       - ./hive/scripts:/hive/scripts
     deploy:
       resources:
