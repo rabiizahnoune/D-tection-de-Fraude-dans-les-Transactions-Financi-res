@@ -29,7 +29,7 @@ jobs:
           docker-compose up -d # Lance les conteneurs en mode détaché
 
       - name: Wait for containers to start
-        run: sleep 10 # Attendre un peu pour que les conteneurs démarrent (ajuste selon ton besoin)
+        run: sleep 30 # Augmenté pour donner plus de temps à Kafka et aux APIs
 
       - name: Check container status
         run: |
@@ -43,7 +43,42 @@ jobs:
             echo "Tous les conteneurs sont démarrés avec succès !"
           fi
 
+      - name: Verify APIs
+        run: |
+          # Fonction pour vérifier une API
+          check_api() {
+            local api_name=$1
+            local port=$2
+            local endpoint=$3
+            local max_attempts=$4
+            local attempt=1
+            local url="http://localhost:$port$endpoint"
+
+            echo "Vérification de l'API $api_name sur le port $port (endpoint $endpoint)..."
+            while [ $attempt -le $max_attempts ]; do
+              # Utilise un timeout de 10 secondes pour éviter d'attendre trop longtemps
+              if curl -s --connect-timeout 10 -o /dev/null -w "%{http_code}" $url | grep -q "200"; then
+                echo "API $api_name est opérationnelle !"
+                return 0
+              else
+                echo "Tentative $attempt/$max_attempts : API $api_name n'est pas encore prête, nouvelle tentative dans 5 secondes..."
+                sleep 5
+                attempt=$((attempt + 1))
+              fi
+            done
+
+            echo "Erreur : L'API $api_name n'a pas démarré après $max_attempts tentatives !"
+            docker-compose logs $api_name  # Affiche les logs de l'API pour débogage
+            exit 1
+          }
+
+          # Vérifier chaque API avec son endpoint spécifique
+          check_api "api-transactions" "5000" "/generate/transaction" "30"
+          check_api "api-customers" "5001" "/generate/customer" "30"
+          # Pour api-externaldata, limiter les tentatives à cause du délai de 60 secondes
+          check_api "api-externaldata" "5002" "/generate/externaldata" "10"
+
       - name: Clean up
-        if: always() # S'exécute même si une étape précédente échoue
+        if: always() 
         run: |
           docker-compose down # Arrête et supprime les conteneurs
