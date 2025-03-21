@@ -92,37 +92,41 @@ jobs:
           # Lister également les sous-répertoires pour vérifier si pipeline_batch.py est ailleurs
           find . -type f -name "pipeline_batch.py"
 
-      - name: Copy DAG file to Airflow container
+      - name: Copy DAG file to shared directory
         run: |
           # Vérifier si pipeline_batch.py existe à la racine
           if [ -f "pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé à la racine, copie en cours..."
-            docker cp pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+            echo "Fichier pipeline_batch.py trouvé à la racine, copie en cours dans ./airflow/dags/..."
+            cp pipeline_batch.py ./airflow/dags/pipeline_batch.py
           # Sinon, vérifier dans le sous-répertoire dags/
           elif [ -f "dags/pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire dags/, copie en cours..."
-            docker cp dags/pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire dags/, copie en cours dans ./airflow/dags/..."
+            cp dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
           # Sinon, vérifier dans le sous-répertoire airflow/dags/
           elif [ -f "airflow/dags/pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/, copie en cours..."
-            docker cp airflow/dags/pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/, copie en cours dans ./airflow/dags/..."
+            cp airflow/dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
           else
             echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine, ni dans le sous-répertoire dags/, ni dans airflow/dags/ !"
             exit 1
           fi
-          # Vérifier que le fichier a été copié et afficher ses permissions
-          echo "Permissions du fichier après la copie :"
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
-          # Ajuster les permissions en tant que root pour s'assurer que le fichier est lisible
-          docker exec -u root d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 chmod 644 /opt/airflow/dags/pipeline_batch.py
-          # Vérifier les permissions après modification
-          echo "Permissions du fichier après chmod :"
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
+          # Ajuster les permissions sur l'hôte pour s'assurer que le fichier est lisible
+          chmod 644 ./airflow/dags/pipeline_batch.py
+          # Vérifier que le fichier est bien dans ./airflow/dags/
+          echo "Contenu de ./airflow/dags/ après la copie :"
+          ls -l ./airflow/dags/
+          # Vérifier que le fichier est visible dans les conteneurs
+          echo "Contenu de /opt/airflow/dags/ dans airflow-webserver :"
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/
+          echo "Contenu de /opt/airflow/dags/ dans airflow-scheduler :"
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 ls -l /opt/airflow/dags/
 
       - name: Force Airflow DAG synchronization
         run: |
-          echo "Forcing Airflow to synchronize DAGs..."
+          echo "Forcing Airflow to synchronize DAGs in webserver..."
           docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list
+          echo "Forcing Airflow to synchronize DAGs in scheduler..."
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 airflow dags list
 
       - name: Wait for Airflow scheduler to sync with database
         run: |
@@ -137,25 +141,25 @@ jobs:
             local max_attempts=$2
             local attempt=1
 
-            echo "Attente du chargement du DAG $dag_id par Airflow..."
+            echo "Attente du chargement du DAG $dag_id par Airflow (scheduler)..."
             while [ $attempt -le $max_attempts ]; do
-              # Lister les DAGs et vérifier si external_customer_pipeline est présent
-              if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list | grep -q "$dag_id"; then
-                echo "DAG $dag_id chargé avec succès !"
+              # Lister les DAGs dans le scheduler et vérifier si external_customer_pipeline est présent
+              if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 airflow dags list | grep -q "$dag_id"; then
+                echo "DAG $dag_id chargé avec succès dans le scheduler !"
                 return 0
               else
-                echo "Tentative $attempt/$max_attempts : DAG $dag_id non chargé, nouvelle tentative dans 5 secondes..."
+                echo "Tentative $attempt/$max_attempts : DAG $dag_id non chargé dans le scheduler, nouvelle tentative dans 5 secondes..."
                 sleep 5
                 attempt=$((attempt + 1))
               fi
             done
 
-            echo "Erreur : Le DAG $dag_id n'a pas été chargé après $max_attempts tentatives !"
+            echo "Erreur : Le DAG $dag_id n'a pas été chargé dans le scheduler après $max_attempts tentatives !"
             # Afficher les logs du scheduler pour débogage
-            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
+            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
             # Afficher le contenu du fichier pour débogage
             echo "Contenu de pipeline_batch.py pour débogage :"
-            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 cat /opt/airflow/dags/pipeline_batch.py
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 cat /opt/airflow/dags/pipeline_batch.py
             exit 1
           }
 
@@ -188,6 +192,7 @@ jobs:
                   echo "Erreur : Impossible de récupérer le run_id du DAG $dag_id !"
                   # Afficher les logs pour débogage
                   docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
+                  docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
                   exit 1
                 fi
                 echo "Run ID récupéré : $run_id"
