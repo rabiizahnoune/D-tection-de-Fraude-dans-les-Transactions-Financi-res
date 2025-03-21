@@ -94,19 +94,19 @@ jobs:
             local attempt=1
 
             echo "Déclenchement du DAG $dag_id..."
-            docker exec transactions-airflow-webserver-1 airflow dags trigger $dag_id
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags trigger $dag_id
 
             echo "Attente de l'exécution du DAG $dag_id..."
             while [ $attempt -le $max_attempts ]; do
               # Récupérer l'état du dernier DAG run
-              dag_state=$(docker exec transactions-airflow-webserver-1 airflow dags state $dag_id "$(date -u +'%Y-%m-%dT%H:%M:%S+00:00')")
+              dag_state=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags state $dag_id "$(date -u +'%Y-%m-%dT%H:%M:%S+00:00')")
               echo "Tentative $attempt/$max_attempts : État du DAG $dag_id : $dag_state"
 
               if [ "$dag_state" = "success" ]; then
                 echo "DAG $dag_id s'est terminé avec succès !"
 
                 # Récupérer le run_id du dernier DAG run
-                run_id=$(docker exec transactions-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
+                run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
                 if [ -z "$run_id" ]; then
                   echo "Erreur : Impossible de récupérer le run_id du DAG $dag_id !"
                   exit 1
@@ -114,11 +114,11 @@ jobs:
                 echo "Run ID récupéré : $run_id"
 
                 # Récupérer le batch_id depuis XCom pour la tâche fetch_customer_data
-                batch_id=$(docker exec transactions-airflow-webserver-1 airflow tasks get-value $dag_id fetch_customer_data $run_id batch_id | grep -o '[0-9]\{8\}_[0-9]\{6\}')
+                batch_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks get-value $dag_id fetch_customer_data $run_id batch_id | grep -o '[0-9]\{8\}_[0-9]\{6\}')
                 if [ -z "$batch_id" ]; then
                   echo "Erreur : Impossible de récupérer le batch_id depuis XCom pour fetch_customer_data !"
                   # Afficher les logs pour débogage
-                  docker exec transactions-airflow-webserver-1 airflow tasks logs $dag_id fetch_customer_data $run_id
+                  docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks logs $dag_id fetch_customer_data $run_id
                   exit 1
                 fi
                 echo "Batch ID récupéré : $batch_id"
@@ -129,12 +129,12 @@ jobs:
                 return 0
               elif [ "$dag_state" = "failed" ]; then
                 echo "Erreur : Le DAG $dag_id a échoué !"
-                docker exec transactions-airflow-webserver-1 airflow dags list-runs -d $dag_id
+                docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id
                 # Récupérer les logs des tâches pour débogage
-                run_id=$(docker exec transactions-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
+                run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
                 for task in create_hdfs_dirs fetch_external_data fetch_customer_data store_external_data_to_hdfs_and_hive store_customer_data_to_hdfs_and_hive; do
                   echo "Logs pour la tâche $task :"
-                  docker exec transactions-airflow-webserver-1 airflow tasks logs $dag_id $task $run_id || echo "Logs non disponibles pour $task"
+                  docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks logs $dag_id $task $run_id || echo "Logs non disponibles pour $task"
                 done
                 exit 1
               else
@@ -145,7 +145,7 @@ jobs:
             done
 
             echo "Erreur : Le DAG $dag_id n'a pas terminé après $max_attempts tentatives !"
-            docker exec transactions-airflow-webserver-1 airflow dags list-runs -d $dag_id
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id
             exit 1
           }
 
