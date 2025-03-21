@@ -124,6 +124,11 @@ jobs:
           echo "Forcing Airflow to synchronize DAGs..."
           docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list
 
+      - name: Wait for Airflow scheduler to sync with database
+        run: |
+          echo "Waiting for Airflow scheduler to sync DAGs with the database..."
+          sleep 30  # Attendre 30 secondes pour donner au scheduler le temps de synchroniser
+
       - name: Wait for Airflow to load the DAG
         run: |
           # Fonction pour vérifier si le DAG est chargé
@@ -181,6 +186,8 @@ jobs:
                 run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
                 if [ -z "$run_id" ]; then
                   echo "Erreur : Impossible de récupérer le run_id du DAG $dag_id !"
+                  # Afficher les logs pour débogage
+                  docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
                   exit 1
                 fi
                 echo "Run ID récupéré : $run_id"
