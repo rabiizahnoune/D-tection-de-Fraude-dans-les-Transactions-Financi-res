@@ -24,6 +24,17 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
+      - name: Prepare Airflow directories and set permissions
+        run: |
+          # Créer les répertoires nécessaires sur l'hôte
+          mkdir -p ./airflow/logs ./airflow/dags
+          # Ajuster les permissions pour que l'utilisateur airflow (UID 5000) puisse écrire
+          sudo chown -R 5000:5000 ./airflow
+          sudo chmod -R 775 ./airflow
+          # Vérifier les permissions
+          ls -ld ./airflow
+          ls -l ./airflow
+
       - name: Start Docker Compose services
         run: |
           docker-compose up -d # Lance les conteneurs en mode détaché
