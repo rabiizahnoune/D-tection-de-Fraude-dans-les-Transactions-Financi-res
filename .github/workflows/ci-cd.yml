@@ -104,8 +104,14 @@ jobs:
             cp dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
           # Sinon, vérifier dans le sous-répertoire airflow/dags/
           elif [ -f "airflow/dags/pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/, copie en cours dans ./airflow/dags/..."
-            cp airflow/dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/..."
+            # Vérifier si le fichier est déjà dans ./airflow/dags/
+            if [ ! -f "./airflow/dags/pipeline_batch.py" ] || ! diff "airflow/dags/pipeline_batch.py" "./airflow/dags/pipeline_batch.py" > /dev/null; then
+              echo "Copie en cours dans ./airflow/dags/..."
+              cp airflow/dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
+            else
+              echo "Le fichier est déjà dans ./airflow/dags/ et est identique, pas besoin de copier."
+            fi
           else
             echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine, ni dans le sous-répertoire dags/, ni dans airflow/dags/ !"
             exit 1
