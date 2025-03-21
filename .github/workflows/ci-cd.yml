@@ -110,10 +110,14 @@ jobs:
             echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine, ni dans le sous-répertoire dags/, ni dans airflow/dags/ !"
             exit 1
           fi
-          # Vérifier que le fichier a été copié
+          # Vérifier que le fichier a été copié et afficher ses permissions
+          echo "Permissions du fichier après la copie :"
           docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
-          # Ajuster les permissions pour s'assurer que le fichier est lisible
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 chmod 644 /opt/airflow/dags/pipeline_batch.py
+          # Ajuster les permissions en tant que root pour s'assurer que le fichier est lisible
+          docker exec -u root d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 chmod 644 /opt/airflow/dags/pipeline_batch.py
+          # Vérifier les permissions après modification
+          echo "Permissions du fichier après chmod :"
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
 
       - name: Force Airflow DAG synchronization
         run: |

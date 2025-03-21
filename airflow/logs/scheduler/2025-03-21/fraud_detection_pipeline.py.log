@@ -25046,3 +25046,192 @@ TypeError: on_failure_callback() takes 1 positional argument but 5 were given
 [2025-03-21T22:30:00.080+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:00.079+0000] {dag.py:2915} INFO - Sync 1 DAGs
 [2025-03-21T22:30:00.093+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:00.093+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
 [2025-03-21T22:30:00.125+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.259 seconds
+[2025-03-21T22:30:30.271+0000] {processor.py:157} INFO - Started process (PID=6081) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:30:30.273+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:30:30.275+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:30.275+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:30:30.427+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:30.427+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:30:30.428+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:30.428+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:30:30.437+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:30:30.475+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:30.474+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:30:30.490+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:30.489+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:30:30.520+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.254 seconds
+[2025-03-21T22:31:00.794+0000] {processor.py:157} INFO - Started process (PID=6102) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:31:00.797+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:31:00.799+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:00.798+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:31:00.959+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:00.958+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:31:00.960+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:00.960+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:31:00.970+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:31:01.028+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:01.028+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:31:01.053+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:01.053+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:31:01.086+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.297 seconds
+[2025-03-21T22:31:31.449+0000] {processor.py:157} INFO - Started process (PID=6123) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:31:31.452+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:31:31.454+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:31.453+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:31:31.643+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:31.642+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:31:31.644+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:31.644+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:31:31.655+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:31:31.713+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:31.712+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:31:31.734+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:31.733+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:31:31.765+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.321 seconds
+[2025-03-21T22:32:01.976+0000] {processor.py:157} INFO - Started process (PID=6144) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:32:01.978+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:32:01.979+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:01.978+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:32:02.165+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:02.164+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:32:02.167+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:02.166+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:32:02.182+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:32:02.244+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:02.243+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:32:02.262+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:02.262+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:32:02.293+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.321 seconds
+[2025-03-21T22:32:32.375+0000] {processor.py:157} INFO - Started process (PID=6165) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:32:32.376+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:32:32.379+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:32.378+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:32:32.535+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:32.534+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:32:32.536+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:32.536+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:32:32.545+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:32:32.606+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:32.605+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:32:32.625+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:32.623+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:32:32.653+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.286 seconds
+[2025-03-21T22:33:02.978+0000] {processor.py:157} INFO - Started process (PID=6185) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:33:02.980+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:33:02.981+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:02.981+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:33:03.126+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:03.126+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:33:03.127+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:03.127+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:33:03.138+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:33:03.207+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:03.206+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:33:03.230+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:03.230+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:33:03.260+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.285 seconds
+[2025-03-21T22:33:33.676+0000] {processor.py:157} INFO - Started process (PID=6206) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:33:33.678+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:33:33.679+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:33.679+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:33:33.919+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:33.918+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:33:33.921+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:33.920+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:33:33.932+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:33:33.979+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:33.979+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:33:33.995+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:33.995+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:33:34.021+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.349 seconds
+[2025-03-21T22:34:04.183+0000] {processor.py:157} INFO - Started process (PID=6226) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:34:04.184+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:34:04.185+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:04.185+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:34:04.337+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:04.336+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:34:04.339+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:04.338+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:34:04.349+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:34:04.399+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:04.399+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:34:04.420+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:04.420+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:34:04.461+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.285 seconds
+[2025-03-21T22:34:34.597+0000] {processor.py:157} INFO - Started process (PID=6247) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:34:34.599+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:34:34.600+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:34.599+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:34:34.748+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:34.747+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:34:34.749+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:34.749+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:34:34.756+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:34:34.793+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:34.793+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:34:34.811+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:34.810+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:34:34.843+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.251 seconds
+[2025-03-21T22:35:05.210+0000] {processor.py:157} INFO - Started process (PID=6268) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:35:05.211+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:35:05.212+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:05.212+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:35:05.380+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:05.380+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:35:05.381+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:05.381+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:35:05.389+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:35:05.429+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:05.429+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:35:05.448+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:05.447+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:35:05.497+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.291 seconds
+[2025-03-21T22:35:35.944+0000] {processor.py:157} INFO - Started process (PID=6289) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:35:35.945+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:35:35.946+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:35.946+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:35:36.121+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:36.120+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:35:36.122+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:36.122+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:35:36.128+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:35:36.173+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:36.172+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:35:36.190+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:36.190+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:35:36.231+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.291 seconds
+[2025-03-21T22:36:06.612+0000] {processor.py:157} INFO - Started process (PID=6310) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:36:06.613+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:36:06.614+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:06.614+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:36:06.797+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:06.796+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:36:06.798+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:06.798+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:36:06.807+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:36:06.861+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:06.860+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:36:06.876+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:06.876+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:36:06.910+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.301 seconds
+[2025-03-21T22:36:36.970+0000] {processor.py:157} INFO - Started process (PID=6331) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:36:36.971+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:36:36.973+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:36.972+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:36:37.137+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:37.136+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:36:37.139+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:37.139+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:36:37.147+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:36:37.195+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:37.195+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:36:37.212+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:37.212+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:36:37.239+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.274 seconds
+[2025-03-21T22:37:07.545+0000] {processor.py:157} INFO - Started process (PID=6352) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:37:07.546+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:37:07.548+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:07.547+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:37:07.801+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:07.799+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:37:07.805+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:07.803+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:37:07.813+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:37:07.872+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:07.870+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:37:07.901+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:07.901+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:37:07.950+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.410 seconds
+[2025-03-21T22:37:38.062+0000] {processor.py:157} INFO - Started process (PID=6373) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:37:38.063+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:37:38.065+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:38.064+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:37:38.225+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:38.224+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:37:38.226+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:38.225+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:37:38.233+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:37:38.279+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:38.278+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:37:38.297+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:38.297+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:37:38.335+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.277 seconds
+[2025-03-21T22:38:08.670+0000] {processor.py:157} INFO - Started process (PID=6394) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:38:08.671+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:38:08.672+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:08.672+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:38:08.834+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:08.833+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:38:08.835+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:08.835+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:38:08.847+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:38:08.901+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:08.901+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:38:08.918+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:08.918+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:38:08.949+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.282 seconds
+[2025-03-21T22:38:39.132+0000] {processor.py:157} INFO - Started process (PID=6415) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:38:39.133+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:38:39.135+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:39.134+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:38:39.370+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:39.369+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:38:39.371+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:39.370+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:38:39.380+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:38:39.420+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:39.419+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:38:39.439+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:39.439+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:38:39.474+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.346 seconds
+[2025-03-21T22:39:09.551+0000] {processor.py:157} INFO - Started process (PID=6435) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:39:09.553+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:39:09.554+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:09.554+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:39:09.714+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:09.713+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:39:09.716+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:09.715+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:39:09.731+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:39:09.784+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:09.783+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:39:09.801+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:09.801+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:39:09.834+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.286 seconds
+[2025-03-21T22:39:40.385+0000] {processor.py:157} INFO - Started process (PID=6456) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:39:40.386+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:39:40.389+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:40.388+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:39:40.564+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:40.564+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:39:40.565+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:40.565+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:39:40.575+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:39:40.631+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:40.631+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:39:40.649+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:40.649+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:39:40.686+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.305 seconds
+[2025-03-21T22:40:11.060+0000] {processor.py:157} INFO - Started process (PID=6476) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:40:11.061+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:40:11.063+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:11.062+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:40:11.243+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:11.243+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:40:11.244+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:11.244+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:40:11.253+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:40:11.304+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:11.303+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:40:11.324+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:11.322+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:40:11.367+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.312 seconds
+[2025-03-21T22:40:41.637+0000] {processor.py:157} INFO - Started process (PID=6496) to work on /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:40:41.639+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/fraud_detection_pipeline.py for tasks to queue
+[2025-03-21T22:40:41.641+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:41.640+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:40:41.825+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:41.823+0000] {fraud_detection_pipeline.py:289} WARNING - Command failed with return code 2 during DAG construction. Treating as no files found.
+[2025-03-21T22:40:41.827+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:41.827+0000] {fraud_detection_pipeline.py:306} INFO - No files to process, DAG will complete successfully without generating tasks.
+[2025-03-21T22:40:41.837+0000] {processor.py:839} INFO - DAG(s) dict_keys(['transactions_pipeline']) retrieved from /opt/airflow/dags/fraud_detection_pipeline.py
+[2025-03-21T22:40:41.893+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:41.893+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:40:41.917+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:41.916+0000] {dag.py:3696} INFO - Setting next_dagrun for transactions_pipeline to None, run_after=None
+[2025-03-21T22:40:41.961+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/fraud_detection_pipeline.py took 0.330 seconds

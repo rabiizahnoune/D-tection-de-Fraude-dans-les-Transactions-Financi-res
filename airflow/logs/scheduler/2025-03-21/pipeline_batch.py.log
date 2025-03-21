@@ -1652,3 +1652,157 @@
 [2025-03-21T22:29:49.644+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:29:49.644+0000] {dag.py:2915} INFO - Sync 1 DAGs
 [2025-03-21T22:29:49.658+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:29:49.658+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
 [2025-03-21T22:29:49.692+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.128 seconds
+[2025-03-21T22:30:20.060+0000] {processor.py:157} INFO - Started process (PID=6076) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:30:20.062+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:30:20.064+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:20.064+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:30:20.090+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:30:20.157+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:20.157+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:30:20.178+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:20.178+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:30:20.207+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.150 seconds
+[2025-03-21T22:30:50.626+0000] {processor.py:157} INFO - Started process (PID=6097) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:30:50.627+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:30:50.629+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:50.629+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:30:50.659+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:30:50.726+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:50.726+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:30:50.741+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:30:50.740+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:30:50.766+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.144 seconds
+[2025-03-21T22:31:21.141+0000] {processor.py:157} INFO - Started process (PID=6118) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:31:21.142+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:31:21.144+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:21.143+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:31:21.183+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:31:21.264+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:21.264+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:31:21.284+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:21.284+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:31:21.319+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.183 seconds
+[2025-03-21T22:31:51.696+0000] {processor.py:157} INFO - Started process (PID=6139) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:31:51.698+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:31:51.699+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:51.698+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:31:51.723+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:31:51.795+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:51.795+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:31:51.811+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:31:51.811+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:31:51.845+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.154 seconds
+[2025-03-21T22:32:22.222+0000] {processor.py:157} INFO - Started process (PID=6160) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:32:22.223+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:32:22.225+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:22.224+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:32:22.253+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:32:22.348+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:22.347+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:32:22.364+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:22.364+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:32:22.398+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.180 seconds
+[2025-03-21T22:32:52.798+0000] {processor.py:157} INFO - Started process (PID=6180) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:32:52.800+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:32:52.802+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:52.801+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:32:52.851+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:32:52.941+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:52.941+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:32:52.963+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:32:52.963+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:32:53.010+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.219 seconds
+[2025-03-21T22:33:23.391+0000] {processor.py:157} INFO - Started process (PID=6201) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:33:23.392+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:33:23.395+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:23.394+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:33:23.421+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:33:23.486+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:23.486+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:33:23.502+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:23.502+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:33:23.534+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.153 seconds
+[2025-03-21T22:33:53.894+0000] {processor.py:157} INFO - Started process (PID=6221) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:33:53.895+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:33:53.896+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:53.896+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:33:53.918+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:33:53.984+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:53.983+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:33:53.998+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:33:53.998+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:33:54.029+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.141 seconds
+[2025-03-21T22:34:24.466+0000] {processor.py:157} INFO - Started process (PID=6242) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:34:24.468+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:34:24.470+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:24.469+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:34:24.508+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:34:24.584+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:24.583+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:34:24.596+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:24.596+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:34:24.627+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.167 seconds
+[2025-03-21T22:34:55.021+0000] {processor.py:157} INFO - Started process (PID=6263) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:34:55.022+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:34:55.023+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:55.023+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:34:55.051+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:34:55.122+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:55.122+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:34:55.136+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:34:55.135+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:34:55.164+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.147 seconds
+[2025-03-21T22:35:25.622+0000] {processor.py:157} INFO - Started process (PID=6284) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:35:25.624+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:35:25.626+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:25.625+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:35:25.659+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:35:25.732+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:25.732+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:35:25.749+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:25.748+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:35:25.784+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.170 seconds
+[2025-03-21T22:35:56.227+0000] {processor.py:157} INFO - Started process (PID=6305) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:35:56.228+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:35:56.230+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:56.229+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:35:56.255+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:35:56.351+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:56.351+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:35:56.369+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:35:56.369+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:35:56.402+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.179 seconds
+[2025-03-21T22:36:26.849+0000] {processor.py:157} INFO - Started process (PID=6326) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:36:26.851+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:36:26.852+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:26.852+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:36:26.879+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:36:26.946+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:26.946+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:36:26.972+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:26.971+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:36:27.025+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.180 seconds
+[2025-03-21T22:36:57.380+0000] {processor.py:157} INFO - Started process (PID=6347) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:36:57.388+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:36:57.432+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:57.431+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:36:57.472+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:36:57.549+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:57.549+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:36:57.565+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:36:57.565+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:36:57.597+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.224 seconds
+[2025-03-21T22:37:27.968+0000] {processor.py:157} INFO - Started process (PID=6368) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:37:27.970+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:37:27.971+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:27.971+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:37:28.009+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:37:28.080+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:28.080+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:37:28.097+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:28.097+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:37:28.131+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.169 seconds
+[2025-03-21T22:37:58.507+0000] {processor.py:157} INFO - Started process (PID=6389) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:37:58.509+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:37:58.510+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:58.509+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:37:58.536+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:37:58.621+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:58.620+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:37:58.637+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:37:58.636+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:37:58.668+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.164 seconds
+[2025-03-21T22:38:28.991+0000] {processor.py:157} INFO - Started process (PID=6410) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:38:28.992+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:38:28.993+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:28.993+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:38:29.017+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:38:29.080+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:29.080+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:38:29.095+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:29.095+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:38:29.122+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.135 seconds
+[2025-03-21T22:38:59.429+0000] {processor.py:157} INFO - Started process (PID=6430) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:38:59.430+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:38:59.431+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:59.431+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:38:59.454+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:38:59.518+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:59.518+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:38:59.534+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:38:59.534+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:38:59.564+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.139 seconds
+[2025-03-21T22:39:30.050+0000] {processor.py:157} INFO - Started process (PID=6451) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:39:30.051+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:39:30.052+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:30.052+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:39:30.075+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:39:30.135+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:30.135+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:39:30.169+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:39:30.168+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:39:30.215+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.175 seconds
+[2025-03-21T22:40:00.570+0000] {processor.py:157} INFO - Started process (PID=6471) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:40:00.576+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:40:00.578+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:00.578+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:40:00.623+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:40:00.728+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:00.727+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:40:00.748+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:00.748+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:40:00.786+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.224 seconds
+[2025-03-21T22:40:31.282+0000] {processor.py:157} INFO - Started process (PID=6491) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:40:31.284+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:40:31.285+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:31.285+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:40:31.311+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:40:31.402+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:31.402+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:40:31.419+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:40:31.418+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:40:31.457+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.179 seconds
+[2025-03-21T22:41:01.858+0000] {processor.py:157} INFO - Started process (PID=6512) to work on /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:41:01.859+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/pipeline_batch.py for tasks to queue
+[2025-03-21T22:41:01.861+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:41:01.860+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:41:01.895+0000] {processor.py:839} INFO - DAG(s) dict_keys(['external_customer_pipeline']) retrieved from /opt/airflow/dags/pipeline_batch.py
+[2025-03-21T22:41:01.968+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:41:01.967+0000] {dag.py:2915} INFO - Sync 1 DAGs
+[2025-03-21T22:41:01.986+0000] {logging_mixin.py:151} INFO - [2025-03-21T22:41:01.985+0000] {dag.py:3696} INFO - Setting next_dagrun for external_customer_pipeline to None, run_after=None
+[2025-03-21T22:41:02.019+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/pipeline_batch.py took 0.165 seconds
