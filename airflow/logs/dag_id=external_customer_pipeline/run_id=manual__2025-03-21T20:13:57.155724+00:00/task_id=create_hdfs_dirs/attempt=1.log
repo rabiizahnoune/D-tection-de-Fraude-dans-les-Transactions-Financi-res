@@ -1,0 +1,18 @@
+[2025-03-21T20:13:59.443+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: external_customer_pipeline.create_hdfs_dirs manual__2025-03-21T20:13:57.155724+00:00 [queued]>
+[2025-03-21T20:13:59.460+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: external_customer_pipeline.create_hdfs_dirs manual__2025-03-21T20:13:57.155724+00:00 [queued]>
+[2025-03-21T20:13:59.461+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 2
+[2025-03-21T20:13:59.492+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): create_hdfs_dirs> on 2025-03-21 20:13:57.155724+00:00
+[2025-03-21T20:13:59.507+0000] {standard_task_runner.py:57} INFO - Started process 1056 to run task
+[2025-03-21T20:13:59.513+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'external_customer_pipeline', 'create_hdfs_dirs', 'manual__2025-03-21T20:13:57.155724+00:00', '--job-id', '876', '--raw', '--subdir', 'DAGS_FOLDER/pipeline_batch.py', '--cfg-path', '/tmp/tmp_kjaerw3']
+[2025-03-21T20:13:59.517+0000] {standard_task_runner.py:85} INFO - Job 876: Subtask create_hdfs_dirs
+[2025-03-21T20:13:59.602+0000] {task_command.py:415} INFO - Running <TaskInstance: external_customer_pipeline.create_hdfs_dirs manual__2025-03-21T20:13:57.155724+00:00 [running]> on host 4f421949e8a6
+[2025-03-21T20:13:59.710+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='external_customer_pipeline' AIRFLOW_CTX_TASK_ID='create_hdfs_dirs' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T20:13:57.155724+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T20:13:57.155724+00:00'
+[2025-03-21T20:13:59.712+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T20:13:59.714+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n        docker exec hive hdfs dfs -mkdir -p /data/external_data &&         docker exec hive hdfs dfs -mkdir -p /data/customer &&         docker exec hive hdfs dfs -test -d /data/external_data || (echo "Failed to create /data/external_data" && exit 1) &&         docker exec hive hdfs dfs -test -d /data/customer || (echo "Failed to create /data/customer" && exit 1)\n        ']
+[2025-03-21T20:13:59.728+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T20:14:09.006+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-03-21T20:14:09.044+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=external_customer_pipeline, task_id=create_hdfs_dirs, execution_date=20250321T201357, start_date=20250321T201359, end_date=20250321T201409
+[2025-03-21T20:14:09.052+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:206 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T20:14:09.492+0000] {pipeline_batch.py:46} INFO - Discord message sent successfully
+[2025-03-21T20:14:09.539+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T20:14:09.596+0000] {taskinstance.py:2776} INFO - 2 downstream tasks scheduled from follow-on schedule check

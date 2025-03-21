@@ -1,0 +1,17 @@
+[2025-03-21T20:19:58.661+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: external_customer_pipeline.fetch_external_data manual__2025-03-21T20:19:39.307019+00:00 [queued]>
+[2025-03-21T20:19:58.682+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: external_customer_pipeline.fetch_external_data manual__2025-03-21T20:19:39.307019+00:00 [queued]>
+[2025-03-21T20:19:58.683+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 3
+[2025-03-21T20:19:58.705+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): fetch_external_data> on 2025-03-21 20:19:39.307019+00:00
+[2025-03-21T20:19:58.715+0000] {standard_task_runner.py:57} INFO - Started process 1622 to run task
+[2025-03-21T20:19:58.722+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'external_customer_pipeline', 'fetch_external_data', 'manual__2025-03-21T20:19:39.307019+00:00', '--job-id', '893', '--raw', '--subdir', 'DAGS_FOLDER/pipeline_batch.py', '--cfg-path', '/tmp/tmppxtvwk1k']
+[2025-03-21T20:19:58.728+0000] {standard_task_runner.py:85} INFO - Job 893: Subtask fetch_external_data
+[2025-03-21T20:19:58.814+0000] {task_command.py:415} INFO - Running <TaskInstance: external_customer_pipeline.fetch_external_data manual__2025-03-21T20:19:39.307019+00:00 [running]> on host 4f421949e8a6
+[2025-03-21T20:19:58.927+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='external_customer_pipeline' AIRFLOW_CTX_TASK_ID='fetch_external_data' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T20:19:39.307019+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T20:19:39.307019+00:00'
+[2025-03-21T20:19:58.936+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:314 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T20:19:59.320+0000] {pipeline_batch.py:47} INFO - Discord message sent successfully
+[2025-03-21T20:19:59.325+0000] {python.py:194} INFO - Done. Returned value was: None
+[2025-03-21T20:19:59.352+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=external_customer_pipeline, task_id=fetch_external_data, execution_date=20250321T201939, start_date=20250321T201958, end_date=20250321T201959
+[2025-03-21T20:19:59.354+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:206 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T20:19:59.803+0000] {pipeline_batch.py:47} INFO - Discord message sent successfully
+[2025-03-21T20:19:59.870+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T20:19:59.950+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

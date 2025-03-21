@@ -85,7 +85,7 @@ with DAG(
     'transactions_pipeline',
     default_args=default_args,
     description='Process transactions dynamically when new files are detected',
-    schedule_interval=timedelta(minutes=8),
+    schedule_interval=None,
     start_date=datetime(2025, 3, 21),
     catchup=False,
     tags=['transactions', 'fraud_detection'],

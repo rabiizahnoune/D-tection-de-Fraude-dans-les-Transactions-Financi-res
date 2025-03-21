@@ -14,7 +14,6 @@ def generate_external_data():
 @app.route('/generate/externaldata', methods=['GET'])
 def get_external_data():
     external_data = generate_external_data()
-    time.sleep(60)  # Mise à jour toutes les minutes
     return jsonify(external_data)
 
 if __name__ == '__main__':

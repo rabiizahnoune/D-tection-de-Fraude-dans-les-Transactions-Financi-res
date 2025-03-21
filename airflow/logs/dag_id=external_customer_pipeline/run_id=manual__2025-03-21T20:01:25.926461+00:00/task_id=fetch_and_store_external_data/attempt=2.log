@@ -1,0 +1,28 @@
+[2025-03-21T20:06:53.606+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: external_customer_pipeline.fetch_and_store_external_data manual__2025-03-21T20:01:25.926461+00:00 [queued]>
+[2025-03-21T20:06:53.627+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: external_customer_pipeline.fetch_and_store_external_data manual__2025-03-21T20:01:25.926461+00:00 [queued]>
+[2025-03-21T20:06:53.628+0000] {taskinstance.py:1359} INFO - Starting attempt 2 of 2
+[2025-03-21T20:06:53.651+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): fetch_and_store_external_data> on 2025-03-21 20:01:25.926461+00:00
+[2025-03-21T20:06:53.662+0000] {standard_task_runner.py:57} INFO - Started process 675 to run task
+[2025-03-21T20:06:53.690+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'external_customer_pipeline', 'fetch_and_store_external_data', 'manual__2025-03-21T20:01:25.926461+00:00', '--job-id', '867', '--raw', '--subdir', 'DAGS_FOLDER/pipeline_batch.py', '--cfg-path', '/tmp/tmp45ui8pdr']
+[2025-03-21T20:06:53.700+0000] {standard_task_runner.py:85} INFO - Job 867: Subtask fetch_and_store_external_data
+[2025-03-21T20:06:53.789+0000] {task_command.py:415} INFO - Running <TaskInstance: external_customer_pipeline.fetch_and_store_external_data manual__2025-03-21T20:01:25.926461+00:00 [running]> on host 4f421949e8a6
+[2025-03-21T20:06:53.917+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='external_customer_pipeline' AIRFLOW_CTX_TASK_ID='fetch_and_store_external_data' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T20:01:25.926461+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T20:01:25.926461+00:00'
+[2025-03-21T20:06:53.928+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:314 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T20:06:56.739+0000] {pipeline_batch.py:44} INFO - Discord message sent successfully
+[2025-03-21T20:06:56.742+0000] {taskinstance.py:1935} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/pipeline_batch.py", line 118, in fetch_and_store_external_data
+    subprocess.run(
+  File "/usr/local/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'exec', 'hive', 'hdfs', 'dfs', '-put', '-f', '/tmp/external_data_20250321_200125.json', '/data/external_data/external_data_20250321_200125.json']' returned non-zero exit status 1.
+[2025-03-21T20:06:56.761+0000] {taskinstance.py:1398} INFO - Marking task as FAILED. dag_id=external_customer_pipeline, task_id=fetch_and_store_external_data, execution_date=20250321T200125, start_date=20250321T200653, end_date=20250321T200656
+[2025-03-21T20:06:56.764+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:206 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T20:06:57.177+0000] {pipeline_batch.py:44} INFO - Discord message sent successfully
+[2025-03-21T20:06:57.203+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 867 for task fetch_and_store_external_data (Command '['docker', 'exec', 'hive', 'hdfs', 'dfs', '-put', '-f', '/tmp/external_data_20250321_200125.json', '/data/external_data/external_data_20250321_200125.json']' returned non-zero exit status 1.; 675)
+[2025-03-21T20:06:57.247+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-03-21T20:06:57.278+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

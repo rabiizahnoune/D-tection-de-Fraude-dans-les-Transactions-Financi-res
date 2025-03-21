@@ -1,0 +1,20 @@
+[2025-03-21T20:30:51.635+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: external_customer_pipeline.create_hdfs_dirs manual__2025-03-21T20:30:49.402077+00:00 [queued]>
+[2025-03-21T20:30:51.667+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: external_customer_pipeline.create_hdfs_dirs manual__2025-03-21T20:30:49.402077+00:00 [queued]>
+[2025-03-21T20:30:51.669+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 3
+[2025-03-21T20:30:51.734+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): create_hdfs_dirs> on 2025-03-21 20:30:49.402077+00:00
+[2025-03-21T20:30:51.744+0000] {standard_task_runner.py:57} INFO - Started process 2378 to run task
+[2025-03-21T20:30:51.756+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'external_customer_pipeline', 'create_hdfs_dirs', 'manual__2025-03-21T20:30:49.402077+00:00', '--job-id', '909', '--raw', '--subdir', 'DAGS_FOLDER/pipeline_batch.py', '--cfg-path', '/tmp/tmpdr84xmjh']
+[2025-03-21T20:30:51.764+0000] {standard_task_runner.py:85} INFO - Job 909: Subtask create_hdfs_dirs
+[2025-03-21T20:30:51.934+0000] {task_command.py:415} INFO - Running <TaskInstance: external_customer_pipeline.create_hdfs_dirs manual__2025-03-21T20:30:49.402077+00:00 [running]> on host 4f421949e8a6
+[2025-03-21T20:30:52.088+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='external_customer_pipeline' AIRFLOW_CTX_TASK_ID='create_hdfs_dirs' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T20:30:49.402077+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T20:30:49.402077+00:00'
+[2025-03-21T20:30:52.092+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T20:30:52.095+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n        docker exec hive hdfs dfs -mkdir -p /data/external_data &&         docker exec hive hdfs dfs -mkdir -p /data/customer &&         docker exec hive hdfs dfs -chmod -R 777 /data/external_data &&         docker exec hive hdfs dfs -chmod -R 777 /data/customer &&         docker exec hive hdfs dfs -test -d /data/external_data || (echo "Failed to create /data/external_data" && exit 1) &&         docker exec hive hdfs dfs -test -d /data/customer || (echo "Failed to create /data/customer" && exit 1)\n        ']
+[2025-03-21T20:30:52.125+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T20:31:01.334+0000] {local_task_job_runner.py:294} WARNING - State of this instance has been externally set to failed. Terminating instance.
+[2025-03-21T20:31:01.351+0000] {process_utils.py:131} INFO - Sending 15 to group 2378. PIDs of all processes in the group: [2379, 2415, 2378]
+[2025-03-21T20:31:01.354+0000] {process_utils.py:86} INFO - Sending the signal 15 to group 2378
+[2025-03-21T20:31:01.356+0000] {taskinstance.py:1630} ERROR - Received SIGTERM. Terminating subprocesses.
+[2025-03-21T20:31:01.360+0000] {subprocess.py:104} INFO - Sending SIGTERM signal to process group
+[2025-03-21T20:31:01.383+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=2415, status='terminated', started='20:31:00') (2415) terminated with exit code None
+[2025-03-21T20:31:01.530+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=2379, status='terminated', started='20:30:51') (2379) terminated with exit code None
+[2025-03-21T20:31:01.531+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=2378, status='terminated', exitcode=0, started='20:30:51') (2378) terminated with exit code 0
