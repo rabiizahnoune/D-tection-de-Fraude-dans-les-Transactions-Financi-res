@@ -102,14 +102,23 @@ jobs:
           elif [ -f "dags/pipeline_batch.py" ]; then
             echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire dags/, copie en cours..."
             docker cp dags/pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+          # Sinon, vérifier dans le sous-répertoire airflow/dags/
+          elif [ -f "airflow/dags/pipeline_batch.py" ]; then
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/, copie en cours..."
+            docker cp airflow/dags/pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
           else
-            echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine ni dans le sous-répertoire dags/ !"
+            echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine, ni dans le sous-répertoire dags/, ni dans airflow/dags/ !"
             exit 1
           fi
           # Vérifier que le fichier a été copié
           docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
           # Ajuster les permissions pour s'assurer que le fichier est lisible
           docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 chmod 644 /opt/airflow/dags/pipeline_batch.py
+
+      - name: Force Airflow DAG synchronization
+        run: |
+          echo "Forcing Airflow to synchronize DAGs..."
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list
 
       - name: Wait for Airflow to load the DAG
         run: |
@@ -135,6 +144,9 @@ jobs:
             echo "Erreur : Le DAG $dag_id n'a pas été chargé après $max_attempts tentatives !"
             # Afficher les logs du scheduler pour débogage
             docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
+            # Afficher le contenu du fichier pour débogage
+            echo "Contenu de pipeline_batch.py pour débogage :"
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 cat /opt/airflow/dags/pipeline_batch.py
             exit 1
           }
 
