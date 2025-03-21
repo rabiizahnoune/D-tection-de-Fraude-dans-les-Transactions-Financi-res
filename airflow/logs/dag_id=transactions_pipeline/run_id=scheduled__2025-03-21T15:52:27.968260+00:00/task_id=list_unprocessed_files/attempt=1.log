@@ -1,0 +1,27 @@
+[2025-03-21T16:00:31.668+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.list_unprocessed_files scheduled__2025-03-21T15:52:27.968260+00:00 [queued]>
+[2025-03-21T16:00:31.678+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.list_unprocessed_files scheduled__2025-03-21T15:52:27.968260+00:00 [queued]>
+[2025-03-21T16:00:31.680+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T16:00:31.697+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): list_unprocessed_files> on 2025-03-21 15:52:27.968260+00:00
+[2025-03-21T16:00:31.703+0000] {standard_task_runner.py:57} INFO - Started process 840 to run task
+[2025-03-21T16:00:31.707+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'list_unprocessed_files', 'scheduled__2025-03-21T15:52:27.968260+00:00', '--job-id', '859', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpmch3gl8f']
+[2025-03-21T16:00:31.710+0000] {standard_task_runner.py:85} INFO - Job 859: Subtask list_unprocessed_files
+[2025-03-21T16:00:31.771+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.list_unprocessed_files scheduled__2025-03-21T15:52:27.968260+00:00 [running]> on host 31abf5c063d1
+[2025-03-21T16:00:31.861+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='list_unprocessed_files' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T15:52:27.968260+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-21T15:52:27.968260+00:00'
+[2025-03-21T16:00:31.965+0000] {fraud_detection_pipeline.py:132} INFO - Listing files in /data/transactions
+[2025-03-21T16:00:32.068+0000] {fraud_detection_pipeline.py:138} INFO - Command stdout: ''
+[2025-03-21T16:00:32.069+0000] {fraud_detection_pipeline.py:139} INFO - Command stderr: ''
+[2025-03-21T16:00:32.069+0000] {fraud_detection_pipeline.py:140} INFO - Command return code: 2
+[2025-03-21T16:00:32.070+0000] {fraud_detection_pipeline.py:143} WARNING - Command failed with return code 2. Treating as no files found.
+[2025-03-21T16:01:00.544+0000] {fraud_detection_pipeline.py:132} INFO - Listing files in /data/transactions
+[2025-03-21T16:01:00.684+0000] {fraud_detection_pipeline.py:138} INFO - Command stdout: ''
+[2025-03-21T16:01:00.685+0000] {fraud_detection_pipeline.py:139} INFO - Command stderr: ''
+[2025-03-21T16:01:00.686+0000] {fraud_detection_pipeline.py:140} INFO - Command return code: 2
+[2025-03-21T16:01:00.686+0000] {fraud_detection_pipeline.py:143} WARNING - Command failed with return code 2. Treating as no files found.
+[2025-03-21T16:01:29.590+0000] {fraud_detection_pipeline.py:52} INFO - Discord message sent successfully
+[2025-03-21T16:01:29.592+0000] {fraud_detection_pipeline.py:177} INFO - No batch files found in /data/transactions after waiting 60 seconds, skipping...
+[2025-03-21T16:01:29.594+0000] {python.py:194} INFO - Done. Returned value was: []
+[2025-03-21T16:01:29.632+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=list_unprocessed_files, execution_date=20250321T155227, start_date=20250321T160031, end_date=20250321T160129
+[2025-03-21T16:01:29.642+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:206 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T16:01:28.419+0000] {fraud_detection_pipeline.py:52} INFO - Discord message sent successfully
+[2025-03-21T16:01:28.482+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T16:01:28.508+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

@@ -1,0 +1,16 @@
+[2025-03-21T14:06:52.971+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.move_processed_file_batch_20250321_140510 manual__2025-03-21T14:05:25.008554+00:00 [queued]>
+[2025-03-21T14:06:52.993+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.move_processed_file_batch_20250321_140510 manual__2025-03-21T14:05:25.008554+00:00 [queued]>
+[2025-03-21T14:06:52.994+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T14:06:53.013+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): move_processed_file_batch_20250321_140510> on 2025-03-21 14:05:25.008554+00:00
+[2025-03-21T14:06:53.021+0000] {standard_task_runner.py:57} INFO - Started process 2792 to run task
+[2025-03-21T14:06:53.025+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'move_processed_file_batch_20250321_140510', 'manual__2025-03-21T14:05:25.008554+00:00', '--job-id', '769', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpjn1wikrh']
+[2025-03-21T14:06:53.028+0000] {standard_task_runner.py:85} INFO - Job 769: Subtask move_processed_file_batch_20250321_140510
+[2025-03-21T14:06:53.108+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.move_processed_file_batch_20250321_140510 manual__2025-03-21T14:05:25.008554+00:00 [running]> on host e95638583d4d
+[2025-03-21T14:06:53.229+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='rabiizahnoune7@gmail.com' AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='move_processed_file_batch_20250321_140510' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T14:05:25.008554+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T14:05:25.008554+00:00'
+[2025-03-21T14:06:53.231+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T14:06:53.233+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n            docker exec kafka bash -c "mv /data/transactions/transactions_batch_20250321_140510.parquet /data/transactions/processed/"\n            ']
+[2025-03-21T14:06:53.247+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T14:06:53.385+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-03-21T14:06:53.432+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=move_processed_file_batch_20250321_140510, execution_date=20250321T140525, start_date=20250321T140652, end_date=20250321T140653
+[2025-03-21T14:06:53.483+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T14:06:53.509+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

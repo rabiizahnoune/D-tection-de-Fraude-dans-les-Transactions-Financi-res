@@ -20,7 +20,7 @@ producer = KafkaProducer(
 )
 
 # Limiter le nombre de messages produits
-MAX_MESSAGES = 25
+MAX_MESSAGES = 601
 message_count = 0
 
 while message_count < MAX_MESSAGES:

@@ -1,0 +1,16 @@
+[2025-03-21T15:32:57.185+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.create_processed_dir manual__2025-03-21T15:32:54.692072+00:00 [queued]>
+[2025-03-21T15:32:57.208+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.create_processed_dir manual__2025-03-21T15:32:54.692072+00:00 [queued]>
+[2025-03-21T15:32:57.209+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T15:32:57.241+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): create_processed_dir> on 2025-03-21 15:32:54.692072+00:00
+[2025-03-21T15:32:57.252+0000] {standard_task_runner.py:57} INFO - Started process 6962 to run task
+[2025-03-21T15:32:57.257+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'create_processed_dir', 'manual__2025-03-21T15:32:54.692072+00:00', '--job-id', '824', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmp2igtf8tx']
+[2025-03-21T15:32:57.262+0000] {standard_task_runner.py:85} INFO - Job 824: Subtask create_processed_dir
+[2025-03-21T15:32:57.351+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.create_processed_dir manual__2025-03-21T15:32:54.692072+00:00 [running]> on host e95638583d4d
+[2025-03-21T15:32:57.520+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='rabiizahnoune7@gmail.com' AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='create_processed_dir' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T15:32:54.692072+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T15:32:54.692072+00:00'
+[2025-03-21T15:32:57.523+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T15:32:57.524+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', "docker exec kafka bash -c 'mkdir -p /data/transactions/processed'"]
+[2025-03-21T15:32:57.549+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T15:32:57.713+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-03-21T15:32:57.766+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=create_processed_dir, execution_date=20250321T153254, start_date=20250321T153257, end_date=20250321T153257
+[2025-03-21T15:32:57.847+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T15:32:57.882+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

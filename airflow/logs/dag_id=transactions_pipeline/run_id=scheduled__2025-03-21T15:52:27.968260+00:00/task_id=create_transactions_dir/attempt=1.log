@@ -1,0 +1,18 @@
+[2025-03-21T16:00:29.667+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.create_transactions_dir scheduled__2025-03-21T15:52:27.968260+00:00 [queued]>
+[2025-03-21T16:00:29.677+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.create_transactions_dir scheduled__2025-03-21T15:52:27.968260+00:00 [queued]>
+[2025-03-21T16:00:29.678+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T16:00:29.694+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): create_transactions_dir> on 2025-03-21 15:52:27.968260+00:00
+[2025-03-21T16:00:29.702+0000] {standard_task_runner.py:57} INFO - Started process 806 to run task
+[2025-03-21T16:00:29.706+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'create_transactions_dir', 'scheduled__2025-03-21T15:52:27.968260+00:00', '--job-id', '858', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpmpl47zwa']
+[2025-03-21T16:00:29.710+0000] {standard_task_runner.py:85} INFO - Job 858: Subtask create_transactions_dir
+[2025-03-21T16:00:29.765+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.create_transactions_dir scheduled__2025-03-21T15:52:27.968260+00:00 [running]> on host 31abf5c063d1
+[2025-03-21T16:00:29.877+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='create_transactions_dir' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T15:52:27.968260+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-21T15:52:27.968260+00:00'
+[2025-03-21T16:00:29.879+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T16:00:29.881+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n        docker exec kafka bash -c \'mkdir -p /data/transactions && mkdir -p /data/transactions/processed\' &&         docker exec kafka bash -c \'[ -d /data/transactions ] || (echo "Failed to create /data/transactions" && exit 1)\'\n        ']
+[2025-03-21T16:00:29.896+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T16:00:30.090+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-03-21T16:00:30.119+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=create_transactions_dir, execution_date=20250321T155227, start_date=20250321T160029, end_date=20250321T160030
+[2025-03-21T16:00:30.125+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:206 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T16:00:30.581+0000] {fraud_detection_pipeline.py:52} INFO - Discord message sent successfully
+[2025-03-21T16:00:30.613+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T16:00:30.642+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

@@ -1,0 +1,34 @@
+[2025-03-21T15:37:06.923+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.list_unprocessed_files manual__2025-03-21T15:37:00.257372+00:00 [queued]>
+[2025-03-21T15:37:06.939+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.list_unprocessed_files manual__2025-03-21T15:37:00.257372+00:00 [queued]>
+[2025-03-21T15:37:06.940+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T15:37:06.969+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): list_unprocessed_files> on 2025-03-21 15:37:00.257372+00:00
+[2025-03-21T15:37:06.976+0000] {standard_task_runner.py:57} INFO - Started process 7455 to run task
+[2025-03-21T15:37:06.982+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'list_unprocessed_files', 'manual__2025-03-21T15:37:00.257372+00:00', '--job-id', '833', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmp1oasm_x6']
+[2025-03-21T15:37:06.987+0000] {standard_task_runner.py:85} INFO - Job 833: Subtask list_unprocessed_files
+[2025-03-21T15:37:07.064+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.list_unprocessed_files manual__2025-03-21T15:37:00.257372+00:00 [running]> on host e95638583d4d
+[2025-03-21T15:37:07.206+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='list_unprocessed_files' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T15:37:00.257372+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T15:37:00.257372+00:00'
+[2025-03-21T15:37:07.211+0000] {fraud_detection_pipeline.py:53} INFO - Listing files in /data/transactions
+[2025-03-21T15:37:07.327+0000] {fraud_detection_pipeline.py:60} INFO - Command stdout: ''
+[2025-03-21T15:37:07.328+0000] {fraud_detection_pipeline.py:61} INFO - Command stderr: ''
+[2025-03-21T15:37:07.329+0000] {fraud_detection_pipeline.py:62} INFO - Command return code: 2
+[2025-03-21T15:37:07.329+0000] {fraud_detection_pipeline.py:66} WARNING - Command failed with return code 2. Treating as no files found.
+[2025-03-21T15:37:35.859+0000] {fraud_detection_pipeline.py:53} INFO - Listing files in /data/transactions
+[2025-03-21T15:37:35.985+0000] {fraud_detection_pipeline.py:60} INFO - Command stdout: ''
+[2025-03-21T15:37:35.986+0000] {fraud_detection_pipeline.py:61} INFO - Command stderr: ''
+[2025-03-21T15:37:35.987+0000] {fraud_detection_pipeline.py:62} INFO - Command return code: 2
+[2025-03-21T15:37:35.987+0000] {fraud_detection_pipeline.py:66} WARNING - Command failed with return code 2. Treating as no files found.
+[2025-03-21T15:38:04.465+0000] {fraud_detection_pipeline.py:53} INFO - Listing files in /data/transactions
+[2025-03-21T15:38:04.623+0000] {fraud_detection_pipeline.py:60} INFO - Command stdout: ''
+[2025-03-21T15:38:04.625+0000] {fraud_detection_pipeline.py:61} INFO - Command stderr: ''
+[2025-03-21T15:38:04.627+0000] {fraud_detection_pipeline.py:62} INFO - Command return code: 2
+[2025-03-21T15:38:04.628+0000] {fraud_detection_pipeline.py:66} WARNING - Command failed with return code 2. Treating as no files found.
+[2025-03-21T15:38:33.147+0000] {fraud_detection_pipeline.py:53} INFO - Listing files in /data/transactions
+[2025-03-21T15:38:33.372+0000] {fraud_detection_pipeline.py:60} INFO - Command stdout: ''
+[2025-03-21T15:38:33.376+0000] {fraud_detection_pipeline.py:61} INFO - Command stderr: ''
+[2025-03-21T15:38:33.378+0000] {fraud_detection_pipeline.py:62} INFO - Command return code: 2
+[2025-03-21T15:38:33.378+0000] {fraud_detection_pipeline.py:66} WARNING - Command failed with return code 2. Treating as no files found.
+[2025-03-21T15:39:01.893+0000] {fraud_detection_pipeline.py:94} INFO - No batch files found in /data/transactions after waiting 120 seconds, skipping...
+[2025-03-21T15:39:01.894+0000] {python.py:194} INFO - Done. Returned value was: []
+[2025-03-21T15:39:01.932+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=list_unprocessed_files, execution_date=20250321T153700, start_date=20250321T153706, end_date=20250321T153901
+[2025-03-21T15:39:01.964+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T15:39:01.985+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

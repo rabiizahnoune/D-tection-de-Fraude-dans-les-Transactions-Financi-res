@@ -1,0 +1,162 @@
+[2025-03-21T13:24:51.366+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.detect_fraud_batch_20250321_131507 manual__2025-03-21T13:22:01.068828+00:00 [queued]>
+[2025-03-21T13:24:51.425+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.detect_fraud_batch_20250321_131507 manual__2025-03-21T13:22:01.068828+00:00 [queued]>
+[2025-03-21T13:24:51.427+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T13:24:51.456+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): detect_fraud_batch_20250321_131507> on 2025-03-21 13:22:01.068828+00:00
+[2025-03-21T13:24:51.468+0000] {standard_task_runner.py:57} INFO - Started process 1342 to run task
+[2025-03-21T13:24:51.476+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'detect_fraud_batch_20250321_131507', 'manual__2025-03-21T13:22:01.068828+00:00', '--job-id', '609', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpj204fxru']
+[2025-03-21T13:24:51.481+0000] {standard_task_runner.py:85} INFO - Job 609: Subtask detect_fraud_batch_20250321_131507
+[2025-03-21T13:24:51.574+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.detect_fraud_batch_20250321_131507 manual__2025-03-21T13:22:01.068828+00:00 [running]> on host 1b7c3466167a
+[2025-03-21T13:24:51.819+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='rabiizahnoune7@gmail.com' AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='detect_fraud_batch_20250321_131507' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T13:22:01.068828+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T13:22:01.068828+00:00'
+[2025-03-21T13:24:51.824+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T13:24:51.826+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n            docker exec hive spark-submit --master spark://localhost:7077 /hive/scripts/detect_fraud.py "batch_20250321_131507"\n            ']
+[2025-03-21T13:24:51.861+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T13:26:01.629+0000] {subprocess.py:93} INFO - 25/03/21 13:26:01 INFO SparkContext: Running Spark version 3.5.0
+[2025-03-21T13:26:01.635+0000] {subprocess.py:93} INFO - 25/03/21 13:26:01 INFO SparkContext: OS info Linux, 5.15.167.4-microsoft-standard-WSL2, amd64
+[2025-03-21T13:26:01.642+0000] {subprocess.py:93} INFO - 25/03/21 13:26:01 INFO SparkContext: Java version 1.8.0_342
+[2025-03-21T13:26:04.616+0000] {subprocess.py:93} INFO - 25/03/21 13:26:04 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2025-03-21T13:26:07.417+0000] {subprocess.py:93} INFO - 25/03/21 13:26:07 INFO ResourceUtils: ==============================================================
+[2025-03-21T13:26:07.425+0000] {subprocess.py:93} INFO - 25/03/21 13:26:07 INFO ResourceUtils: No custom resources configured for spark.driver.
+[2025-03-21T13:26:07.426+0000] {subprocess.py:93} INFO - 25/03/21 13:26:07 INFO ResourceUtils: ==============================================================
+[2025-03-21T13:26:07.427+0000] {subprocess.py:93} INFO - 25/03/21 13:26:07 INFO SparkContext: Submitted application: FraudDetection
+[2025-03-21T13:26:07.926+0000] {subprocess.py:93} INFO - 25/03/21 13:26:07 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+[2025-03-21T13:26:08.209+0000] {subprocess.py:93} INFO - 25/03/21 13:26:08 INFO ResourceProfile: Limiting resource is cpu
+[2025-03-21T13:26:08.213+0000] {subprocess.py:93} INFO - 25/03/21 13:26:08 INFO ResourceProfileManager: Added ResourceProfile id: 0
+[2025-03-21T13:26:08.920+0000] {subprocess.py:93} INFO - 25/03/21 13:26:08 INFO SecurityManager: Changing view acls to: root
+[2025-03-21T13:26:08.921+0000] {subprocess.py:93} INFO - 25/03/21 13:26:08 INFO SecurityManager: Changing modify acls to: root
+[2025-03-21T13:26:08.921+0000] {subprocess.py:93} INFO - 25/03/21 13:26:08 INFO SecurityManager: Changing view acls groups to:
+[2025-03-21T13:26:09.020+0000] {subprocess.py:93} INFO - 25/03/21 13:26:09 INFO SecurityManager: Changing modify acls groups to:
+[2025-03-21T13:26:09.022+0000] {subprocess.py:93} INFO - 25/03/21 13:26:09 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: root; groups with view permissions: EMPTY; users with modify permissions: root; groups with modify permissions: EMPTY
+[2025-03-21T13:26:21.721+0000] {subprocess.py:93} INFO - 25/03/21 13:26:21 INFO Utils: Successfully started service 'sparkDriver' on port 42831.
+[2025-03-21T13:26:23.523+0000] {subprocess.py:93} INFO - 25/03/21 13:26:23 INFO SparkEnv: Registering MapOutputTracker
+[2025-03-21T13:26:24.721+0000] {subprocess.py:93} INFO - 25/03/21 13:26:24 INFO SparkEnv: Registering BlockManagerMaster
+[2025-03-21T13:26:25.221+0000] {subprocess.py:93} INFO - 25/03/21 13:26:25 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+[2025-03-21T13:26:25.414+0000] {subprocess.py:93} INFO - 25/03/21 13:26:25 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+[2025-03-21T13:26:25.525+0000] {subprocess.py:93} INFO - 25/03/21 13:26:25 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+[2025-03-21T13:26:28.914+0000] {subprocess.py:93} INFO - 25/03/21 13:26:28 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-61cbf021-fa8f-4e95-867f-04c7d0df844c
+[2025-03-21T13:26:29.125+0000] {subprocess.py:93} INFO - 25/03/21 13:26:29 INFO MemoryStore: MemoryStore started with capacity 366.3 MiB
+[2025-03-21T13:26:29.617+0000] {subprocess.py:93} INFO - 25/03/21 13:26:29 INFO SparkEnv: Registering OutputCommitCoordinator
+[2025-03-21T13:26:34.790+0000] {subprocess.py:93} INFO - 25/03/21 13:26:34 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+[2025-03-21T13:26:38.778+0000] {subprocess.py:93} INFO - 25/03/21 13:26:38 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+[2025-03-21T13:26:39.381+0000] {subprocess.py:93} INFO - 25/03/21 13:26:39 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+[2025-03-21T13:26:46.581+0000] {subprocess.py:93} INFO - 25/03/21 13:26:46 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://localhost:7077...
+[2025-03-21T13:26:49.388+0000] {subprocess.py:93} INFO - 25/03/21 13:26:49 INFO TransportClientFactory: Successfully created connection to localhost/127.0.0.1:7077 after 1908 ms (0 ms spent in bootstraps)
+[2025-03-21T13:27:01.088+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20250321132700-0006
+[2025-03-21T13:27:01.480+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 44749.
+[2025-03-21T13:27:01.482+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO NettyBlockTransferService: Server created on e3006a54eed1:44749
+[2025-03-21T13:27:01.498+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+[2025-03-21T13:27:01.584+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, e3006a54eed1, 44749, None)
+[2025-03-21T13:27:01.675+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO BlockManagerMasterEndpoint: Registering block manager e3006a54eed1:44749 with 366.3 MiB RAM, BlockManagerId(driver, e3006a54eed1, 44749, None)
+[2025-03-21T13:27:01.693+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, e3006a54eed1, 44749, None)
+[2025-03-21T13:27:01.699+0000] {subprocess.py:93} INFO - 25/03/21 13:27:01 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, e3006a54eed1, 44749, None)
+[2025-03-21T13:27:16.810+0000] {job.py:219} ERROR - Job heartbeat got an exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 190, in heartbeat
+    session.merge(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3056, in merge
+    return self._merge(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3136, in _merge
+    merged = self.get(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2853, in get
+    return self._get_impl(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2975, in _get_impl
+    return db_load_fn(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/loading.py", line 530, in load_on_pk_identity
+    session.execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/future/engine.py", line 406, in connect
+    return super(Engine, self).connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-03-21T13:27:27.176+0000] {subprocess.py:93} INFO - 25/03/21 13:27:26 INFO AsyncEventQueue: Process of event SparkListenerResourceProfileAdded(Profile: id = 0, executor resources: memory -> name: memory, amount: 1024, script: , vendor: ,offHeap -> name: offHeap, amount: 0, script: , vendor: , task resources: cpus -> name: cpus, amount: 1.0) by listener HeartbeatReceiver took 12.786120434s.
+[2025-03-21T13:27:27.181+0000] {subprocess.py:93} INFO - 25/03/21 13:27:26 INFO AsyncEventQueue: Process of event SparkListenerResourceProfileAdded(Profile: id = 0, executor resources: memory -> name: memory, amount: 1024, script: , vendor: ,offHeap -> name: offHeap, amount: 0, script: , vendor: , task resources: cpus -> name: cpus, amount: 1.0) by listener AppStatusListener took 13.261156303s.
+[2025-03-21T13:27:29.441+0000] {subprocess.py:93} INFO - 25/03/21 13:27:29 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+[2025-03-21T13:27:34.525+0000] {subprocess.py:93} INFO - Spark version: 3.5.0
+[2025-03-21T13:27:36.618+0000] {subprocess.py:93} INFO - 25/03/21 13:27:36 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+[2025-03-21T13:27:41.693+0000] {local_task_job_runner.py:294} WARNING - State of this instance has been externally set to removed. Terminating instance.
+[2025-03-21T13:27:41.702+0000] {process_utils.py:131} INFO - Sending 15 to group 1342. PIDs of all processes in the group: [1354, 1355, 1342]
+[2025-03-21T13:27:41.703+0000] {process_utils.py:86} INFO - Sending the signal 15 to group 1342
+[2025-03-21T13:27:41.704+0000] {taskinstance.py:1630} ERROR - Received SIGTERM. Terminating subprocesses.
+[2025-03-21T13:27:41.705+0000] {subprocess.py:104} INFO - Sending SIGTERM signal to process group
+[2025-03-21T13:27:41.732+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=1355, status='terminated', started='13:24:51') (1355) terminated with exit code None
+[2025-03-21T13:27:41.792+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=1342, status='terminated', exitcode=0, started='13:24:50') (1342) terminated with exit code 0
+[2025-03-21T13:27:41.798+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=1354, status='terminated', started='13:24:51') (1354) terminated with exit code None

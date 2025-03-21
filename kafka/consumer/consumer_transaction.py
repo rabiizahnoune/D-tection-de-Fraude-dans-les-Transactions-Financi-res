@@ -20,7 +20,7 @@ consumer = KafkaConsumer(
 )
 
 transactions = []
-batch_size = 20
+batch_size = 10
 batch_count = 0
 
 print("Starting consumer...")

@@ -5,3 +5,6 @@
 
 
 rm -f transactions_batch_*.parquet  # Supprime les fichiers parquet
+
+
+#git

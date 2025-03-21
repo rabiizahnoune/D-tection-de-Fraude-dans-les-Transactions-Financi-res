@@ -1,0 +1,18 @@
+[2025-03-21T13:55:53.035+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.list_unprocessed_files scheduled__2025-03-21T13:50:48.728384+00:00 [queued]>
+[2025-03-21T13:55:53.052+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.list_unprocessed_files scheduled__2025-03-21T13:50:48.728384+00:00 [queued]>
+[2025-03-21T13:55:53.053+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T13:55:53.083+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): list_unprocessed_files> on 2025-03-21 13:50:48.728384+00:00
+[2025-03-21T13:55:53.096+0000] {standard_task_runner.py:57} INFO - Started process 1801 to run task
+[2025-03-21T13:55:53.103+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'list_unprocessed_files', 'scheduled__2025-03-21T13:50:48.728384+00:00', '--job-id', '748', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmp5axjcffx']
+[2025-03-21T13:55:53.108+0000] {standard_task_runner.py:85} INFO - Job 748: Subtask list_unprocessed_files
+[2025-03-21T13:55:53.202+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.list_unprocessed_files scheduled__2025-03-21T13:50:48.728384+00:00 [running]> on host e95638583d4d
+[2025-03-21T13:55:53.356+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='rabiizahnoune7@gmail.com' AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='list_unprocessed_files' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T13:50:48.728384+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-03-21T13:50:48.728384+00:00'
+[2025-03-21T13:55:53.359+0000] {fraud_detection_pipeline.py:77} INFO - Listing files in /data/transactions
+[2025-03-21T13:55:53.567+0000] {fraud_detection_pipeline.py:84} INFO - Command stdout: '/data/transactions/transactions_batch_20250321_131625.parquet
+'
+[2025-03-21T13:55:53.568+0000] {fraud_detection_pipeline.py:85} INFO - Command stderr: ''
+[2025-03-21T13:55:53.569+0000] {fraud_detection_pipeline.py:101} INFO - Found unprocessed files: ['/data/transactions/transactions_batch_20250321_131625.parquet']
+[2025-03-21T13:55:53.570+0000] {python.py:194} INFO - Done. Returned value was: ['/data/transactions/transactions_batch_20250321_131625.parquet']
+[2025-03-21T13:55:53.608+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=list_unprocessed_files, execution_date=20250321T135048, start_date=20250321T135553, end_date=20250321T135553
+[2025-03-21T13:55:53.640+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T13:55:53.724+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check

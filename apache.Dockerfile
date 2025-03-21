@@ -11,5 +11,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     && apt-get clean
 
+RUN pip3 install requests
+
 # Revenir à l'utilisateur airflow pour les installations pip
 USER airflow

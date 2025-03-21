@@ -1,0 +1,41 @@
+[2025-03-21T15:57:57.016+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: transactions_pipeline.add_fraud_partition_batch_20250321_155012 manual__2025-03-21T15:56:49.071985+00:00 [queued]>
+[2025-03-21T15:57:57.032+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: transactions_pipeline.add_fraud_partition_batch_20250321_155012 manual__2025-03-21T15:56:49.071985+00:00 [queued]>
+[2025-03-21T15:57:57.034+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2025-03-21T15:57:57.054+0000] {taskinstance.py:1380} INFO - Executing <Task(BashOperator): add_fraud_partition_batch_20250321_155012> on 2025-03-21 15:56:49.071985+00:00
+[2025-03-21T15:57:57.064+0000] {standard_task_runner.py:57} INFO - Started process 683 to run task
+[2025-03-21T15:57:57.069+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'transactions_pipeline', 'add_fraud_partition_batch_20250321_155012', 'manual__2025-03-21T15:56:49.071985+00:00', '--job-id', '856', '--raw', '--subdir', 'DAGS_FOLDER/fraud_detection_pipeline.py', '--cfg-path', '/tmp/tmpkmrswqpp']
+[2025-03-21T15:57:57.073+0000] {standard_task_runner.py:85} INFO - Job 856: Subtask add_fraud_partition_batch_20250321_155012
+[2025-03-21T15:57:57.156+0000] {task_command.py:415} INFO - Running <TaskInstance: transactions_pipeline.add_fraud_partition_batch_20250321_155012 manual__2025-03-21T15:56:49.071985+00:00 [running]> on host 31abf5c063d1
+[2025-03-21T15:57:57.288+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='transactions_pipeline' AIRFLOW_CTX_TASK_ID='add_fraud_partition_batch_20250321_155012' AIRFLOW_CTX_EXECUTION_DATE='2025-03-21T15:56:49.071985+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-03-21T15:56:49.071985+00:00'
+[2025-03-21T15:57:57.291+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-03-21T15:57:57.293+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', '\n            docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "\n            ALTER TABLE fraud_detections ADD IF NOT EXISTS PARTITION (batch_id=\'batch_20250321_155012\') LOCATION \'/data/fraud_detections/batch_id=batch_20250321_155012\';"\n            ']
+[2025-03-21T15:57:57.309+0000] {subprocess.py:86} INFO - Output:
+[2025-03-21T15:57:58.823+0000] {subprocess.py:93} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2025-03-21T15:57:58.826+0000] {subprocess.py:93} INFO - SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.17.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2025-03-21T15:57:58.827+0000] {subprocess.py:93} INFO - SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2025-03-21T15:57:58.828+0000] {subprocess.py:93} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2025-03-21T15:57:59.040+0000] {subprocess.py:93} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2025-03-21T15:58:00.451+0000] {subprocess.py:93} INFO - Connecting to jdbc:hive2://localhost:10000
+[2025-03-21T15:58:00.782+0000] {subprocess.py:93} INFO - Connected to: Apache Hive (version 3.1.3)
+[2025-03-21T15:58:00.782+0000] {subprocess.py:93} INFO - Driver: Hive JDBC (version 3.1.3)
+[2025-03-21T15:58:00.783+0000] {subprocess.py:93} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2025-03-21T15:58:01.021+0000] {subprocess.py:93} INFO - INFO  : Compiling command(queryId=root_20250321155800_b3b900b8-5b4a-4620-ab91-cda958964d08): ALTER TABLE fraud_detections ADD IF NOT EXISTS PARTITION (batch_id='batch_20250321_155012') LOCATION '/data/fraud_detections/batch_id=batch_20250321_155012'
+[2025-03-21T15:58:01.023+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-21T15:58:01.026+0000] {subprocess.py:93} INFO - INFO  : Semantic Analysis Completed (retrial = false)
+[2025-03-21T15:58:01.028+0000] {subprocess.py:93} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+[2025-03-21T15:58:01.029+0000] {subprocess.py:93} INFO - INFO  : Completed compiling command(queryId=root_20250321155800_b3b900b8-5b4a-4620-ab91-cda958964d08); Time taken: 0.04 seconds
+[2025-03-21T15:58:01.030+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-21T15:58:01.031+0000] {subprocess.py:93} INFO - INFO  : Executing command(queryId=root_20250321155800_b3b900b8-5b4a-4620-ab91-cda958964d08): ALTER TABLE fraud_detections ADD IF NOT EXISTS PARTITION (batch_id='batch_20250321_155012') LOCATION '/data/fraud_detections/batch_id=batch_20250321_155012'
+[2025-03-21T15:58:01.038+0000] {subprocess.py:93} INFO - INFO  : Starting task [Stage-0:DDL] in serial mode
+[2025-03-21T15:58:01.039+0000] {subprocess.py:93} INFO - INFO  : Completed executing command(queryId=root_20250321155800_b3b900b8-5b4a-4620-ab91-cda958964d08); Time taken: 0.091 seconds
+[2025-03-21T15:58:01.045+0000] {subprocess.py:93} INFO - INFO  : OK
+[2025-03-21T15:58:01.046+0000] {subprocess.py:93} INFO - INFO  : Concurrency mode is disabled, not creating a lock manager
+[2025-03-21T15:58:01.047+0000] {subprocess.py:93} INFO - No rows affected (0.221 seconds)
+[2025-03-21T15:58:01.048+0000] {subprocess.py:93} INFO - Beeline version 3.1.3 by Apache Hive
+[2025-03-21T15:58:01.053+0000] {subprocess.py:93} INFO - Closing: 0: jdbc:hive2://localhost:10000
+[2025-03-21T15:58:01.102+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-03-21T15:58:01.136+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=transactions_pipeline, task_id=add_fraud_partition_batch_20250321_155012, execution_date=20250321T155649, start_date=20250321T155757, end_date=20250321T155801
+[2025-03-21T15:58:01.144+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/***/utils/context.py:206 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2025-03-21T15:58:01.525+0000] {fraud_detection_pipeline.py:52} INFO - Discord message sent successfully
+[2025-03-21T15:58:01.588+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-03-21T15:58:01.629+0000] {taskinstance.py:2776} INFO - 1 downstream tasks scheduled from follow-on schedule check
