@@ -85,10 +85,27 @@ jobs:
           echo "Test de la connexion à l'API..."
           docker exec kafka bash -c "curl -v http://api-transactions:5000/generate/transaction || echo \"Échec de la connexion à l'API\""
 
+      - name: Debug - List files in working directory
+        run: |
+          echo "Listing files in the working directory to debug..."
+          ls -l
+          # Lister également les sous-répertoires pour vérifier si pipeline_batch.py est ailleurs
+          find . -type f -name "pipeline_batch.py"
+
       - name: Copy DAG file to Airflow container
         run: |
-          # Copier le fichier DAG dans le répertoire /opt/airflow/dags du conteneur
-          docker cp pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+          # Vérifier si pipeline_batch.py existe à la racine
+          if [ -f "pipeline_batch.py" ]; then
+            echo "Fichier pipeline_batch.py trouvé à la racine, copie en cours..."
+            docker cp pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+          # Sinon, vérifier dans le sous-répertoire dags/
+          elif [ -f "dags/pipeline_batch.py" ]; then
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire dags/, copie en cours..."
+            docker cp dags/pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+          else
+            echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine ni dans le sous-répertoire dags/ !"
+            exit 1
+          fi
           # Vérifier que le fichier a été copié
           docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
           # Ajuster les permissions pour s'assurer que le fichier est lisible
