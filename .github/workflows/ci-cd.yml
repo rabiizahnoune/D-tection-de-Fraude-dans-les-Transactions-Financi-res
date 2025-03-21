@@ -85,6 +85,45 @@ jobs:
           echo "Test de la connexion à l'API..."
           docker exec kafka bash -c "curl -v http://api-transactions:5000/generate/transaction || echo \"Échec de la connexion à l'API\""
 
+      - name: Copy DAG file to Airflow container
+        run: |
+          # Copier le fichier DAG dans le répertoire /opt/airflow/dags du conteneur
+          docker cp pipeline_batch.py d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1:/opt/airflow/dags/pipeline_batch.py
+          # Vérifier que le fichier a été copié
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/pipeline_batch.py
+          # Ajuster les permissions pour s'assurer que le fichier est lisible
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 chmod 644 /opt/airflow/dags/pipeline_batch.py
+
+      - name: Wait for Airflow to load the DAG
+        run: |
+          # Fonction pour vérifier si le DAG est chargé
+          check_dag_loaded() {
+            local dag_id=$1
+            local max_attempts=$2
+            local attempt=1
+
+            echo "Attente du chargement du DAG $dag_id par Airflow..."
+            while [ $attempt -le $max_attempts ]; do
+              # Lister les DAGs et vérifier si external_customer_pipeline est présent
+              if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list | grep -q "$dag_id"; then
+                echo "DAG $dag_id chargé avec succès !"
+                return 0
+              else
+                echo "Tentative $attempt/$max_attempts : DAG $dag_id non chargé, nouvelle tentative dans 5 secondes..."
+                sleep 5
+                attempt=$((attempt + 1))
+              fi
+            done
+
+            echo "Erreur : Le DAG $dag_id n'a pas été chargé après $max_attempts tentatives !"
+            # Afficher les logs du scheduler pour débogage
+            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
+            exit 1
+          }
+
+          # Attendre que le DAG soit chargé (max 30 tentatives, soit environ 2,5 minutes)
+          check_dag_loaded "external_customer_pipeline" "30"
+
       - name: Test Airflow DAG and Extract Batch ID
         run: |
           # Fonction pour vérifier l'état du DAG et extraire le batch_id
