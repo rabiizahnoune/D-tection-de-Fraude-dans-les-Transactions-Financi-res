@@ -137,7 +137,21 @@ jobs:
       - name: Wait for Airflow scheduler to sync with database
         run: |
           echo "Waiting for Airflow scheduler to sync DAGs with the database..."
-          sleep 30  # Attendre 30 secondes pour donner au scheduler le temps de synchroniser
+          sleep 60  # Augmenté à 60 secondes pour donner plus de temps au scheduler
+
+      - name: Check DagModel in database
+        run: |
+          # Vérifier si le DAG est enregistré dans le DagModel en interrogeant la base de données
+          echo "Vérification du DagModel dans la base de données..."
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-postgres-1 psql -U airflow -d airflow -c "SELECT dag_id FROM dag WHERE dag_id = 'external_customer_pipeline';"
+          if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-postgres-1 psql -U airflow -d airflow -c "SELECT dag_id FROM dag WHERE dag_id = 'external_customer_pipeline';" | grep -q "external_customer_pipeline"; then
+            echo "DAG external_customer_pipeline trouvé dans le DagModel !"
+          else
+            echo "DAG external_customer_pipeline NON trouvé dans le DagModel !"
+            # Afficher les logs du scheduler pour débogage
+            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
+            exit 1
+          fi
 
       - name: Wait for Airflow to load the DAG
         run: |

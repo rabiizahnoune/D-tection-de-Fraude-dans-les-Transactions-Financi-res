@@ -82,7 +82,7 @@ with DAG(
     default_args=default_args,
     description='Fetch data from external_data and customer APIs, store in HDFS, and load into Hive using XCom',
     schedule_interval=None,
-    start_date=datetime(2025, 3, 21),
+    start_date=datetime(2025, 3, 20),  # Changé pour une date dans le passé
     catchup=False,
     tags=['external_data', 'customer', 'hdfs', 'hive'],
 ) as dag:
