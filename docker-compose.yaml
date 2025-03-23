@@ -146,6 +146,7 @@ services:
     build:
       context: ./api/transanctions
       dockerfile: Dockerfile
+    container_name: api-transactions
     ports:
       - "5000:5000"
     environment:
@@ -160,6 +161,7 @@ services:
     build:
       context: ./api/customers
       dockerfile: Dockerfile
+    container_name: api-customers
     ports:
       - "5001:5001"
     environment:
@@ -176,6 +178,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5002:5002"
+    container_name: api-externaldata
     environment:
       - KAFKA_BROKER=kafka:9092
       - KAFKA_TOPIC=external_data_topic
