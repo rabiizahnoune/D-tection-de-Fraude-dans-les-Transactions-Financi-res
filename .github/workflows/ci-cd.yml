@@ -100,8 +100,8 @@ jobs:
 
       - name: Build and push API Transactions
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest ./api/transactions
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-transanctions:latest ./api/transanctions
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-transanctions:latest
 
       - name: Build and push API Customers
         run: |
