@@ -76,7 +76,7 @@ jobs:
           check_api "api-customers" "5001" "/generate/customer" "30"
           check_api "api-externaldata" "5002" "/generate/externaldata" "10"
 
-      - name: Clean up Docker 
+      - name: Clean up Docker
         if: always()
         run: |
           docker-compose down # Arrête et supprime les conteneurs
@@ -100,15 +100,15 @@ jobs:
 
       - name: Build and push API Transactions
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest ./api-transactions
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest ./api/transactions
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest
 
       - name: Build and push API Customers
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-customers:latest ./api-customers
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-customers:latest ./api/customers
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-customers:latest
 
       - name: Build and push API External Data
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-externaldata:latest ./api-externaldata
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-externaldata:latest ./api/external
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-externaldata:latest
