@@ -1,4 +1,4 @@
-name: Docker Compose CI
+name: Docker Compose CI/CD
 
 on:
   push:
@@ -24,23 +24,12 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      - name: Prepare Airflow directories and set permissions
-        run: |
-          # Créer les répertoires nécessaires sur l'hôte
-          mkdir -p ./airflow/logs ./airflow/dags
-          # Ajuster les permissions pour que l'utilisateur airflow (UID 5000) puisse écrire
-          sudo chown -R 5000:5000 ./airflow
-          sudo chmod -R 775 ./airflow
-          # Vérifier les permissions
-          ls -ld ./airflow
-          ls -l ./airflow
-
       - name: Start Docker Compose services
         run: |
           docker-compose up -d # Lance les conteneurs en mode détaché
 
       - name: Wait for containers to start
-        run: sleep 30 # Augmenté pour donner plus de temps à Kafka et aux APIs
+        run: sleep 30 # Temps d'attente pour que les conteneurs démarrent
 
       - name: Check container status
         run: |
@@ -67,7 +56,6 @@ jobs:
 
             echo "Vérification de l'API $api_name sur le port $port (endpoint $endpoint)..."
             while [ $attempt -le $max_attempts ]; do
-              # Utilise un timeout de 10 secondes pour éviter d'attendre trop longtemps
               if curl -s --connect-timeout 10 -o /dev/null -w "%{http_code}" $url | grep -q "200"; then
                 echo "API $api_name est opérationnelle !"
                 return 0
@@ -86,257 +74,41 @@ jobs:
           # Vérifier chaque API avec son endpoint spécifique
           check_api "api-transactions" "5000" "/generate/transaction" "30"
           check_api "api-customers" "5001" "/generate/customer" "30"
-          # Pour api-externaldata, limiter les tentatives à cause du délai de 60 secondes
           check_api "api-externaldata" "5002" "/generate/externaldata" "10"
-
-      - name: Debug Network Connectivity
-        run: |
-          echo "Vérification de la résolution DNS pour api-transactions..."
-          docker exec kafka bash -c "ping -c 4 api-transactions || echo \"Échec de la résolution DNS pour api-transactions\""
-          echo "Test de la connexion à l'API..."
-          docker exec kafka bash -c "curl -v http://api-transactions:5000/generate/transaction || echo \"Échec de la connexion à l'API\""
-
-      - name: Debug - List files in working directory
-        run: |
-          echo "Listing files in the working directory to debug..."
-          ls -l
-          # Lister également les sous-répertoires pour vérifier si pipeline_batch.py est ailleurs
-          find . -type f -name "pipeline_batch.py"
-
-      - name: Copy DAG file to shared directory
-        run: |
-          # Vérifier si pipeline_batch.py existe à la racine
-          if [ -f "pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé à la racine, copie en cours dans ./airflow/dags/..."
-            cp pipeline_batch.py ./airflow/dags/pipeline_batch.py
-          # Sinon, vérifier dans le sous-répertoire dags/
-          elif [ -f "dags/pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire dags/, copie en cours dans ./airflow/dags/..."
-            cp dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
-          # Sinon, vérifier dans le sous-répertoire airflow/dags/
-          elif [ -f "airflow/dags/pipeline_batch.py" ]; then
-            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/..."
-            # Vérifier si le fichier est déjà dans ./airflow/dags/
-            if [ ! -f "./airflow/dags/pipeline_batch.py" ] || ! diff "airflow/dags/pipeline_batch.py" "./airflow/dags/pipeline_batch.py" > /dev/null; then
-              echo "Copie en cours dans ./airflow/dags/..."
-              cp airflow/dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
-            else
-              echo "Le fichier est déjà dans ./airflow/dags/ et est identique, pas besoin de copier."
-            fi
-          else
-            echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine, ni dans le sous-répertoire dags/, ni dans airflow/dags/ !"
-            exit 1
-          fi
-          # Ajuster les permissions sur l'hôte pour s'assurer que le fichier est lisible
-          chmod 644 ./airflow/dags/pipeline_batch.py
-          # Vérifier que le fichier est bien dans ./airflow/dags/
-          echo "Contenu de ./airflow/dags/ après la copie :"
-          ls -l ./airflow/dags/
-          # Vérifier que le fichier est visible dans les conteneurs
-          echo "Contenu de /opt/airflow/dags/ dans airflow-webserver :"
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/
-          echo "Contenu de /opt/airflow/dags/ dans airflow-scheduler :"
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 ls -l /opt/airflow/dags/
-
-      - name: Force Airflow DAG synchronization
-        run: |
-          echo "Forcing Airflow to synchronize DAGs in webserver..."
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list
-          echo "Forcing Airflow to synchronize DAGs in scheduler..."
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 airflow dags list
-
-      - name: Wait for Airflow scheduler to sync with database
-        run: |
-          echo "Waiting for Airflow scheduler to sync DAGs with the database..."
-          sleep 60  # Augmenté à 60 secondes pour donner plus de temps au scheduler
-
-      - name: Check DagModel in database
-        run: |
-          # Vérifier si le DAG est enregistré dans le DagModel en interrogeant la base de données
-          echo "Vérification du DagModel dans la base de données..."
-          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-postgres-1 psql -U airflow -d airflow -c "SELECT dag_id FROM dag WHERE dag_id = 'external_customer_pipeline';"
-          if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-postgres-1 psql -U airflow -d airflow -c "SELECT dag_id FROM dag WHERE dag_id = 'external_customer_pipeline';" | grep -q "external_customer_pipeline"; then
-            echo "DAG external_customer_pipeline trouvé dans le DagModel !"
-          else
-            echo "DAG external_customer_pipeline NON trouvé dans le DagModel !"
-            # Afficher les logs du scheduler pour débogage
-            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
-            exit 1
-          fi
-
-      - name: Wait for Airflow to load the DAG
-        run: |
-          # Fonction pour vérifier si le DAG est chargé
-          check_dag_loaded() {
-            local dag_id=$1
-            local max_attempts=$2
-            local attempt=1
-
-            echo "Attente du chargement du DAG $dag_id par Airflow (scheduler)..."
-            while [ $attempt -le $max_attempts ]; do
-              # Lister les DAGs dans le scheduler et vérifier si external_customer_pipeline est présent
-              if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 airflow dags list | grep -q "$dag_id"; then
-                echo "DAG $dag_id chargé avec succès dans le scheduler !"
-                return 0
-              else
-                echo "Tentative $attempt/$max_attempts : DAG $dag_id non chargé dans le scheduler, nouvelle tentative dans 5 secondes..."
-                sleep 5
-                attempt=$((attempt + 1))
-              fi
-            done
-
-            echo "Erreur : Le DAG $dag_id n'a pas été chargé dans le scheduler après $max_attempts tentatives !"
-            # Afficher les logs du scheduler pour débogage
-            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
-            # Afficher le contenu du fichier pour débogage
-            echo "Contenu de pipeline_batch.py pour débogage :"
-            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 cat /opt/airflow/dags/pipeline_batch.py
-            exit 1
-          }
-
-          # Attendre que le DAG soit chargé (max 30 tentatives, soit environ 2,5 minutes)
-          check_dag_loaded "external_customer_pipeline" "30"
-
-      - name: Test Airflow DAG and Extract Batch ID
-        run: |
-          # Fonction pour vérifier l'état du DAG et extraire le batch_id
-          check_dag_status() {
-            local dag_id=$1
-            local max_attempts=$2
-            local attempt=1
-
-            echo "Déclenchement du DAG $dag_id..."
-            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags trigger $dag_id
-
-            echo "Attente de l'exécution du DAG $dag_id..."
-            while [ $attempt -le $max_attempts ]; do
-              # Récupérer l'état du dernier DAG run
-              dag_state=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags state $dag_id "$(date -u +'%Y-%m-%dT%H:%M:%S+00:00')")
-              echo "Tentative $attempt/$max_attempts : État du DAG $dag_id : $dag_state"
-
-              if [ "$dag_state" = "success" ]; then
-                echo "DAG $dag_id s'est terminé avec succès !"
-
-                # Récupérer le run_id du dernier DAG run
-                run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
-                if [ -z "$run_id" ]; then
-                  echo "Erreur : Impossible de récupérer le run_id du DAG $dag_id !"
-                  # Afficher les logs pour débogage
-                  docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
-                  docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
-                  exit 1
-                fi
-                echo "Run ID récupéré : $run_id"
-
-                # Récupérer le batch_id depuis XCom pour la tâche fetch_customer_data
-                batch_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks get-value $dag_id fetch_customer_data $run_id batch_id | grep -o '[0-9]\{8\}_[0-9]\{6\}')
-                if [ -z "$batch_id" ]; then
-                  echo "Erreur : Impossible de récupérer le batch_id depuis XCom pour fetch_customer_data !"
-                  # Afficher les logs pour débogage
-                  docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks logs $dag_id fetch_customer_data $run_id
-                  exit 1
-                fi
-                echo "Batch ID récupéré : $batch_id"
-
-                # Exporter le batch_id pour les étapes suivantes
-                echo "BATCH_ID=$batch_id" >> $GITHUB_ENV
-
-                return 0
-              elif [ "$dag_state" = "failed" ]; then
-                echo "Erreur : Le DAG $dag_id a échoué !"
-                docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id
-                # Récupérer les logs des tâches pour débogage
-                run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
-                for task in create_hdfs_dirs fetch_external_data fetch_customer_data store_external_data_to_hdfs_and_hive store_customer_data_to_hdfs_and_hive; do
-                  echo "Logs pour la tâche $task :"
-                  docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks logs $dag_id $task $run_id || echo "Logs non disponibles pour $task"
-                done
-                exit 1
-              else
-                echo "DAG $dag_id est en cours d'exécution, nouvelle tentative dans 10 secondes..."
-                sleep 10
-                attempt=$((attempt + 1))
-              fi
-            done
-
-            echo "Erreur : Le DAG $dag_id n'a pas terminé après $max_attempts tentatives !"
-            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id
-            exit 1
-          }
-
-          # Vérifier l'état du DAG external_customer_pipeline et extraire le batch_id
-          check_dag_status "external_customer_pipeline" "30"
-
-      - name: Verify Data in Hive
-        run: |
-          # Récupérer le batch_id depuis l'environnement
-          batch_id=${{ env.BATCH_ID }}
-          if [ -z "$batch_id" ]; then
-            echo "Erreur : batch_id non défini !"
-            exit 1
-          fi
-          echo "Utilisation du batch_id : $batch_id"
-
-          # Fonction pour vérifier les données dans Hive
-          check_hive_data() {
-            local table_name=$1
-            local batch_id=$2
-            local max_attempts=$3
-            local attempt=1
-
-            echo "Vérification des données dans la table Hive $table_name pour batch_id=$batch_id..."
-            while [ $attempt -le $max_attempts ]; do
-              # Exécuter une requête SELECT pour vérifier les données
-              result=$(docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "SELECT COUNT(*) FROM $table_name WHERE batch_id='$batch_id';" 2>&1)
-              if echo "$result" | grep -q "ERROR"; then
-                echo "Tentative $attempt/$max_attempts : Erreur lors de la requête Hive : $result"
-                sleep 5
-                attempt=$((attempt + 1))
-              else
-                count=$(echo "$result" | grep -o '[0-9]\+' | tail -n 1)
-                if [ -n "$count" ] && [ "$count" -gt 0 ]; then
-                  echo "Données trouvées dans la table $table_name pour batch_id=$batch_id : $count lignes."
-                  return 0
-                else
-                  echo "Tentative $attempt/$max_attempts : Aucune donnée trouvée dans $table_name pour batch_id=$batch_id, nouvelle tentative dans 5 secondes..."
-                  sleep 5
-                  attempt=$((attempt + 1))
-                fi
-              fi
-            done
-
-            echo "Erreur : Aucune donnée trouvée dans $table_name pour batch_id=$batch_id après $max_attempts tentatives !"
-            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "SHOW TABLES;"
-            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "DESCRIBE $table_name;"
-            exit 1
-          }
-
-          # Vérifier les données dans les tables Hive avec le batch_id dynamique
-          check_hive_data "external_data" "$batch_id" "10"
-          check_hive_data "customers" "$batch_id" "10"
-
-      - name: Clean up HDFS and Hive
-        if: always()
-        run: |
-          # Récupérer le batch_id depuis l'environnement
-          batch_id=${{ env.BATCH_ID }}
-          if [ -n "$batch_id" ]; then
-            # Supprimer les données dans HDFS
-            docker exec hive hdfs dfs -rm -r /data/external_data/batch_id=$batch_id || echo "Aucune donnée à supprimer dans /data/external_data pour batch_id=$batch_id"
-            docker exec hive hdfs dfs -rm -r /data/customer/batch_id=$batch_id || echo "Aucune donnée à supprimer dans /data/customer pour batch_id=$batch_id"
-
-            # Supprimer les partitions dans Hive
-            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE external_data DROP IF EXISTS PARTITION (batch_id='$batch_id');" || echo "Erreur lors de la suppression de la partition $batch_id de external_data"
-            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE customers DROP IF EXISTS PARTITION (batch_id='$batch_id');" || echo "Erreur lors de la suppression de la partition $batch_id de customers"
-          else
-            echo "batch_id non défini, suppression des partitions avec un motif générique..."
-            docker exec hive hdfs dfs -rm -r /data/external_data/batch_id=* || echo "Aucune donnée à supprimer dans /data/external_data"
-            docker exec hive hdfs dfs -rm -r /data/customer/batch_id=* || echo "Aucune donnée à supprimer dans /data/customer"
-            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE external_data DROP IF EXISTS PARTITION (batch_id LIKE '%');" || echo "Erreur lors de la suppression des partitions de external_data"
-            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE customers DROP IF EXISTS PARTITION (batch_id LIKE '%');" || echo "Erreur lors de la suppression des partitions de customers"
-          fi
 
       - name: Clean up Docker
         if: always()
         run: |
           docker-compose down # Arrête et supprime les conteneurs
+
+  deploy-to-dockerhub:
+    needs: test-docker-compose # Ce job dépend de la réussite du job précédent
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Ne s'exécute que sur push vers main
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push API Transactions
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest ./api-transactions
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-transactions:latest
+
+      - name: Build and push API Customers
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-customers:latest ./api-customers
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-customers:latest
+
+      - name: Build and push API External Data
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/api-externaldata:latest ./api-externaldata
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-externaldata:latest

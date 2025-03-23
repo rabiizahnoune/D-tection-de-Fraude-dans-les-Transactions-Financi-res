@@ -1,0 +1,2252 @@
+Structure du projet : C:\Users\Youcode\Pictures\transactions
+==================================================
+
+Dossier : Racine du projet
+----------------------------------------
+Fichier : .gitignore
+Contenu :
+myenv
+.gitignore
+----------------------------------------
+Fichier : apache.Dockerfile
+Contenu :
+# Utiliser une image officielle Airflow comme base
+FROM apache/airflow:2.7.1
+
+# Passer en root pour installer des paquets système
+USER root
+
+# Installer les outils de compilation et les dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    gcc \
+    python3-dev \
+    libssl-dev \
+    && apt-get clean
+
+RUN pip3 install requests
+
+# Revenir à l'utilisateur airflow pour les installations pip
+USER airflow
+----------------------------------------
+Fichier : commande.sh
+Contenu :
+# Lancez beeline pour vous connecter à HiveServer2
+/opt/hive/bin/beeline -u "jdbc:hive2://localhost:10000"
+
+
+
+
+rm -f transactions_batch_*.parquet  # Supprime les fichiers parquet
+
+
+#git
+
+----------------------------------------
+Fichier : doc.py
+Contenu :
+import os
+
+# Chemin du répertoire du projet (par défaut, répertoire courant)
+project_path = os.getcwd()
+output_file = "project_structure.txt"
+
+# Fonction pour parcourir et écrire la structure et le contenu
+def generate_project_structure(root_dir, output_file):
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(f"Structure du projet : {root_dir}\n")
+        f.write("=" * 50 + "\n\n")
+        
+        # Parcourir tous les fichiers et dossiers
+        for root, dirs, files in os.walk(root_dir):
+            # Ignorer certains dossiers (comme .git ou node_modules)
+            dirs[:] = [d for d in dirs if d not in [".git", "node_modules", "__pycache__"]]
+            
+            # Écrire le chemin relatif du dossier courant
+            relative_path = os.path.relpath(root, root_dir)
+            if relative_path == ".":
+                relative_path = "Racine du projet"
+            f.write(f"Dossier : {relative_path}\n")
+            f.write("-" * 40 + "\n")
+            
+            # Écrire les fichiers dans ce dossier
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                f.write(f"Fichier : {file_name}\n")
+                
+                # Lire et écrire le contenu du fichier (si c'est un fichier texte)
+                try:
+                    with open(file_path, "r", encoding="utf-8") as file_content:
+                        content = file_content.read()
+                        f.write("Contenu :\n")
+                        f.write(content + "\n")
+                except (UnicodeDecodeError, IOError):
+                    f.write("Contenu : [Non lisible - fichier binaire ou encodage incompatible]\n")
+                f.write("-" * 40 + "\n")
+            f.write("\n")
+
+    print(f"Structure générée dans {output_file}")
+
+# Exécuter le script
+if __name__ == "__main__":
+    generate_project_structure(project_path, output_file)
+----------------------------------------
+Fichier : docker-compose.yaml
+Contenu :
+
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_db_volume:/var/lib/postgresql/data
+      - ./init-sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    networks:
+      - airflow_network
+
+  airflow-init:
+    image: apache/airflow:2.7.1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hadoop_datanode:/mnt/hadoop_data
+      - transactions_data:/data/transactions  # Volume partagé
+    entrypoint: bash -c "airflow db init && airflow users create --username admin --password admin --firstname Admin --lastname User --email admin@example.com --role Admin"
+    depends_on:
+      - postgres
+    networks:
+      - airflow_network
+
+  airflow-webserver:
+    build:
+      context: ./
+      dockerfile: apache.Dockerfile
+    restart: always
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - airflow-init
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hadoop_datanode:/mnt/hadoop_data
+      - ./hive/scripts:/scripts
+      - transactions_data:/data/transactions  # Volume partagé
+    command: webserver
+    networks:
+      - airflow_network
+
+  airflow-scheduler:
+    build:
+      context: ./
+      dockerfile: apache.Dockerfile
+    restart: always
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - hadoop_datanode:/mnt/hadoop_data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./hive/scripts:/scripts
+      - transactions_data:/data/transactions  # Volume partagé
+    command: scheduler
+    depends_on:
+      - postgres
+      - airflow-init
+    networks:
+      - airflow_network
+
+
+  hive:
+    build:
+      context: ./hive
+      dockerfile: Dockerfile
+    container_name: hive
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+      - "9870:9870"
+      - "9000:9000"
+      - "7077:7077"
+    volumes:
+      - transactions_data:/data/transactions
+      - ./hive/scripts:/hive/scripts
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "4G"
+    networks:
+      - airflow_network
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - airflow_network
+
+  kafka:
+    build:
+      context: ./kafka
+      dockerfile: Dockerfile
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    volumes:
+      - ./kafka:/application
+      - /var/run/docker.sock:/var/run/docker.sock  # Ajout du socket Docker
+      - transactions_data:/data/transactions  # Volume nommé partagé
+    depends_on:
+      - zookeeper
+    networks:
+      - airflow_network
+
+  api-transactions:
+    build:
+      context: ./api/transanctions
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=transactions_topic
+    depends_on:
+      - kafka
+    networks:
+      - airflow_network
+
+  api-customers:
+    build:
+      context: ./api/customers
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=customers_topic
+    depends_on:
+      - kafka
+    networks:
+      - airflow_network
+
+  api-externaldata:
+    build:
+      context: ./api/external  # Ajusté pour correspondre au nom du service
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=external_data_topic
+    depends_on:
+      - kafka
+    networks:
+      - airflow_network
+
+volumes:
+  postgres_db_volume:
+  namenode_data:
+  datanode1_data:
+  hadoop_datanode:
+  hive-data:
+  transactions_data:
+
+networks:
+  airflow_network:
+    driver: bridge
+
+
+# INSERT INTO TABLE fraud_detections
+# SELECT
+#     t.transaction_id,
+#     t.date_time,
+#     t.amount,
+#     t.customer_id,
+#     t.location,
+#     'High Amount' AS fraud_reason
+# FROM transactions t
+# WHERE t.batch_id = 'batch_20250320_112938'
+# AND t.amount > 1000;
+----------------------------------------
+Fichier : init-postgres.sh
+Contenu :
+#!/bin/bash
+set -e
+
+if [ -n "$POSTGRES_MULTIPLE_DATABASES" ]; then
+  for db in $(echo $POSTGRES_MULTIPLE_DATABASES | tr ',' ' '); do
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+      CREATE DATABASE $db;
+      GRANT ALL PRIVILEGES ON DATABASE $db TO $POSTGRES_USER;
+EOSQL
+  done
+fi
+----------------------------------------
+Fichier : project_structure.txt
+Contenu :
+Structure du projet : C:\Users\Youcode\Pictures\transactions
+==================================================
+
+Dossier : Racine du projet
+----------------------------------------
+Fichier : .gitignore
+Contenu :
+myenv
+.gitignore
+----------------------------------------
+Fichier : apache.Dockerfile
+Contenu :
+# Utiliser une image officielle Airflow comme base
+FROM apache/airflow:2.7.1
+
+# Passer en root pour installer des paquets système
+USER root
+
+# Installer les outils de compilation et les dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    gcc \
+    python3-dev \
+    libssl-dev \
+    && apt-get clean
+
+RUN pip3 install requests
+
+# Revenir à l'utilisateur airflow pour les installations pip
+USER airflow
+----------------------------------------
+Fichier : commande.sh
+Contenu :
+# Lancez beeline pour vous connecter à HiveServer2
+/opt/hive/bin/beeline -u "jdbc:hive2://localhost:10000"
+
+
+
+
+rm -f transactions_batch_*.parquet  # Supprime les fichiers parquet
+
+
+#git
+
+----------------------------------------
+Fichier : doc.py
+Contenu :
+import os
+
+# Chemin du répertoire du projet (par défaut, répertoire courant)
+project_path = os.getcwd()
+output_file = "project_structure.txt"
+
+# Fonction pour parcourir et écrire la structure et le contenu
+def generate_project_structure(root_dir, output_file):
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(f"Structure du projet : {root_dir}\n")
+        f.write("=" * 50 + "\n\n")
+        
+        # Parcourir tous les fichiers et dossiers
+        for root, dirs, files in os.walk(root_dir):
+            # Ignorer certains dossiers (comme .git ou node_modules)
+            dirs[:] = [d for d in dirs if d not in [".git", "node_modules", "__pycache__"]]
+            
+            # Écrire le chemin relatif du dossier courant
+            relative_path = os.path.relpath(root, root_dir)
+            if relative_path == ".":
+                relative_path = "Racine du projet"
+            f.write(f"Dossier : {relative_path}\n")
+            f.write("-" * 40 + "\n")
+            
+            # Écrire les fichiers dans ce dossier
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                f.write(f"Fichier : {file_name}\n")
+                
+                # Lire et écrire le contenu du fichier (si c'est un fichier texte)
+                try:
+                    with open(file_path, "r", encoding="utf-8") as file_content:
+                        content = file_content.read()
+                        f.write("Contenu :\n")
+                        f.write(content + "\n")
+                except (UnicodeDecodeError, IOError):
+                    f.write("Contenu : [Non lisible - fichier binaire ou encodage incompatible]\n")
+                f.write("-" * 40 + "\n")
+            f.write("\n")
+
+    print(f"Structure générée dans {output_file}")
+
+# Exécuter le script
+if __name__ == "__main__":
+    generate_project_structure(project_path, output_file)
+----------------------------------------
+Fichier : docker-compose.yaml
+Contenu :
+
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_db_volume:/var/lib/postgresql/data
+      - ./init-sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    networks:
+      - airflow_network
+
+  airflow-init:
+    image: apache/airflow:2.7.1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hadoop_datanode:/mnt/hadoop_data
+      - transactions_data:/data/transactions  # Volume partagé
+    entrypoint: bash -c "airflow db init && airflow users create --username admin --password admin --firstname Admin --lastname User --email admin@example.com --role Admin"
+    depends_on:
+      - postgres
+    networks:
+      - airflow_network
+
+  airflow-webserver:
+    build:
+      context: ./
+      dockerfile: apache.Dockerfile
+    restart: always
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - airflow-init
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hadoop_datanode:/mnt/hadoop_data
+      - ./hive/scripts:/scripts
+      - transactions_data:/data/transactions  # Volume partagé
+    command: webserver
+    networks:
+      - airflow_network
+
+  airflow-scheduler:
+    build:
+      context: ./
+      dockerfile: apache.Dockerfile
+    restart: always
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - hadoop_datanode:/mnt/hadoop_data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./hive/scripts:/scripts
+      - transactions_data:/data/transactions  # Volume partagé
+    command: scheduler
+    depends_on:
+      - postgres
+      - airflow-init
+    networks:
+      - airflow_network
+
+
+  hive:
+    build:
+      context: ./hive
+      dockerfile: Dockerfile
+    container_name: hive
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+      - "9870:9870"
+      - "9000:9000"
+      - "7077:7077"
+    volumes:
+      - transactions_data:/data/transactions
+      - ./hive/scripts:/hive/scripts
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "4G"
+    networks:
+      - airflow_network
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - airflow_network
+
+  kafka:
+    build:
+      context: ./kafka
+      dockerfile: Dockerfile
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    volumes:
+      - ./kafka:/application
+      - /var/run/docker.sock:/var/run/docker.sock  # Ajout du socket Docker
+      - transactions_data:/data/transactions  # Volume nommé partagé
+    depends_on:
+      - zookeeper
+    networks:
+      - airflow_network
+
+  api-transactions:
+    build:
+      context: ./api/transanctions
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=transactions_topic
+    depends_on:
+      - kafka
+    networks:
+      - airflow_network
+
+  api-customers:
+    build:
+      context: ./api/customers
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=customers_topic
+    depends_on:
+      - kafka
+    networks:
+      - airflow_network
+
+  api-externaldata:
+    build:
+      context: ./api/external  # Ajusté pour correspondre au nom du service
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=external_data_topic
+    depends_on:
+      - kafka
+    networks:
+      - airflow_network
+
+volumes:
+  postgres_db_volume:
+  namenode_data:
+  datanode1_data:
+  hadoop_datanode:
+  hive-data:
+  transactions_data:
+
+networks:
+  airflow_network:
+    driver: bridge
+
+
+# INSERT INTO TABLE fraud_detections
+# SELECT
+#     t.transaction_id,
+#     t.date_time,
+#     t.amount,
+#     t.customer_id,
+#     t.location,
+#     'High Amount' AS fraud_reason
+# FROM transactions t
+# WHERE t.batch_id = 'batch_20250320_112938'
+# AND t.amount > 1000;
+
+----------------------------------------
+
+Dossier : .github
+----------------------------------------
+
+Dossier : .github\workflows
+----------------------------------------
+Fichier : ci-cd.yml
+Contenu :
+name: Docker Compose CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-docker-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Prepare Airflow directories and set permissions
+        run: |
+          # Créer les répertoires nécessaires sur l'hôte
+          mkdir -p ./airflow/logs ./airflow/dags
+          # Ajuster les permissions pour que l'utilisateur airflow (UID 5000) puisse écrire
+          sudo chown -R 5000:5000 ./airflow
+          sudo chmod -R 775 ./airflow
+          # Vérifier les permissions
+          ls -ld ./airflow
+          ls -l ./airflow
+
+      - name: Start Docker Compose services
+        run: |
+          docker-compose up -d # Lance les conteneurs en mode détaché
+
+      - name: Wait for containers to start
+        run: sleep 30 # Augmenté pour donner plus de temps à Kafka et aux APIs
+
+      - name: Check container status
+        run: |
+          docker-compose ps # Affiche l'état des conteneurs
+          # Vérifie qu'aucun conteneur n'a le statut "Exit"
+          if docker-compose ps | grep -q "Exit"; then
+            echo "Erreur : Certains conteneurs ont échoué !"
+            docker-compose logs # Affiche les logs pour debugging
+            exit 1
+          else
+            echo "Tous les conteneurs sont démarrés avec succès !"
+          fi
+
+      - name: Verify APIs
+        run: |
+          # Fonction pour vérifier une API
+          check_api() {
+            local api_name=$1
+            local port=$2
+            local endpoint=$3
+            local max_attempts=$4
+            local attempt=1
+            local url="http://localhost:$port$endpoint"
+
+            echo "Vérification de l'API $api_name sur le port $port (endpoint $endpoint)..."
+            while [ $attempt -le $max_attempts ]; do
+              # Utilise un timeout de 10 secondes pour éviter d'attendre trop longtemps
+              if curl -s --connect-timeout 10 -o /dev/null -w "%{http_code}" $url | grep -q "200"; then
+                echo "API $api_name est opérationnelle !"
+                return 0
+              else
+                echo "Tentative $attempt/$max_attempts : API $api_name n'est pas encore prête, nouvelle tentative dans 5 secondes..."
+                sleep 5
+                attempt=$((attempt + 1))
+              fi
+            done
+
+            echo "Erreur : L'API $api_name n'a pas démarré après $max_attempts tentatives !"
+            docker-compose logs $api_name  # Affiche les logs de l'API pour débogage
+            exit 1
+          }
+
+          # Vérifier chaque API avec son endpoint spécifique
+          check_api "api-transactions" "5000" "/generate/transaction" "30"
+          check_api "api-customers" "5001" "/generate/customer" "30"
+          # Pour api-externaldata, limiter les tentatives à cause du délai de 60 secondes
+          check_api "api-externaldata" "5002" "/generate/externaldata" "10"
+
+      - name: Debug Network Connectivity
+        run: |
+          echo "Vérification de la résolution DNS pour api-transactions..."
+          docker exec kafka bash -c "ping -c 4 api-transactions || echo \"Échec de la résolution DNS pour api-transactions\""
+          echo "Test de la connexion à l'API..."
+          docker exec kafka bash -c "curl -v http://api-transactions:5000/generate/transaction || echo \"Échec de la connexion à l'API\""
+
+      - name: Debug - List files in working directory
+        run: |
+          echo "Listing files in the working directory to debug..."
+          ls -l
+          # Lister également les sous-répertoires pour vérifier si pipeline_batch.py est ailleurs
+          find . -type f -name "pipeline_batch.py"
+
+      - name: Copy DAG file to shared directory
+        run: |
+          # Vérifier si pipeline_batch.py existe à la racine
+          if [ -f "pipeline_batch.py" ]; then
+            echo "Fichier pipeline_batch.py trouvé à la racine, copie en cours dans ./airflow/dags/..."
+            cp pipeline_batch.py ./airflow/dags/pipeline_batch.py
+          # Sinon, vérifier dans le sous-répertoire dags/
+          elif [ -f "dags/pipeline_batch.py" ]; then
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire dags/, copie en cours dans ./airflow/dags/..."
+            cp dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
+          # Sinon, vérifier dans le sous-répertoire airflow/dags/
+          elif [ -f "airflow/dags/pipeline_batch.py" ]; then
+            echo "Fichier pipeline_batch.py trouvé dans le sous-répertoire airflow/dags/..."
+            # Vérifier si le fichier est déjà dans ./airflow/dags/
+            if [ ! -f "./airflow/dags/pipeline_batch.py" ] || ! diff "airflow/dags/pipeline_batch.py" "./airflow/dags/pipeline_batch.py" > /dev/null; then
+              echo "Copie en cours dans ./airflow/dags/..."
+              cp airflow/dags/pipeline_batch.py ./airflow/dags/pipeline_batch.py
+            else
+              echo "Le fichier est déjà dans ./airflow/dags/ et est identique, pas besoin de copier."
+            fi
+          else
+            echo "Erreur : Fichier pipeline_batch.py non trouvé ni à la racine, ni dans le sous-répertoire dags/, ni dans airflow/dags/ !"
+            exit 1
+          fi
+          # Ajuster les permissions sur l'hôte pour s'assurer que le fichier est lisible
+          chmod 644 ./airflow/dags/pipeline_batch.py
+          # Vérifier que le fichier est bien dans ./airflow/dags/
+          echo "Contenu de ./airflow/dags/ après la copie :"
+          ls -l ./airflow/dags/
+          # Vérifier que le fichier est visible dans les conteneurs
+          echo "Contenu de /opt/airflow/dags/ dans airflow-webserver :"
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 ls -l /opt/airflow/dags/
+          echo "Contenu de /opt/airflow/dags/ dans airflow-scheduler :"
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 ls -l /opt/airflow/dags/
+
+      - name: Force Airflow DAG synchronization
+        run: |
+          echo "Forcing Airflow to synchronize DAGs in webserver..."
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list
+          echo "Forcing Airflow to synchronize DAGs in scheduler..."
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 airflow dags list
+
+      - name: Wait for Airflow scheduler to sync with database
+        run: |
+          echo "Waiting for Airflow scheduler to sync DAGs with the database..."
+          sleep 60  # Augmenté à 60 secondes pour donner plus de temps au scheduler
+
+      - name: Check DagModel in database
+        run: |
+          # Vérifier si le DAG est enregistré dans le DagModel en interrogeant la base de données
+          echo "Vérification du DagModel dans la base de données..."
+          docker exec d-tection-de-fraude-dans-les-transactions-financi-res-postgres-1 psql -U airflow -d airflow -c "SELECT dag_id FROM dag WHERE dag_id = 'external_customer_pipeline';"
+          if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-postgres-1 psql -U airflow -d airflow -c "SELECT dag_id FROM dag WHERE dag_id = 'external_customer_pipeline';" | grep -q "external_customer_pipeline"; then
+            echo "DAG external_customer_pipeline trouvé dans le DagModel !"
+          else
+            echo "DAG external_customer_pipeline NON trouvé dans le DagModel !"
+            # Afficher les logs du scheduler pour débogage
+            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
+            exit 1
+          fi
+
+      - name: Wait for Airflow to load the DAG
+        run: |
+          # Fonction pour vérifier si le DAG est chargé
+          check_dag_loaded() {
+            local dag_id=$1
+            local max_attempts=$2
+            local attempt=1
+
+            echo "Attente du chargement du DAG $dag_id par Airflow (scheduler)..."
+            while [ $attempt -le $max_attempts ]; do
+              # Lister les DAGs dans le scheduler et vérifier si external_customer_pipeline est présent
+              if docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 airflow dags list | grep -q "$dag_id"; then
+                echo "DAG $dag_id chargé avec succès dans le scheduler !"
+                return 0
+              else
+                echo "Tentative $attempt/$max_attempts : DAG $dag_id non chargé dans le scheduler, nouvelle tentative dans 5 secondes..."
+                sleep 5
+                attempt=$((attempt + 1))
+              fi
+            done
+
+            echo "Erreur : Le DAG $dag_id n'a pas été chargé dans le scheduler après $max_attempts tentatives !"
+            # Afficher les logs du scheduler pour débogage
+            docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
+            # Afficher le contenu du fichier pour débogage
+            echo "Contenu de pipeline_batch.py pour débogage :"
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 cat /opt/airflow/dags/pipeline_batch.py
+            exit 1
+          }
+
+          # Attendre que le DAG soit chargé (max 30 tentatives, soit environ 2,5 minutes)
+          check_dag_loaded "external_customer_pipeline" "30"
+
+      - name: Test Airflow DAG and Extract Batch ID
+        run: |
+          # Fonction pour vérifier l'état du DAG et extraire le batch_id
+          check_dag_status() {
+            local dag_id=$1
+            local max_attempts=$2
+            local attempt=1
+
+            echo "Déclenchement du DAG $dag_id..."
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags trigger $dag_id
+
+            echo "Attente de l'exécution du DAG $dag_id..."
+            while [ $attempt -le $max_attempts ]; do
+              # Récupérer l'état du dernier DAG run
+              dag_state=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags state $dag_id "$(date -u +'%Y-%m-%dT%H:%M:%S+00:00')")
+              echo "Tentative $attempt/$max_attempts : État du DAG $dag_id : $dag_state"
+
+              if [ "$dag_state" = "success" ]; then
+                echo "DAG $dag_id s'est terminé avec succès !"
+
+                # Récupérer le run_id du dernier DAG run
+                run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
+                if [ -z "$run_id" ]; then
+                  echo "Erreur : Impossible de récupérer le run_id du DAG $dag_id !"
+                  # Afficher les logs pour débogage
+                  docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 | grep -i "error"
+                  docker logs d-tection-de-fraude-dans-les-transactions-financi-res-airflow-scheduler-1 | grep -i "error"
+                  exit 1
+                fi
+                echo "Run ID récupéré : $run_id"
+
+                # Récupérer le batch_id depuis XCom pour la tâche fetch_customer_data
+                batch_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks get-value $dag_id fetch_customer_data $run_id batch_id | grep -o '[0-9]\{8\}_[0-9]\{6\}')
+                if [ -z "$batch_id" ]; then
+                  echo "Erreur : Impossible de récupérer le batch_id depuis XCom pour fetch_customer_data !"
+                  # Afficher les logs pour débogage
+                  docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks logs $dag_id fetch_customer_data $run_id
+                  exit 1
+                fi
+                echo "Batch ID récupéré : $batch_id"
+
+                # Exporter le batch_id pour les étapes suivantes
+                echo "BATCH_ID=$batch_id" >> $GITHUB_ENV
+
+                return 0
+              elif [ "$dag_state" = "failed" ]; then
+                echo "Erreur : Le DAG $dag_id a échoué !"
+                docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id
+                # Récupérer les logs des tâches pour débogage
+                run_id=$(docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id | grep manual | head -n 1 | awk '{print $4}')
+                for task in create_hdfs_dirs fetch_external_data fetch_customer_data store_external_data_to_hdfs_and_hive store_customer_data_to_hdfs_and_hive; do
+                  echo "Logs pour la tâche $task :"
+                  docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow tasks logs $dag_id $task $run_id || echo "Logs non disponibles pour $task"
+                done
+                exit 1
+              else
+                echo "DAG $dag_id est en cours d'exécution, nouvelle tentative dans 10 secondes..."
+                sleep 10
+                attempt=$((attempt + 1))
+              fi
+            done
+
+            echo "Erreur : Le DAG $dag_id n'a pas terminé après $max_attempts tentatives !"
+            docker exec d-tection-de-fraude-dans-les-transactions-financi-res-airflow-webserver-1 airflow dags list-runs -d $dag_id
+            exit 1
+          }
+
+          # Vérifier l'état du DAG external_customer_pipeline et extraire le batch_id
+          check_dag_status "external_customer_pipeline" "30"
+
+      - name: Verify Data in Hive
+        run: |
+          # Récupérer le batch_id depuis l'environnement
+          batch_id=${{ env.BATCH_ID }}
+          if [ -z "$batch_id" ]; then
+            echo "Erreur : batch_id non défini !"
+            exit 1
+          fi
+          echo "Utilisation du batch_id : $batch_id"
+
+          # Fonction pour vérifier les données dans Hive
+          check_hive_data() {
+            local table_name=$1
+            local batch_id=$2
+            local max_attempts=$3
+            local attempt=1
+
+            echo "Vérification des données dans la table Hive $table_name pour batch_id=$batch_id..."
+            while [ $attempt -le $max_attempts ]; do
+              # Exécuter une requête SELECT pour vérifier les données
+              result=$(docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "SELECT COUNT(*) FROM $table_name WHERE batch_id='$batch_id';" 2>&1)
+              if echo "$result" | grep -q "ERROR"; then
+                echo "Tentative $attempt/$max_attempts : Erreur lors de la requête Hive : $result"
+                sleep 5
+                attempt=$((attempt + 1))
+              else
+                count=$(echo "$result" | grep -o '[0-9]\+' | tail -n 1)
+                if [ -n "$count" ] && [ "$count" -gt 0 ]; then
+                  echo "Données trouvées dans la table $table_name pour batch_id=$batch_id : $count lignes."
+                  return 0
+                else
+                  echo "Tentative $attempt/$max_attempts : Aucune donnée trouvée dans $table_name pour batch_id=$batch_id, nouvelle tentative dans 5 secondes..."
+                  sleep 5
+                  attempt=$((attempt + 1))
+                fi
+              fi
+            done
+
+            echo "Erreur : Aucune donnée trouvée dans $table_name pour batch_id=$batch_id après $max_attempts tentatives !"
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "SHOW TABLES;"
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "DESCRIBE $table_name;"
+            exit 1
+          }
+
+          # Vérifier les données dans les tables Hive avec le batch_id dynamique
+          check_hive_data "external_data" "$batch_id" "10"
+          check_hive_data "customers" "$batch_id" "10"
+
+      - name: Clean up HDFS and Hive
+        if: always()
+        run: |
+          # Récupérer le batch_id depuis l'environnement
+          batch_id=${{ env.BATCH_ID }}
+          if [ -n "$batch_id" ]; then
+            # Supprimer les données dans HDFS
+            docker exec hive hdfs dfs -rm -r /data/external_data/batch_id=$batch_id || echo "Aucune donnée à supprimer dans /data/external_data pour batch_id=$batch_id"
+            docker exec hive hdfs dfs -rm -r /data/customer/batch_id=$batch_id || echo "Aucune donnée à supprimer dans /data/customer pour batch_id=$batch_id"
+
+            # Supprimer les partitions dans Hive
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE external_data DROP IF EXISTS PARTITION (batch_id='$batch_id');" || echo "Erreur lors de la suppression de la partition $batch_id de external_data"
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE customers DROP IF EXISTS PARTITION (batch_id='$batch_id');" || echo "Erreur lors de la suppression de la partition $batch_id de customers"
+          else
+            echo "batch_id non défini, suppression des partitions avec un motif générique..."
+            docker exec hive hdfs dfs -rm -r /data/external_data/batch_id=* || echo "Aucune donnée à supprimer dans /data/external_data"
+            docker exec hive hdfs dfs -rm -r /data/customer/batch_id=* || echo "Aucune donnée à supprimer dans /data/customer"
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE external_data DROP IF EXISTS PARTITION (batch_id LIKE '%');" || echo "Erreur lors de la suppression des partitions de external_data"
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" -e "ALTER TABLE customers DROP IF EXISTS PARTITION (batch_id LIKE '%');" || echo "Erreur lors de la suppression des partitions de customers"
+          fi
+
+      - name: Clean up Docker
+        if: always()
+        run: |
+          docker-compose down # Arrête et supprime les conteneurs
+----------------------------------------
+
+Dossier : airflow
+----------------------------------------
+
+Dossier : airflow\dags
+----------------------------------------
+Fichier : fraud_detection_pipeline.py
+Contenu :
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+from airflow.models import Variable
+from datetime import datetime, timedelta
+import subprocess
+import logging
+import time
+import os
+import requests  # Importer requests pour envoyer des messages à Discord
+
+# Configurer le logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# URL du webhook Discord (remplace par ton URL de webhook)
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1352669441019740230/j7ez0ADpYLvH4F1Kc2bm26eAAv7CIfyinEtoe52OBerIM9fPExFg4alWGdx4ZSHQLP12"  # Remplace par ton URL
+
+# Fonction pour envoyer un message à Discord
+def send_discord_message(message, color="info"):
+    """
+    Envoie un message à un canal Discord via un webhook.
+    :param message: Le message à envoyer
+    :param color: Couleur de l'embed ("info" pour bleu, "success" pour vert, "error" pour rouge)
+    """
+    # Définir la couleur de l'embed
+    colors = {
+        "info": 0x3498db,    # Bleu
+        "success": 0x2ecc71, # Vert
+        "error": 0xe74c3c    # Rouge
+    }
+    embed_color = colors.get(color, colors["info"])  # Par défaut, bleu si la couleur n'est pas reconnue
+
+    # Créer le payload pour Discord
+    payload = {
+        "embeds": [
+            {
+                "title": "Airflow Notification",
+                "description": message,
+                "color": embed_color,
+                "timestamp": datetime.utcnow().isoformat(),
+                "footer": {"text": "Airflow DAG: transactions_pipeline"}
+            }
+        ]
+    }
+
+    try:
+        response = requests.post(DISCORD_WEBHOOK_URL, json=payload)
+        if response.status_code != 204:
+            logger.error(f"Failed to send Discord message: {response.status_code} - {response.text}")
+        else:
+            logger.info("Discord message sent successfully")
+    except Exception as e:
+        logger.error(f"Error sending Discord message: {str(e)}")
+
+# Fonction de callback pour les succès
+def on_success_callback(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task_instance'].task_id
+    execution_date = context['execution_date']
+    message = f"✅ **Success**: Task `{task_id}` in DAG `{dag_id}` completed successfully on {execution_date}."
+    send_discord_message(message, color="success")
+
+# Fonction de callback pour les échecs
+def on_failure_callback(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task_instance'].task_id
+    execution_date = context['execution_date']
+    exception = context.get('exception', 'Unknown error')
+    message = f"❌ **Failure**: Task `{task_id}` in DAG `{dag_id}` failed on {execution_date}. Error: {exception}"
+    send_discord_message(message, color="error")
+
+# Définir les arguments par défaut
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'retries': 0,
+    'retry_delay': timedelta(minutes=5),
+    'on_success_callback': on_success_callback,
+    'on_failure_callback': on_failure_callback,
+}
+
+# Définir le DAG
+with DAG(
+    'transactions_pipeline',
+    default_args=default_args,
+    description='Process transactions dynamically when new files are detected',
+    schedule_interval=None,
+    start_date=datetime(2025, 3, 21),
+    catchup=False,
+    tags=['transactions', 'fraud_detection'],
+) as dag:
+
+    # Utiliser des Airflow Variables pour les chemins
+    TRANSACTIONS_PATH = Variable.get("transactions_path", default_var="/data/transactions")
+    PROCESSED_PATH = f"{TRANSACTIONS_PATH}/processed"
+    FRAUD_THRESHOLD = float(Variable.get("fraud_amount_threshold", default_var=1000))
+
+    # Tâche pour créer le répertoire des transactions et des fichiers traités
+    create_transactions_dir = BashOperator(
+        task_id='create_transactions_dir',
+        bash_command=f"""
+        docker exec kafka bash -c 'mkdir -p {TRANSACTIONS_PATH} && mkdir -p {PROCESSED_PATH}' && \
+        docker exec kafka bash -c '[ -d {TRANSACTIONS_PATH} ] || (echo "Failed to create {TRANSACTIONS_PATH}" && exit 1)'
+        """,
+    )
+
+    # Fonction pour lister les fichiers non traités
+    def list_unprocessed_files(**context):
+        max_wait_time = 60  # Attendre jusqu'à 1 minute
+        poke_interval = 30  # Vérifier toutes les 30 secondes
+        elapsed_time = 0  # Corrigé : initialiser à 0
+
+        # Vérifier d'abord si le répertoire existe
+        try:
+            result = subprocess.run(
+                ["docker", "exec", "-i", "kafka", "bash", "-c", f"[ -d {TRANSACTIONS_PATH} ]"],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                message = f"❌ **Error**: Directory {TRANSACTIONS_PATH} does not exist in kafka container."
+                send_discord_message(message, color="error")
+                raise RuntimeError(f"Directory {TRANSACTIONS_PATH} does not exist in kafka container.")
+        except Exception as e:
+            message = f"❌ **Error**: Failed to check directory {TRANSACTIONS_PATH}: {str(e)}"
+            send_discord_message(message, color="error")
+            raise
+
+        while elapsed_time < max_wait_time:
+            try:
+                logger.info(f"Listing files in {TRANSACTIONS_PATH}")
+                result = subprocess.run(
+                    ["docker", "exec", "-i", "kafka", "bash", "-c", f"ls {TRANSACTIONS_PATH}/transactions_batch_*.parquet 2>/dev/null"],
+                    capture_output=True,
+                    text=True,
+                )
+                logger.info(f"Command stdout: '{result.stdout}'")
+                logger.info(f"Command stderr: '{result.stderr}'")
+                logger.info(f"Command return code: {result.returncode}")
+
+                if result.returncode != 0:
+                    logger.warning(f"Command failed with return code {result.returncode}. Treating as no files found.")
+                    time.sleep(poke_interval)
+                    elapsed_time += poke_interval
+                    continue
+
+                if not result.stdout or result.stdout.strip() == '':
+                    logger.warning(f"No unprocessed batch files found in {TRANSACTIONS_PATH}, waiting {poke_interval} seconds...")
+                    time.sleep(poke_interval)
+                    elapsed_time += poke_interval
+                    continue
+
+                files = result.stdout.strip().split('\n')
+                files = [f.strip() for f in files if f.strip()]
+                if not files:
+                    logger.warning(f"No valid batch files found in {TRANSACTIONS_PATH}, waiting {poke_interval} seconds...")
+                    time.sleep(poke_interval)
+                    elapsed_time += poke_interval
+                    continue
+
+                # Fichiers trouvés : envoyer une notification Discord
+                message = f"📂 **Files Found**: {len(files)} unprocessed files found in {TRANSACTIONS_PATH}: {files}"
+                send_discord_message(message, color="info")
+                logger.info(f"Found unprocessed files: {files}")
+                return files  # Retourner la liste des fichiers
+
+            except Exception as e:
+                logger.error(f"Unexpected error: {str(e)}")
+                time.sleep(poke_interval)
+                elapsed_time += poke_interval
+                continue
+
+        # Aucun fichier trouvé après max_wait_time : envoyer une notification Discord
+        message = f"ℹ️ **No Files**: No batch files found in {TRANSACTIONS_PATH} after waiting {max_wait_time} seconds."
+        send_discord_message(message, color="info")
+        logger.info(f"No batch files found in {TRANSACTIONS_PATH} after waiting {max_wait_time} seconds, skipping...")
+        return []  # Retourner une liste vide si aucun fichier n'est trouvé
+
+    # Tâche pour lister les fichiers non traités
+    list_files = PythonOperator(
+        task_id='list_unprocessed_files',
+        python_callable=list_unprocessed_files,
+        provide_context=True,
+        do_xcom_push=True,
+    )
+
+    # Fonction pour créer les tâches pour chaque fichier
+    def create_tasks_for_file(file_path, dag):
+        batch_id = os.path.basename(file_path).split('transactions_batch_')[1].replace('.parquet', '')
+        batch_id = f"batch_{batch_id}"
+
+        copy_to_hdfs = BashOperator(
+            task_id=f'copy_to_hdfs_{batch_id}',
+            bash_command=f"""
+            docker exec hive hdfs dfs -mkdir -p /data/transactions/transactions_{batch_id} && \
+            docker exec hive hdfs dfs -put -f {file_path} /data/transactions/transactions_{batch_id}/
+            """,
+            dag=dag,
+        )
+
+        create_table = BashOperator(
+            task_id=f'create_hive_table_{batch_id}',
+            bash_command=f"""
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "
+            CREATE EXTERNAL TABLE IF NOT EXISTS transactions (
+                transaction_id STRING,
+                date_time STRING,
+                amount DOUBLE,
+                currency STRING,
+                merchant_details STRING,
+                customer_id STRING,
+                transaction_type STRING,
+                location STRING
+            )
+            PARTITIONED BY (batch_id STRING)
+            STORED AS PARQUET;
+            ALTER TABLE transactions ADD IF NOT EXISTS PARTITION (batch_id='{batch_id}') LOCATION '/data/transactions/transactions_{batch_id}';"
+            """,
+            dag=dag,
+        )
+
+        create_fraud_table = BashOperator(
+            task_id=f'create_fraud_table_{batch_id}',
+            bash_command=f"""
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "
+            CREATE EXTERNAL TABLE IF NOT EXISTS fraud_detections (
+                transaction_id STRING,
+                date_time STRING,
+                amount DOUBLE,
+                customer_id STRING,
+                location STRING,
+                fraud_reason STRING
+            )
+            PARTITIONED BY (batch_id STRING)
+            STORED AS PARQUET
+            LOCATION '/data/fraud_detections';"
+            """,
+            dag=dag,
+        )
+
+        detect_fraud = BashOperator(
+            task_id=f'detect_fraud_{batch_id}',
+            bash_command=f"""
+            docker exec hive spark-submit \
+              --master spark://localhost:7077 \
+              --driver-memory 1g \
+              --executor-memory 1g \
+              --num-executors 1 \
+              --executor-cores 1 \
+              /hive/scripts/detect_fraud.py "{batch_id}"
+            """,
+            dag=dag,
+        )
+
+        add_fraud_partition = BashOperator(
+            task_id=f'add_fraud_partition_{batch_id}',
+            bash_command=f"""
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "
+            ALTER TABLE fraud_detections ADD IF NOT EXISTS PARTITION (batch_id='{batch_id}') LOCATION '/data/fraud_detections/batch_id={batch_id}';"
+            """,
+            dag=dag,
+        )
+
+        move_processed_file = BashOperator(
+            task_id=f'move_processed_file_{batch_id}',
+            bash_command=f"""
+            docker exec kafka bash -c "mv {file_path} {PROCESSED_PATH}/" && \
+            echo "File {file_path} moved to {PROCESSED_PATH}"
+            """,
+            on_success_callback=lambda context: send_discord_message(
+                f"📦 **File Processed**: File `{file_path}` has been processed and moved to `{PROCESSED_PATH}`.",
+                color="success"
+            ),
+            dag=dag,
+        )
+
+        list_files >> copy_to_hdfs >> create_table >> create_fraud_table >> detect_fraud >> add_fraud_partition >> move_processed_file
+
+    # Fonction pour générer les tâches dynamiquement au moment de la construction du DAG
+    def generate_tasks():
+        try:
+            result = subprocess.run(
+                ["docker", "exec", "-i", "kafka", "bash", "-c", f"ls {TRANSACTIONS_PATH}/transactions_batch_*.parquet 2>/dev/null"],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                logger.warning(f"Command failed with return code {result.returncode} during DAG construction. Treating as no files found.")
+                files = []
+            elif result.stdout and result.stdout.strip():
+                files = result.stdout.strip().split('\n')
+                files = [f.strip() for f in files if f.strip()]
+                logger.info(f"Found files at DAG construction time: {files}")
+            else:
+                files = []
+                logger.info("No files found during DAG construction, no tasks will be generated.")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Error listing files at DAG construction time: {e.stderr}")
+            files = []
+
+        if files:
+            for file_path in files:
+                create_tasks_for_file(file_path, dag)
+        else:
+            logger.info("No files to process, DAG will complete successfully without generating tasks.")
+
+    # Appeler la fonction pour générer les tâches au moment de la construction du DAG
+    generate_tasks()
+
+    # Définir les dépendances globales
+    create_transactions_dir >> list_files
+----------------------------------------
+Fichier : pipeline_batch.py
+Contenu :
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+from airflow.models import Variable
+from datetime import datetime, timedelta
+import requests
+import json
+import logging
+import subprocess
+
+# Configurer le logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# URL du webhook Discord
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1352669441019740230/j7ez0ADpYLvH4F1Kc2bm26eAAv7CIfyinEtoe52OBerIM9fPExFg4alWGdx4ZSHQLP12"
+
+# Fonction pour envoyer un message à Discord
+def send_discord_message(message, color="info"):
+    colors = {
+        "info": 0x3498db,    # Bleu
+        "success": 0x2ecc71, # Vert
+        "error": 0xe74c3c    # Rouge
+    }
+    embed_color = colors.get(color, colors["info"])
+
+    # Raccourcir le message si nécessaire (limite Discord : 2000 caractères pour la description)
+    if len(message) > 1500:
+        message = message[:1500] + "... (message truncated)"
+
+    payload = {
+        "embeds": [
+            {
+                "title": "Airflow Notification",
+                "description": message,
+                "color": embed_color,
+                "timestamp": datetime.utcnow().isoformat(),
+                "footer": {"text": "Airflow DAG: external_customer_pipeline"}
+            }
+        ]
+    }
+
+    try:
+        response = requests.post(DISCORD_WEBHOOK_URL, json=payload)
+        if response.status_code != 204:
+            logger.error(f"Failed to send Discord message: {response.status_code} - {response.text}")
+        else:
+            logger.info("Discord message sent successfully")
+    except Exception as e:
+        logger.error(f"Error sending Discord message: {str(e)}")
+
+# Fonction de callback pour les succès
+def on_success_callback(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task_instance'].task_id
+    execution_date = context['execution_date']
+    message = f"✅ **Success**: Task `{task_id}` in DAG `{dag_id}` completed successfully on {execution_date}."
+    send_discord_message(message, color="success")
+
+# Fonction de callback pour les échecs
+def on_failure_callback(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task_instance'].task_id
+    execution_date = context['execution_date']
+    exception = context.get('exception', 'Unknown error')
+    message = f"❌ **Failure**: Task `{task_id}` in DAG `{dag_id}` failed on {execution_date}. Error: {exception}"
+    send_discord_message(message, color="error")
+
+# Définir les arguments par défaut
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'retries': 2,
+    'retry_delay': timedelta(minutes=2),
+    'on_success_callback': on_success_callback,
+    'on_failure_callback': on_failure_callback,
+}
+
+# Définir le DAG
+with DAG(
+    'external_customer_pipeline',
+    default_args=default_args,
+    description='Fetch data from external_data and customer APIs, store in HDFS, and load into Hive using XCom',
+    schedule_interval=None,
+    start_date=datetime(2025, 3, 20),  # Changé pour une date dans le passé
+    catchup=False,
+    tags=['external_data', 'customer', 'hdfs', 'hive'],
+) as dag:
+
+    # Chemins HDFS pour stocker les données
+    HDFS_EXTERNAL_DATA_PATH = "/data/external_data"
+    HDFS_CUSTOMER_DATA_PATH = "/data/customer"
+
+    # URLs des API
+    CUSTOMER_API_URL = "http://api-customers:5001/generate/customer"
+    EXTERNAL_DATA_API_URL = "http://api-externaldata:5002/generate/externaldata"
+
+    # Tâche pour créer les répertoires dans HDFS et ajuster les permissions
+    create_hdfs_dirs = BashOperator(
+        task_id='create_hdfs_dirs',
+        bash_command=f"""
+        docker exec hive hdfs dfs -mkdir -p {HDFS_EXTERNAL_DATA_PATH} && \
+        docker exec hive hdfs dfs -mkdir -p {HDFS_CUSTOMER_DATA_PATH} && \
+        docker exec hive hdfs dfs -chmod -R 777 {HDFS_EXTERNAL_DATA_PATH} && \
+        docker exec hive hdfs dfs -chmod -R 777 {HDFS_CUSTOMER_DATA_PATH} && \
+        docker exec hive hdfs dfs -test -d {HDFS_EXTERNAL_DATA_PATH} || (echo "Failed to create {HDFS_EXTERNAL_DATA_PATH}" && exit 1) && \
+        docker exec hive hdfs dfs -test -d {HDFS_CUSTOMER_DATA_PATH} || (echo "Failed to create {HDFS_CUSTOMER_DATA_PATH}" && exit 1)
+        """,
+    )
+
+    # Fonction pour récupérer les données de l'API external_data et les passer via XCom
+    def fetch_external_data(**context):
+        batch_id = context['execution_date'].strftime('%Y%m%d_%H%M%S')
+        try:
+            response = requests.get(EXTERNAL_DATA_API_URL, timeout=15)
+            response.raise_for_status()
+            data = response.json()
+
+            # Convertir les données en JSON pour les passer via XCom
+            data_json = json.dumps(data)
+            context['ti'].xcom_push(key='external_data_json', value=data_json)
+            context['ti'].xcom_push(key='batch_id', value=batch_id)
+
+            message = f"📊 **External Data Fetched**: Batch `{batch_id}` data fetched successfully."
+            send_discord_message(message, color="info")
+        except Exception as e:
+            message = f"❌ **Error Fetching External Data (Batch {batch_id})**: {str(e)}"
+            send_discord_message(message, color="error")
+            raise
+
+    # Fonction pour récupérer les données de l'API customer et les passer via XCom
+    def fetch_customer_data(**context):
+        batch_id = context['execution_date'].strftime('%Y%m%d_%H%M%S')
+        try:
+            response = requests.get(CUSTOMER_API_URL, timeout=15)
+            response.raise_for_status()
+            data = response.json()
+
+            # Convertir les données en JSON pour les passer via XCom
+            data_json = json.dumps(data)
+            context['ti'].xcom_push(key='customer_data_json', value=data_json)
+            context['ti'].xcom_push(key='batch_id', value=batch_id)
+
+            message = f"👤 **Customer Data Fetched**: Batch `{batch_id}` data fetched successfully."
+            send_discord_message(message, color="info")
+        except Exception as e:
+            message = f"❌ **Error Fetching Customer Data (Batch {batch_id})**: {str(e)}"
+            send_discord_message(message, color="error")
+            raise
+
+    # Fonction pour stocker les données external_data dans HDFS et les charger dans Hive
+    def store_external_data_to_hdfs_and_hive(**context):
+        ti = context['ti']
+        batch_id = ti.xcom_pull(key='batch_id', task_ids='fetch_external_data')
+        data_json = ti.xcom_pull(key='external_data_json', task_ids='fetch_external_data')
+
+        # Créer un répertoire pour la partition
+        partition_dir = f"{HDFS_EXTERNAL_DATA_PATH}/batch_id={batch_id}"
+        hdfs_file_path = f"{partition_dir}/data.json"
+
+        try:
+            # Créer le répertoire de la partition dans HDFS
+            try:
+                subprocess.run(
+                    ["docker", "exec", "hive", "hdfs", "dfs", "-mkdir", "-p", partition_dir],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                subprocess.run(
+                    ["docker", "exec", "hive", "hdfs", "dfs", "-chmod", "-R", "777", partition_dir],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+            except subprocess.CalledProcessError as e:
+                error_message = f"Failed to create partition directory in HDFS: {e.stderr}"
+                logger.error(error_message)
+                raise RuntimeError(error_message)
+
+            # Écrire les données JSON dans HDFS dans le répertoire de la partition
+            try:
+                process = subprocess.Popen(
+                    ["docker", "exec", "hive", "hdfs", "dfs", "-put", "-", hdfs_file_path],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                )
+                stdout, stderr = process.communicate(input=data_json)
+                if process.returncode != 0:
+                    error_message = f"HDFS put command failed: {stderr}"
+                    logger.error(error_message)
+                    raise RuntimeError(error_message)
+                logger.info(f"HDFS put command output: {stdout}")
+            except Exception as e:
+                error_message = f"Error writing to HDFS: {str(e)}"
+                logger.error(error_message)
+                raise RuntimeError(error_message)
+
+            # Créer la table Hive et ajouter une partition
+            create_table_cmd = f"""
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "
+            CREATE EXTERNAL TABLE IF NOT EXISTS external_data (
+                blacklist_info ARRAY<STRING>,
+                credit_scores MAP<STRING, INT>,
+                fraud_reports MAP<STRING, INT>
+            )
+            PARTITIONED BY (batch_id STRING)
+            ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+            STORED AS TEXTFILE
+            LOCATION '{HDFS_EXTERNAL_DATA_PATH}';
+            ALTER TABLE external_data ADD IF NOT EXISTS PARTITION (batch_id='{batch_id}');
+            "
+            """
+            try:
+                result = subprocess.run(
+                    create_table_cmd,
+                    shell=True,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                logger.info(f"Hive command output: {result.stdout}")
+            except subprocess.CalledProcessError as e:
+                error_message = f"Hive command failed: {e.stderr}"
+                logger.error(error_message)
+                raise RuntimeError(error_message)
+
+            message = f"📊 **External Data Processed**: Batch `{batch_id}` stored in HDFS at {hdfs_file_path} and loaded into Hive table `external_data`."
+            send_discord_message(message, color="info")
+        except Exception as e:
+            message = f"❌ **Error Processing External Data (Batch {batch_id})**: {str(e)}"
+            send_discord_message(message, color="error")
+            raise
+
+    # Fonction pour stocker les données customer dans HDFS et les charger dans Hive
+    def store_customer_data_to_hdfs_and_hive(**context):
+        ti = context['ti']
+        batch_id = ti.xcom_pull(key='batch_id', task_ids='fetch_customer_data')
+        data_json = ti.xcom_pull(key='customer_data_json', task_ids='fetch_customer_data')
+
+        # Créer un répertoire pour la partition
+        partition_dir = f"{HDFS_CUSTOMER_DATA_PATH}/batch_id={batch_id}"
+        hdfs_file_path = f"{partition_dir}/data.json"
+
+        try:
+            # Créer le répertoire de la partition dans HDFS
+            try:
+                subprocess.run(
+                    ["docker", "exec", "hive", "hdfs", "dfs", "-mkdir", "-p", partition_dir],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                subprocess.run(
+                    ["docker", "exec", "hive", "hdfs", "dfs", "-chmod", "-R", "777", partition_dir],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+            except subprocess.CalledProcessError as e:
+                error_message = f"Failed to create partition directory in HDFS: {e.stderr}"
+                logger.error(error_message)
+                raise RuntimeError(error_message)
+
+            # Écrire les données JSON dans HDFS dans le répertoire de la partition
+            try:
+                process = subprocess.Popen(
+                    ["docker", "exec", "hive", "hdfs", "dfs", "-put", "-", hdfs_file_path],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                )
+                stdout, stderr = process.communicate(input=data_json)
+                if process.returncode != 0:
+                    error_message = f"HDFS put command failed: {stderr}"
+                    logger.error(error_message)
+                    raise RuntimeError(error_message)
+                logger.info(f"HDFS put command output: {stdout}")
+            except Exception as e:
+                error_message = f"Error writing to HDFS: {str(e)}"
+                logger.error(error_message)
+                raise RuntimeError(error_message)
+
+            # Créer la table Hive et ajouter une partition
+            create_table_cmd = f"""
+            docker exec hive beeline -u "jdbc:hive2://localhost:10000" --hiveconf hive.exec.dynamic.partition.mode=nonstrict -e "
+            CREATE EXTERNAL TABLE IF NOT EXISTS customers (
+                customer_id STRING,
+                account_history ARRAY<STRING>,
+                demographics STRUCT<age: INT, location: STRING>,
+                behavioral_patterns STRUCT<avg_transaction_value: DOUBLE>
+            )
+            PARTITIONED BY (batch_id STRING)
+            ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+            STORED AS TEXTFILE
+            LOCATION '{HDFS_CUSTOMER_DATA_PATH}';
+            ALTER TABLE customers ADD IF NOT EXISTS PARTITION (batch_id='{batch_id}');
+            "
+            """
+            try:
+                result = subprocess.run(
+                    create_table_cmd,
+                    shell=True,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                logger.info(f"Hive command output: {result.stdout}")
+            except subprocess.CalledProcessError as e:
+                error_message = f"Hive command failed: {e.stderr}"
+                logger.error(error_message)
+                raise RuntimeError(error_message)
+
+            message = f"👤 **Customer Data Processed**: Batch `{batch_id}` stored in HDFS at {hdfs_file_path} and loaded into Hive table `customers`."
+            send_discord_message(message, color="info")
+        except Exception as e:
+            message = f"❌ **Error Processing Customer Data (Batch {batch_id})**: {str(e)}"
+            send_discord_message(message, color="error")
+            raise
+
+    # Tâches pour récupérer et stocker les données
+    fetch_external_data_task = PythonOperator(
+        task_id='fetch_external_data',
+        python_callable=fetch_external_data,
+        provide_context=True,
+    )
+
+    fetch_customer_data_task = PythonOperator(
+        task_id='fetch_customer_data',
+        python_callable=fetch_customer_data,
+        provide_context=True,
+    )
+
+    store_external_data_task = PythonOperator(
+        task_id='store_external_data_to_hdfs_and_hive',
+        python_callable=store_external_data_to_hdfs_and_hive,
+        provide_context=True,
+    )
+
+    store_customer_data_task = PythonOperator(
+        task_id='store_customer_data_to_hdfs_and_hive',
+        python_callable=store_customer_data_to_hdfs_and_hive,
+        provide_context=True,
+    )
+
+    # Définir les dépendances
+    create_hdfs_dirs >> fetch_external_data_task >> store_external_data_task
+    create_hdfs_dirs >> fetch_customer_data_task >> store_customer_data_task
+----------------------------------------
+
+Dossier : airflow\plugins
+----------------------------------------
+
+Dossier : api
+----------------------------------------
+
+Dossier : api\customers
+----------------------------------------
+Fichier : app.py
+Contenu :
+from flask import Flask, jsonify
+import random
+import time
+
+app = Flask(__name__)
+
+def generate_customer():
+    customer_id = f"C{random.randint(0, 999):03}"
+    return {
+        "customer_id": customer_id,
+        "account_history": [],
+        "demographics": {"age": random.randint(18, 70), "location": f"City{random.randint(1, 10)}"},
+        "behavioral_patterns": {"avg_transaction_value": random.uniform(50, 500)}
+    }
+
+@app.route('/generate/customer', methods=['GET'])
+def get_customer():
+    customer = generate_customer()
+    time.sleep(5)  # Générer un client toutes les 5 secondes
+    return jsonify(customer)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)
+----------------------------------------
+Fichier : Dockerfile
+Contenu :
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+
+EXPOSE 5001
+CMD ["python", "app.py"]
+----------------------------------------
+Fichier : requirements.txt
+Contenu :
+Flask
+kafka-python
+requests
+----------------------------------------
+
+Dossier : api\external
+----------------------------------------
+Fichier : app.py
+Contenu :
+from flask import Flask, jsonify
+import random
+import time
+
+app = Flask(__name__)
+
+def generate_external_data():
+    return {
+        "blacklist_info": [f"Merchant{random.randint(21, 30)}" for _ in range(10)],
+        "credit_scores": {f"C{random.randint(0, 99):03}": random.randint(300, 850) for _ in range(10)},
+        "fraud_reports": {f"C{random.randint(0, 99):03}": random.randint(0, 5) for _ in range(10)}
+    }
+
+@app.route('/generate/externaldata', methods=['GET'])
+def get_external_data():
+    external_data = generate_external_data()
+    return jsonify(external_data)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5002)
+----------------------------------------
+Fichier : Dockerfile
+Contenu :
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+
+EXPOSE 5002
+CMD ["python", "app.py"]
+----------------------------------------
+Fichier : requirements.txt
+Contenu :
+Flask
+kafka-python
+----------------------------------------
+
+Dossier : api\transanctions
+----------------------------------------
+Fichier : app.py
+Contenu :
+from flask import Flask, jsonify
+import random
+from datetime import datetime, timedelta
+import time
+
+app = Flask(__name__)
+
+def random_date(start, end):
+    return start + timedelta(seconds=random.randint(0, int((end - start).total_seconds())))
+    
+def generate_transaction():
+    return {
+        "transaction_id": f"T{random.randint(10000, 99999)}",
+        "date_time": datetime.now().isoformat(),  # Temps réel
+        "amount": random.uniform(10, 1000) * (10 if random.random() < 0.4 else 1),
+        "currency": random.choice(["USD", "EUR", "GBP"]),
+        "merchant_details": f"Merchant{random.randint(1, 20)}",
+        "customer_id": f"C{random.randint(0, 99):03}",
+        "transaction_type": random.choice(["purchase", "withdrawal"]),
+        "location": f"City{random.randint(1, 10)}"
+    }
+
+@app.route('/generate/transaction', methods=['GET'])
+def get_transaction():
+    transaction = generate_transaction()
+    time.sleep(1)  # Simule un délai de 1 seconde pour la génération
+    return jsonify(transaction)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+----------------------------------------
+Fichier : Dockerfile
+Contenu :
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+
+EXPOSE 5000
+CMD ["python", "app.py"]
+----------------------------------------
+Fichier : requirements.txt
+Contenu :
+Flask
+kafka-python
+----------------------------------------
+
+Dossier : data-generator
+----------------------------------------
+
+Dossier : data-generator\output
+----------------------------------------
+
+Dossier : data-generator\output\transactions
+----------------------------------------
+
+Dossier : hive
+----------------------------------------
+Fichier : Dockerfile
+Contenu :
+FROM apache/hive:3.1.3
+
+USER root
+
+# Installer les dépendances
+RUN apt-get update && apt-get install -y python3 python3-pip wget curl
+
+# Installer les bibliothèques Python nécessaires
+RUN pip3 install pyhive thrift 
+
+# Créer les répertoires nécessaires pour HDFS
+RUN mkdir -p /data/namenode /data/datanode /data/transactions /data/warehouse && \
+    chmod -R 777 /data
+
+# Configurer Hadoop (HDFS)
+RUN echo '<?xml version="1.0"?>\n\
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>\n\
+<configuration>\n\
+    <property>\n\
+        <name>fs.defaultFS</name>\n\
+        <value>hdfs://localhost:9000</value>\n\
+    </property>\n\
+</configuration>' > /opt/hadoop/etc/hadoop/core-site.xml
+
+RUN echo '<?xml version="1.0"?>\n\
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>\n\
+<configuration>\n\
+    <property>\n\
+        <name>dfs.replication</name>\n\
+        <value>1</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>dfs.namenode.name.dir</name>\n\
+        <value>file:///data/namenode</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>dfs.datanode.data.dir</name>\n\
+        <value>file:///data/datanode</value>\n\
+    </property>\n\
+</configuration>' > /opt/hadoop/etc/hadoop/hdfs-site.xml
+
+# Télécharger et installer Spark
+RUN curl -O https://archive.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz && \
+    tar -xvzf spark-3.5.0-bin-hadoop3.tgz -C /opt && \
+    rm spark-3.5.0-bin-hadoop3.tgz
+
+
+# Configurer Hive pour utiliser Spark
+RUN echo '<?xml version="1.0"?>\n\
+<configuration>\n\
+    <property>\n\
+        <name>hive.execution.engine</name>\n\
+        <value>spark</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>hive.metastore.warehouse.dir</name>\n\
+        <value>/data/warehouse</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.master</name>\n\
+        <value>spark://hive:7077</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.sql.catalogImplementation</name>\n\
+        <value>hive</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.home</name>\n\
+        <value>/opt/spark-3.5.0-bin-hadoop3</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.driver.memory</name>\n\
+        <value>2g</value>\n\
+    </property>\n\
+    <property>\n\
+        <name>spark.executor.memory</name>\n\
+        <value>2g</value>\n\
+    </property>\n\
+</configuration>' > /opt/hive/conf/hive-site.xml
+
+# Configurer Spark (facultatif, pour les defaults)
+RUN echo "spark.master                     spark://localhost:7077" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf && \
+    echo "spark.sql.warehouse.dir         /data/warehouse" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf && \
+    echo "spark.hadoop.fs.defaultFS        hdfs://localhost:9000" >> /opt/spark-3.5.0-bin-hadoop3/conf/spark-defaults.conf
+
+
+# Définir les variables d'environnement
+ENV HADOOP_HOME=/opt/hadoop
+ENV SPARK_HOME=/opt/spark-3.5.0-bin-hadoop3
+ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
+
+
+# Copier les scripts et entrypoint
+COPY scripts/ /hive/scripts/
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Commande d'entrée
+CMD ["/entrypoint.sh"]
+----------------------------------------
+Fichier : entrypoint.sh
+Contenu :
+#!/bin/bash
+set -e  # Arrête le script si une commande échoue
+
+# Fonction pour arrêter les processus proprement
+cleanup() {
+    echo "Stopping Hadoop, Spark, and Hive services..."
+    kill $NAMENODE_PID $DATANODE_PID $SPARK_MASTER_PID $SPARK_WORKER_PID $HIVESERVER2_PID 2>/dev/null
+    wait $NAMENODE_PID $DATANODE_PID $SPARK_MASTER_PID $SPARK_WORKER_PID $HIVESERVER2_PID 2>/dev/null
+    echo "All services stopped."
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
+
+# Vérifier et créer les répertoires locaux
+echo "Creating local directories..."
+mkdir -p /data/namenode /data/datanode /data/transactions /data/warehouse
+chmod -R 777 /data
+chown -R hive:hive /data  # Assurer que l'utilisateur hive peut y accéder
+
+# Vérifier si HDFS est déjà formaté
+if [ ! -d "/data/namenode/current" ]; then
+    echo "Formatting HDFS NameNode..."
+    /opt/hadoop/bin/hdfs namenode -format -force
+fi
+
+# Démarrer le NameNode
+echo "Starting NameNode..."
+/opt/hadoop/bin/hdfs namenode &
+NAMENODE_PID=$!
+sleep 10
+if ! ps -p $NAMENODE_PID > /dev/null; then
+    echo "NameNode failed to start. Check logs..."
+    cat /opt/hadoop/logs/hadoop-*namenode*.log || echo "No NameNode logs found"
+    exit 1
+fi
+
+# Démarrer le DataNode
+echo "Starting DataNode..."
+rm -rf /data/datanode/*  # Nettoyer pour éviter les corruptions
+/opt/hadoop/bin/hdfs datanode &
+DATANODE_PID=$!
+sleep 10
+if ! ps -p $DATANODE_PID > /dev/null; then
+    echo "DataNode failed to start. Check logs..."
+    cat /opt/hadoop/logs/hadoop-*datanode*.log || echo "No DataNode logs found"
+    exit 1
+fi
+
+# Vérifier l'état de HDFS
+echo "Checking HDFS status..."
+if ! hdfs dfsadmin -report; then
+    echo "HDFS failed to initialize properly. Check logs..."
+    cat /opt/hadoop/logs/hadoop-*.log || echo "No logs found"
+    exit 1
+fi
+
+# Créer les répertoires dans HDFS
+echo "Creating directories in HDFS..."
+hdfs dfs -mkdir -p /data/transactions /data/fraud_detections /tmp/hadoop /tmp/hive /user/hive/warehouse
+hdfs dfs -chmod -R 777 /data/transactions /data/fraud_detections /tmp/hadoop /tmp/hive /user/hive/warehouse
+hdfs dfs -chown -R hive:hive /data /tmp/hadoop /tmp/hive /user/hive/warehouse
+
+# Démarrer Spark Master
+echo "Starting Spark Master..."
+/opt/spark-3.5.0-bin-hadoop3/bin/spark-class org.apache.spark.deploy.master.Master --host localhost --port 7077 &
+SPARK_MASTER_PID=$!
+sleep 10
+if ! ps -p $SPARK_MASTER_PID > /dev/null; then
+    echo "Spark Master failed to start. Check logs..."
+    cat /opt/spark-3.5.0-bin-hadoop3/logs/spark-*master*.out || echo "No Spark Master logs found"
+    exit 1
+fi
+
+# Démarrer Spark Worker
+# Par :
+echo "Starting Spark Worker..."
+mkdir -p /opt/spark-3.5.0-bin-hadoop3/logs
+chmod -R 777 /opt/spark-3.5.0-bin-hadoop3/logs
+/opt/spark-3.5.0-bin-hadoop3/bin/spark-class org.apache.spark.deploy.worker.Worker spark://localhost:7077 --memory 2g --cores 2 > /opt/spark-3.5.0-bin-hadoop3/logs/spark-worker.log 2>&1 &
+SPARK_WORKER_PID=$!
+sleep 10
+if ! ps -p $SPARK_WORKER_PID > /dev/null; then
+    echo "Spark Worker failed to start. Check logs..."
+    cat /opt/spark-3.5.0-bin-hadoop3/logs/spark-worker.log || echo "No Worker logs found"
+    exit 1
+fi
+
+# Initialiser le schéma Hive si nécessaire
+if [ ! -d "/tmp/metastore_db" ]; then
+    echo "Initializing Hive schema..."
+    /opt/hive/bin/schematool -dbType derby -initSchema
+fi
+
+# Démarrer HiveServer2
+echo "Starting HiveServer2..."
+/opt/hive/bin/hive --service hiveserver2 --hiveconf hive.server2.enable.doAs=false --hiveconf hive.server2.thrift.bind.host=0.0.0.0 &
+HIVESERVER2_PID=$!
+sleep 5
+if ! ps -p $HIVESERVER2_PID > /dev/null; then
+    echo "HiveServer2 failed to start. Check logs..."
+    cat /opt/hive/logs/hive.log || echo "No Hive logs found"
+    exit 1
+fi
+
+# Attendre que les services restent en cours d'exécution
+wait $NAMENODE_PID $DATANODE_PID $SPARK_MASTER_PID $SPARK_WORKER_PID $HIVESERVER2_PID
+----------------------------------------
+
+Dossier : hive\scripts
+----------------------------------------
+Fichier : .env
+Contenu :
+PORT_SPARK = 7077
+PATH_FRAUD = '/data/fraud_detections' 
+----------------------------------------
+Fichier : detect_fraud.py
+Contenu :
+from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
+import sys
+import os
+
+# Récupérer le batch_id depuis les arguments
+batch_id = sys.argv[1] if len(sys.argv) > 1 else "batch_0"
+
+# Initialiser la session Spark
+spark = SparkSession.builder \
+    .appName("FraudDetection") \
+    .master("spark://localhost:7077") \
+    .config("spark.driver.memory", "1g") \
+    .config("spark.executor.memory", "1g") \
+    .config("spark.executor.cores", "1") \
+    .config("spark.executor.instances", "1") \
+    .getOrCreate()
+
+try:
+    print(f"Spark version: {spark.version}")
+    # Lire les données depuis HDFS
+    df_transactions = spark.read.parquet(f"hdfs://localhost:9000/data/transactions/transactions_{batch_id}/*.parquet")
+
+    # Filtrer les transactions frauduleuses et ajouter la colonne batch_id
+    df_fraud = df_transactions.filter(df_transactions.amount > 1000) \
+        .select(
+            "transaction_id",
+            "date_time",
+            "amount",
+            "customer_id",
+            "location",
+            F.lit("High Amount").alias("fraud_reason"),
+            F.lit(batch_id).alias("batch_id")  # Ajouter la colonne batch_id
+        )
+
+    # Écrire dans HDFS avec partitionnement par batch_id
+    df_fraud.write.partitionBy("batch_id").mode("append").parquet("hdfs://localhost:9000/data/fraud_detections")
+except Exception as e:
+    print(f"Error: {str(e)}")
+    raise
+finally:
+    spark.stop()
+----------------------------------------
+Fichier : init_hive_tables.hql
+Contenu :
+
+----------------------------------------
+
+Dossier : init-sql
+----------------------------------------
+Fichier : init-hive.sql
+Contenu :
+CREATE DATABASE hive_metastore;
+----------------------------------------
+
+Dossier : kafka
+----------------------------------------
+Fichier : Dockerfile
+Contenu :
+FROM confluentinc/cp-kafka:7.3.0
+
+USER root
+
+# Installer wget et les locales
+RUN microdnf update -y && \
+    microdnf install -y wget glibc-langpack-en && \
+    microdnf clean all
+
+# Configurer la locale UTF-8
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+# Copier et installer les dépendances Python avec le pip existant
+COPY requirements.txt .
+RUN /usr/bin/pip3 install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p /data/transactions && \
+    chown appuser:appuser /data/transactions
+# Revenir à l'utilisateur par défaut
+USER appuser
+
+# Commande par défaut pour démarrer Kafka
+CMD ["bash", "-c", "/etc/confluent/docker/run"]
+----------------------------------------
+Fichier : requirements.txt
+Contenu :
+kafka-python
+pandas
+requests
+pyarrow
+python-dotenv
+----------------------------------------
+
+Dossier : kafka\consumer
+----------------------------------------
+Fichier : .env
+Contenu :
+PORT = 9092
+----------------------------------------
+Fichier : consumer_transaction.py
+Contenu :
+from kafka import KafkaConsumer
+import pandas as pd
+import json
+from datetime import datetime
+import os
+from dotenv import load_dotenv
+
+
+# Charger le fichier .env
+load_dotenv()
+
+# Accéder aux variables
+PORT = os.getenv("PORT")
+consumer = KafkaConsumer(
+    'transactions_topic',
+    bootstrap_servers=[F'kafka:{PORT}'],
+    auto_offset_reset='earliest',
+    enable_auto_commit=True,
+    group_id='transaction-consumer-group'
+)
+
+transactions = []
+batch_size = 10
+batch_count = 0
+
+print("Starting consumer...")
+for i, message in enumerate(consumer):
+    # Décoder le message Kafka (chaîne JSON)
+    transaction_json = message.value.decode('utf-8')
+    print(f"Received transaction({i}): {transaction_json}")
+    
+    # Parser le JSON
+    transaction_data = json.loads(transaction_json)
+
+    # Extraire les champs du JSON
+    transactions.append({
+        'transaction_id': transaction_data['transaction_id'],
+        'date_time': transaction_data['date_time'],
+        'amount': transaction_data['amount'],
+        'currency': transaction_data['currency'],
+        'merchant_details': transaction_data['merchant_details'],
+        'customer_id': transaction_data['customer_id'],
+        'transaction_type': transaction_data['transaction_type'],
+        'location': transaction_data['location']
+    })
+
+    # Écrire un batch toutes les 20 transactions
+    if len(transactions) >= batch_size:
+        batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        df = pd.DataFrame(transactions)
+        output_path = f"/data/transactions/transactions_batch_{batch_id}.parquet"
+        df.to_parquet(output_path, index=False)
+        print(f"Wrote {output_path} to shared volume")
+        
+        transactions = []
+        batch_count += 1
+
+# Écrire les transactions restantes
+if transactions:
+    batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    df = pd.DataFrame(transactions)
+    output_path = f"/data/transactions/transactions_batch_{batch_id}.parquet"
+    df.to_parquet(output_path, index=False)
+    print(f"Wrote {output_path} to shared volume")
+----------------------------------------
+
+Dossier : kafka\producer
+----------------------------------------
+Fichier : .env
+Contenu :
+PORT = 9092
+API = http://api-transactions:5000/generate/transaction
+----------------------------------------
+Fichier : transactions_producer.py
+Contenu :
+import requests
+import json
+from kafka import KafkaProducer
+import time
+from dotenv import load_dotenv
+import os
+
+# Charger le fichier .env
+load_dotenv()
+
+# Accéder aux variables
+PORT = os.getenv("PORT")
+API = os.getenv("API")
+
+KAFKA_BROKER = f"kafka:{PORT}"
+KAFKA_TOPIC = "transactions_topic"
+producer = KafkaProducer(
+    bootstrap_servers=KAFKA_BROKER,
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+# Limiter le nombre de messages produits
+MAX_MESSAGES = 20
+message_count = 0
+
+while message_count < MAX_MESSAGES:
+    response = requests.get(API)
+    if response.status_code == 200:
+        transaction = response.json()
+        producer.send(KAFKA_TOPIC, value=transaction)
+        print(f"Sent transaction: {transaction['transaction_id']}")
+        message_count += 1
+    else:
+        print(f"Failed to fetch transaction: {response.status_code}")
+    time.sleep(1)  # Une transaction par seconde
+
+# S'assurer que tous les messages sont envoyés avant de quitter
+producer.flush()
+print(f"Produit {message_count} messages. Arrêt du producteur.")
+----------------------------------------
+
