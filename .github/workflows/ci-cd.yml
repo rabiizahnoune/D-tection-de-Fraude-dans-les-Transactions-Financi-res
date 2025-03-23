@@ -76,7 +76,7 @@ jobs:
           check_api "api-customers" "5001" "/generate/customer" "30"
           check_api "api-externaldata" "5002" "/generate/externaldata" "10"
 
-      - name: Clean up Docker
+      - name: Clean up Docker 
         if: always()
         run: |
           docker-compose down # Arrête et supprime les conteneurs
